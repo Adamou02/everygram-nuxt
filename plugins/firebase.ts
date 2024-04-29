@@ -1,8 +1,8 @@
-import "firebase/auth";
-import firebaseConfig from "~/firebase.config.json";
-import { initializeApp, getApp } from "firebase/app";
+import 'firebase/auth';
+import firebaseConfig from '~/firebase.config.json';
+import { initializeApp, getApp } from 'firebase/app';
 export default defineNuxtPlugin({
-    name: "firebase.client",
+    name: 'firebase.client',
     async setup(nuxtApp) {
         // this is the equivalent of a normal functional plugin
         // initialize Firebase app
@@ -11,8 +11,8 @@ export default defineNuxtPlugin({
     },
     hooks: {
         // You can directly register Nuxt app runtime hooks here
-        "app:beforeMount"() {},
-        "vue:setup"() {},
-        "app:created"() {},
+        'app:beforeMount'() {},
+        'vue:setup'() {},
+        'app:created'() {},
     },
 });

@@ -1,5 +1,4 @@
 <template>
-    <div>user page</div>
     <slot />
 </template>
 

@@ -2,7 +2,6 @@
 <template>
     <div>
         <h1>Gears</h1>
-        <p>Welcome to the gears page!</p>
         <p v-if="isFetchingGears">Loading...</p>
         <ul v-else>
             <li v-for="gear in gears" :key="gear.id">
@@ -12,25 +11,24 @@
                 <button @click="onDeleteGear(gear)">Delete</button>
             </li>
         </ul>
-        <hr />
         <GearEditor
             v-if="isAddingGear || isEditingGear"
             :gear="editingGear"
-            @complete="onCompleteEdit"
-            @cancel="onCancelEdit"
+            @complete="onCompleteEditGear"
+            @cancel="onCancelEditGear"
         />
+        <button v-else @click="onAddGear">Add Gear</button>
         <hr />
-        <button @click="navigateTo('/dashboard')">Dashboard</button>
-        <template v-if="!isAddingGear && !isEditingGear">
-            <button @click="onAddGear">Add Gear</button>
-        </template>
+        <nav>
+            <NuxtLink to="/dashboard">Dashboard</NuxtLink>
+        </nav>
     </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-    middleware: ["auth-guard"],
-    layout: "user-page",
+    middleware: ['auth-guard'],
+    layout: 'user-page',
 });
 
 const userGearsStore = useUserGearsStore();
@@ -42,8 +40,8 @@ const {
     onEditGear,
     onDeleteGear,
     onArchiveGear,
-    onCompleteEdit,
-    onCancelEdit,
+    onCompleteEditGear,
+    onCancelEditGear,
     isAddingGear,
     isEditingGear,
     editingGear,

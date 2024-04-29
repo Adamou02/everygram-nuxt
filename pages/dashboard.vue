@@ -1,30 +1,35 @@
 <template>
     <div>
         <h1>Dashboard</h1>
-        <p>Welcome to the dashboard page!</p>
-        <p>Here you can manage your trips and gears.</p>
+        <p>You're signed in as {{ user?.email }}</p>
+        <h2>Trips</h2>
         <TripList />
         <hr />
-        <button @click="navigateTo('/')">Home</button>
-        <button @click="navigateTo('/gears')">Gears</button>
-        <button @click="onSignOut">Sign Out</button>
+        <nav>
+            <NuxtLink to="/">Home</NuxtLink>
+            |
+            <NuxtLink to="/gears">Gears</NuxtLink>
+            |
+            <button @click="onSignOut">Sign Out</button>
+        </nav>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { AuthError } from "firebase/auth";
+import type { AuthError } from 'firebase/auth';
 
 definePageMeta({
-    middleware: ["auth-guard"],
-    layout: "user-page",
+    middleware: ['auth-guard'],
+    layout: 'user-page',
 });
 
 const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const onSignOut = async () => {
     try {
         await userStore.signOutUser();
-        navigateTo("/");
+        navigateTo('/');
     } catch (error) {
         console.error(errorMessageLang((error as AuthError).code));
     }

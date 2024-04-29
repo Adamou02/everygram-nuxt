@@ -1,5 +1,5 @@
 const CONSTANTS: Record<string, any> = {
-    ROLE_OWNER: "owner",
+    ROLE_OWNER: 'owner',
 };
 
 export default function (key: string) {

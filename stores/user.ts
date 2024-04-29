@@ -1,12 +1,13 @@
 import {
     getAuth,
+    createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-} from "firebase/auth";
-import type { User } from "firebase/auth";
+} from 'firebase/auth';
+import type { User } from 'firebase/auth';
 
-export const useUserStore = defineStore("userStore", () => {
+export const useUserStore = defineStore('userStore', () => {
     const auth = getAuth();
     const user = ref<null | User>(null);
     const isInitialized = ref(false);
@@ -30,7 +31,26 @@ export const useUserStore = defineStore("userStore", () => {
         destroy: () => {
             unsubscribeOnAuthStateChangedRef.value?.();
             isInitialized.value = false;
-            console.log("destroy useUserStore");
+            console.log('destroy useUserStore');
+        },
+        signUpWithEmail: async ({
+            email,
+            password,
+        }: {
+            email: string;
+            password: string;
+        }) => {
+            try {
+                const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password,
+                );
+                user.value = userCredential.user;
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
         },
         signInWithEmail: async ({
             email,

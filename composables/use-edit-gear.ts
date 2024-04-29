@@ -25,14 +25,14 @@ export default function useEditGear() {
         },
         onArchiveGear: async (gear: Gear) => {
             // TODO
-            console.log("archive gear", gear);
+            console.log('archive gear', gear);
         },
-        onCompleteEdit: () => {
+        onCompleteEditGear: () => {
             isAddingGear.value = false;
             isEditingGear.value = false;
             editingGear.value = null;
         },
-        onCancelEdit: () => {
+        onCancelEditGear: () => {
             isAddingGear.value = false;
             isEditingGear.value = false;
             editingGear.value = null;

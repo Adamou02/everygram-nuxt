@@ -1,11 +1,16 @@
 <template>
     <div>
         <h1>Home</h1>
-        <p>Welcome to the home page!</p>
-        <button v-if="isLoggedIn" @click="navigateTo('/dashboard')">
-            Dashboard
-        </button>
-        <button v-else @click="navigateTo('/login')">Login</button>
+        <p>Welcome to Everygram!</p>
+        <hr />
+        <nav>
+            <NuxtLink v-if="isLoggedIn" to="/dashboard"> Dashboard </NuxtLink>
+            <template v-else>
+                <NuxtLink to="/login">Login</NuxtLink>
+                |
+                <NuxtLink to="/signup">Sign Up</NuxtLink>
+            </template>
+        </nav>
     </div>
 </template>
 

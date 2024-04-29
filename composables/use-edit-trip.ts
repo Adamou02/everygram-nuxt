@@ -22,12 +22,12 @@ export default function useEditTrip() {
                 console.error(error);
             }
         },
-        onCompleteEdit: () => {
+        onCompleteEditTrip: () => {
             isAddingTrip.value = false;
             isEditingTrip.value = false;
             editingTrip.value = null;
         },
-        onCancelEdit: () => {
+        onCancelEditTrip: () => {
             isAddingTrip.value = false;
             isEditingTrip.value = false;
             editingTrip.value = null;

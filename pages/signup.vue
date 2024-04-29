@@ -9,13 +9,13 @@
             <input type="password" v-model="password" placeholder="Password" />
         </div>
         <div>
-            <button @click="login">Login</button>
+            <button @click="signUp">Sign Up</button>
         </div>
         <hr />
         <nav>
             <NuxtLink to="/">Home</NuxtLink>
             |
-            <NuxtLink to="/signup">Sign Up</NuxtLink>
+            <NuxtLink to="/login">Login</NuxtLink>
         </nav>
     </div>
 </template>
@@ -34,10 +34,10 @@ const isLoading = ref<boolean>(false);
 
 const userStore = useUserStore();
 
-const login = async () => {
+const signUp = async () => {
     isLoading.value = true;
     try {
-        await userStore.signInWithEmail({
+        await userStore.signUpWithEmail({
             email: email.value,
             password: password.value,
         });

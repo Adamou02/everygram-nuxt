@@ -1,23 +1,40 @@
 <!-- a form for editing data of type Gear -->
 <template>
     <div>
-        <h1>{{ isEditing ? "Edit" : "Add" }} Gear</h1>
+        <hr />
+        <h3>{{ isEditing ? 'Edit' : 'Add' }} Gear</h3>
         <div>
-            <input type="text" v-model="editingGear.name" placeholder="Name" />
-            <input
-                type="text"
-                v-model="editingGear.brand"
-                placeholder="Brand"
-            />
-            <input
-                type="text"
-                v-model="editingGear.weight"
-                placeholder="Weight"
-            />
-            <button @click="onSubmit()">Save</button>
-            <button @click="$emit('cancel')">Cancel</button>
+            <div>
+                <label>Name</label>
+                <input
+                    type="text"
+                    v-model="editingGear.name"
+                    placeholder="Name"
+                />
+            </div>
+            <div>
+                <label>Brand</label>
+                <input
+                    type="text"
+                    v-model="editingGear.brand"
+                    placeholder="Brand"
+                />
+            </div>
+            <div>
+                <label>Weight</label>
+                <input
+                    type="text"
+                    v-model="editingGear.weight"
+                    placeholder="Weight"
+                />
+            </div>
+            <div>
+                <button @click="onSubmit()">Save</button>
+                <button @click="$emit('cancel')">Cancel</button>
+            </div>
             <p v-if="isSaving">Saving...</p>
         </div>
+        <hr />
     </div>
 </template>
 
@@ -26,11 +43,11 @@ const props = defineProps<{
     gear: Gear | null;
 }>();
 
-const emit = defineEmits(["complete", "cancel"]);
+const emit = defineEmits(['complete', 'cancel']);
 
 const emptyGear: EditingGear = {
-    brand: "",
-    name: "",
+    brand: '',
+    name: '',
     weight: 0,
 };
 const isEditing = !!props.gear;
@@ -51,7 +68,7 @@ const onSubmit = async () => {
         } else {
             await userGearsStore.addGear(editingGear.value);
         }
-        emit("complete");
+        emit('complete');
     } catch (error) {
         console.error(error);
         isSaving.value = false;

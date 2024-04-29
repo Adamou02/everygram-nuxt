@@ -1,21 +1,31 @@
 <template>
     <div>
-        <h1>{{ isEditing ? "Edit" : "Add" }} Trip</h1>
+        <hr />
+        <h3>{{ isEditing ? 'Edit' : 'Add' }} Trip</h3>
         <div>
-            <input
-                type="text"
-                v-model="editingTrip.title"
-                placeholder="Title"
-            />
-            <input
-                type="text"
-                v-model="editingTrip.description"
-                placeholder="Description"
-            />
-            <button @click="onSubmit()">Save</button>
-            <button @click="$emit('cancel')">Cancel</button>
+            <div>
+                <label>Title</label>
+                <input
+                    type="text"
+                    v-model="editingTrip.title"
+                    placeholder="Title"
+                />
+            </div>
+            <div>
+                <label>Description</label>
+                <input
+                    type="text"
+                    v-model="editingTrip.description"
+                    placeholder="Description"
+                />
+            </div>
+            <div>
+                <button @click="onSubmit()">Save</button>
+                <button @click="$emit('cancel')">Cancel</button>
+            </div>
             <p v-if="isSaving">Saving...</p>
         </div>
+        <hr />
     </div>
 </template>
 
@@ -24,11 +34,11 @@ const props = defineProps<{
     trip: Trip | null;
 }>();
 
-const emit = defineEmits(["complete", "cancel"]);
+const emit = defineEmits(['complete', 'cancel']);
 
 const emptyTrip: EditingTrip = {
-    title: "",
-    description: "",
+    title: '',
+    description: '',
 };
 const isEditing = !!props.trip;
 const editingTrip = ref<EditingTrip>(
@@ -43,12 +53,12 @@ const onSubmit = async () => {
         if (isEditing) {
             await userTripsStore.updateTrip({
                 id: props.trip.id,
-                trip: editingTrip.value,
+                tripData: editingTrip.value,
             });
         } else {
             await userTripsStore.addTrip(editingTrip.value);
         }
-        emit("complete");
+        emit('complete');
     } catch (error) {
         console.error(error);
         isSaving.value = false;

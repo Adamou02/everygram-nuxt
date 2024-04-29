@@ -1,23 +1,21 @@
 <template>
     <div>
-        <h1>Trips</h1>
         <ul>
             <li v-for="trip in trips" :key="trip.id">
-                <div>Title: {{ trip.title }}</div>
-                <div>Desc: {{ trip.description }}</div>
+                <NuxtLink :to="`/trip/${trip.id}`">
+                    <div>{{ trip.title }} ({{ trip.description }})</div>
+                </NuxtLink>
                 <button @click="onEditTrip(trip)">Edit</button>
                 <button @click="onDeleteTrip(trip)">Delete</button>
             </li>
         </ul>
-        <hr />
         <TripInfoEditor
             v-if="isAddingTrip || isEditingTrip"
             :trip="editingTrip"
-            @complete="onCompleteEdit"
-            @cancel="onCancelEdit"
+            @complete="onCompleteEditTrip"
+            @cancel="onCancelEditTrip"
         />
-        <hr />
-        <button @click="onAddTrip">Add Trip</button>
+        <button v-else @click="onAddTrip">Add Trip</button>
     </div>
 </template>
 
@@ -31,7 +29,7 @@ const {
     onAddTrip,
     onEditTrip,
     onDeleteTrip,
-    onCompleteEdit,
-    onCancelEdit,
+    onCompleteEditTrip,
+    onCancelEditTrip,
 } = useEditTrip();
 </script>
