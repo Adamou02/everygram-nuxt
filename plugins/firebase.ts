@@ -7,7 +7,6 @@ export default defineNuxtPlugin({
         // this is the equivalent of a normal functional plugin
         // initialize Firebase app
         initializeApp(firebaseConfig);
-        const app = getApp();
     },
     hooks: {
         // You can directly register Nuxt app runtime hooks here
