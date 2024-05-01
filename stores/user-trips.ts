@@ -32,7 +32,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         unsubscribe.value = onSnapshot(
             query(
                 tripCollectionRef,
-                where(`role.${user.value.uid}`, '==', constants('ROLE_OWNER')),
+                where(`role.${user.value.uid}`, '==', CONSTANTS.ROLE_OWNER),
             ),
             (querySnapshot) => {
                 trips.value = querySnapshot.docs.map(
@@ -65,7 +65,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             const docRef = await addDoc(tripCollectionRef, {
                 ...trip,
                 role: {
-                    [user.value.uid]: constants('ROLE_OWNER'),
+                    [user.value.uid]: CONSTANTS.ROLE_OWNER,
                 },
                 gears: {},
             });

@@ -1,4 +1,3 @@
-<!-- a form for editing data of type Gear -->
 <template>
     <div>
         <hr />
@@ -27,6 +26,27 @@
                     v-model="editingGear.weight"
                     placeholder="Weight"
                 />
+            </div>
+            <div>
+                <label>Category</label>
+                <select v-model="editingGear.category">
+                    <option :value="undefined" selected disabled>
+                        Select a category
+                    </option>
+                    <option value="accessories">Accessories</option>
+                    <option value="backpack">Backpack</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="cooking">Cooking</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="footwear">Footwear</option>
+                    <option value="hydration">Hydration</option>
+                    <option value="medical">Medical</option>
+                    <option value="sanitary">Sanitary</option>
+                    <option value="shelter">Shelter</option>
+                    <option value="sleeping">Sleeping</option>
+                    <option value="tools">Tools</option>
+                    <option value="othters">Others</option>
+                </select>
             </div>
             <div>
                 <button @click="onSubmit()">Save</button>

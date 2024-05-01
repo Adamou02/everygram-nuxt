@@ -3,14 +3,25 @@
     <div>
         <h1>Gears</h1>
         <p v-if="isFetchingGears">Loading...</p>
-        <ul v-else>
-            <li v-for="gear in gears" :key="gear.id">
-                <div>{{ gear.name }}: {{ gear.weight }} grams</div>
-                <button @click="onEditGear(gear)">Edit</button>
-                <button @click="onArchiveGear(gear)">Archive</button>
-                <button @click="onDeleteGear(gear)">Delete</button>
+
+        <!-- list gears by displayCatergories -->
+        <ul v-if="displayCatergories.length">
+            <li v-for="category in displayCatergories" :key="category">
+                <h2>{{ category }}</h2>
+                <ul>
+                    <li
+                        v-for="gear in gearsGroupByCategory[category]"
+                        :key="gear.id"
+                    >
+                        <div>{{ gear.name }}: {{ gear.weight }} grams</div>
+                        <button @click="onEditGear(gear)">Edit</button>
+                        <button @click="onArchiveGear(gear)">Archive</button>
+                        <button @click="onDeleteGear(gear)">Delete</button>
+                    </li>
+                </ul>
             </li>
         </ul>
+
         <GearEditor
             v-if="isAddingGear || isEditingGear"
             :gear="editingGear"
@@ -34,6 +45,14 @@ definePageMeta({
 
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
+const gearsGroupByCategory = computed(() =>
+    gearUtils.groupGearsByCategory(gears.value),
+);
+const displayCatergories = computed(() =>
+    CONSTANTS.GEAR_CATEGORIES.filter(
+        (category) => gearsGroupByCategory.value[category],
+    ),
+);
 
 // for GearEditor
 const {
