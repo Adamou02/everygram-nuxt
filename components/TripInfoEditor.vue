@@ -34,7 +34,11 @@ const props = defineProps<{
     trip: Trip | null;
 }>();
 
-const emit = defineEmits(['complete', 'cancel']);
+const emit = defineEmits<{
+    'complete-add': [trip: Trip];
+    'complete-edit': [trip: Trip];
+    cancel: [];
+}>();
 
 const emptyTrip: EditingTrip = {
     title: '',
@@ -55,10 +59,14 @@ const onSubmit = async () => {
                 id: props.trip.id,
                 tripData: editingTrip.value,
             });
+            emit('complete-edit', userTripsStore.getTripById(props.trip.id));
         } else {
-            await userTripsStore.addTrip(editingTrip.value);
+            const tripId = await userTripsStore.addTrip(editingTrip.value);
+            if (!tripId) {
+                throw new Error('Failed to add trip');
+            }
+            emit('complete-add', userTripsStore.getTripById(tripId));
         }
-        emit('complete');
     } catch (error) {
         console.error(error);
         isSaving.value = false;

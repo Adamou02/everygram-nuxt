@@ -17,9 +17,12 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
     const { user } = storeToRefs(userStore);
     const tripCollectionRef = collection(db, 'trip');
     const trips = ref<Trip[]>([]);
+    const tripMap = computed(() => _keyBy(trips.value, 'id'));
     const isFirstFetching = ref(true);
     const unsubscribe = ref<null | (() => void)>(null);
     const isInitialized = ref(false);
+
+    const getTripById = computed(() => (id: string) => tripMap.value[id]);
 
     const initialize = () => {
         if (isInitialized.value || !user.value) {
@@ -59,13 +62,14 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             return;
         }
         try {
-            await addDoc(tripCollectionRef, {
+            const docRef = await addDoc(tripCollectionRef, {
                 ...trip,
                 role: {
                     [user.value.uid]: constants('ROLE_OWNER'),
                 },
                 gears: {},
             });
+            return docRef.id;
         } catch (error) {
             console.error(error);
             throw error;
@@ -130,7 +134,9 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
 
     return {
         trips,
+        tripMap,
         isFetchingTrips: isFirstFetching,
+        getTripById,
         initialize,
         destroy,
         addTrip,

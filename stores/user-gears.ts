@@ -61,12 +61,13 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             return;
         }
         try {
-            await addDoc(gearCollectionRef, {
+            const docRef = await addDoc(gearCollectionRef, {
                 ...gear,
                 role: {
                     [user.value.uid]: constants('ROLE_OWNER'),
                 },
             });
+            return docRef.id;
         } catch (error) {
             console.error(error);
             throw error;

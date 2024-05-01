@@ -1,5 +1,4 @@
 export default function useEditTrip() {
-    const userTripsStore = useUserTripsStore();
     const isAddingTrip = ref<boolean>(false);
     const isEditingTrip = ref<boolean>(false);
     const editingTrip = ref<Trip | null>(null);
@@ -15,15 +14,10 @@ export default function useEditTrip() {
             editingTrip.value = trip;
             isEditingTrip.value = true;
         },
-        onDeleteTrip: async (trip: Trip) => {
-            try {
-                await userTripsStore.deleteTrip(trip.id);
-            } catch (error) {
-                console.error(error);
-            }
+        onCompleteAddTrip: () => {
+            isAddingTrip.value = false;
         },
         onCompleteEditTrip: () => {
-            isAddingTrip.value = false;
             isEditingTrip.value = false;
             editingTrip.value = null;
         },

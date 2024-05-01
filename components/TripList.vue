@@ -12,7 +12,8 @@
         <TripInfoEditor
             v-if="isAddingTrip || isEditingTrip"
             :trip="editingTrip"
-            @complete="onCompleteEditTrip"
+            @complete-add="onCompleteAddTrip"
+            @complete-edit="onCompleteEditTrip"
             @cancel="onCancelEditTrip"
         />
         <button v-else @click="onAddTrip">Add Trip</button>
@@ -28,8 +29,16 @@ const {
     editingTrip,
     onAddTrip,
     onEditTrip,
-    onDeleteTrip,
+    onCompleteAddTrip,
     onCompleteEditTrip,
     onCancelEditTrip,
 } = useEditTrip();
+
+const onDeleteTrip = async (trip: Trip) => {
+    try {
+        await userTripsStore.deleteTrip(trip.id);
+    } catch (error) {
+        console.error(error);
+    }
+};
 </script>

@@ -14,16 +14,32 @@
                         {{ gear.name }}: {{ gear.weight }} grams x
                         {{ trip.gears[gear.id].quantity }}
                     </div>
+                    <button @click="onEditGear(gear)">Edit</button>
                     <button @click="onRemoveGear(gear.id)">x</button>
                 </li>
             </ul>
-            <button @click="isSelectingGears = true">Add Gears</button>
             <GearsSelector
                 v-if="isSelectingGears"
                 :selected-gear-ids="selectedGearIds"
                 @complete="onCompletSelectGears"
                 @cancel="isSelectingGears = false"
             />
+            <GearEditor
+                v-if="isAddingGear || isEditingGear"
+                :gear="editingGear"
+                @complete-add="onCompleteAddGearInTrip"
+                @complete-edit="onCompleteEditGear"
+                @cancel="onCancelEditGear"
+            />
+            <TripInfoEditor
+                v-if="isEditingTrip"
+                :trip="editingTrip"
+                @complete-edit="onCompleteEditTrip"
+                @cancel="onCancelEditTrip"
+            />
+            <button @click="isSelectingGears = true">Select Gears</button>
+            <button @click="onAddGear">Add Gears</button>
+            <button @click="onEditTrip(trip)">Edit Trip Info</button>
         </template>
         <template v-else>
             <p>Trip not found</p>
@@ -64,7 +80,32 @@ const onCompletSelectGears = (selectedGears: TripGear[]) => {
     isSelectingGears.value = false;
 };
 
+// for add gear
+const {
+    isAddingGear,
+    isEditingGear,
+    editingGear,
+    onAddGear,
+    onEditGear,
+    onCompleteAddGear,
+    onCompleteEditGear,
+    onCancelEditGear,
+} = useEditGear();
+
+const onCompleteAddGearInTrip = (gear: Gear) => {
+    userTripsStore.addGearsToTrip(tripId, [{ id: gear.id, quantity: 1 }]);
+    onCompleteAddGear();
+};
+
 const onRemoveGear = (gearId: string) => {
     userTripsStore.removeGearsFromTrip(tripId, [gearId]);
 };
+
+const {
+    isEditingTrip,
+    editingTrip,
+    onEditTrip,
+    onCompleteEditTrip,
+    onCancelEditTrip,
+} = useEditTrip();
 </script>

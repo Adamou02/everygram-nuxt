@@ -14,7 +14,8 @@
         <GearEditor
             v-if="isAddingGear || isEditingGear"
             :gear="editingGear"
-            @complete="onCompleteEditGear"
+            @complete-add="onCompleteAddGear"
+            @complete-edit="onCompleteEditGear"
             @cancel="onCancelEditGear"
         />
         <button v-else @click="onAddGear">Add Gear</button>
@@ -38,12 +39,25 @@ const { gears, isFetchingGears } = storeToRefs(userGearsStore);
 const {
     onAddGear,
     onEditGear,
-    onDeleteGear,
-    onArchiveGear,
+    onCompleteAddGear,
     onCompleteEditGear,
     onCancelEditGear,
     isAddingGear,
     isEditingGear,
     editingGear,
 } = useEditGear();
+
+const onDeleteGear = async (gear: Gear) => {
+    // TODO: check if the gear has been used in any trips
+    try {
+        await userGearsStore.deleteGear(gear.id);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const onArchiveGear = async (gear: Gear) => {
+    // TODO
+    console.log('archive gear', gear);
+};
 </script>

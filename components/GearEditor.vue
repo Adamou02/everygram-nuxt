@@ -43,7 +43,11 @@ const props = defineProps<{
     gear: Gear | null;
 }>();
 
-const emit = defineEmits(['complete', 'cancel']);
+const emit = defineEmits<{
+    'complete-add': [gear: Gear];
+    'complete-edit': [gear: Gear];
+    cancel: [];
+}>();
 
 const emptyGear: EditingGear = {
     brand: '',
@@ -65,10 +69,14 @@ const onSubmit = async () => {
                 id: props.gear.id,
                 gear: editingGear.value,
             });
+            emit('complete-edit', userGearsStore.getGearById(props.gear.id));
         } else {
-            await userGearsStore.addGear(editingGear.value);
+            const docId = await userGearsStore.addGear(editingGear.value);
+            if (!docId) {
+                throw new Error('Failed to add gear');
+            }
+            emit('complete-add', userGearsStore.getGearById(docId));
         }
-        emit('complete');
     } catch (error) {
         console.error(error);
         isSaving.value = false;
