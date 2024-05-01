@@ -5,8 +5,12 @@
                 <NuxtLink :to="`/trip/${trip.id}`">
                     <div>{{ trip.title }} ({{ trip.description }})</div>
                 </NuxtLink>
-                <button @click="onEditTrip(trip)">Edit</button>
-                <button @click="onDeleteTrip(trip)">Delete</button>
+                <button @click="onEditTrip(trip)">
+                    {{ $t('ACTION_EDIT') }}
+                </button>
+                <button @click="onDeleteTrip(trip)">
+                    {{ $t('ACTION_DELETE') }}
+                </button>
             </li>
         </ul>
         <TripInfoEditor
@@ -16,7 +20,9 @@
             @complete-edit="onCompleteEditTrip"
             @cancel="onCancelEditTrip"
         />
-        <button v-else @click="onAddTrip">Add Trip</button>
+        <button v-else @click="onAddTrip">
+            {{ $t('ACTION_ADD_TRIP') }}
+        </button>
     </div>
 </template>
 

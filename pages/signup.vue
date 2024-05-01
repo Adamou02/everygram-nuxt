@@ -9,7 +9,9 @@
             <input type="password" v-model="password" placeholder="Password" />
         </div>
         <div>
-            <button @click="signUp">Sign Up</button>
+            <button @click="signUp">
+                {{ $t('ACTION_SIGN_UP') }}
+            </button>
         </div>
         <hr />
         <nav>

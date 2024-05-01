@@ -1,0 +1,23 @@
+{
+    "ACTION_ADD_GEAR": "@:ACTION_ADD @:ENTITY_GEAR",
+    "ACTION_ADD_TRIP": "@:ACTION_ADD @:ENTITY_TRIP",
+    "ACTION_ADD": "Add",
+    "ACTION_ARCHIVE": "Archive",
+    "ACTION_CANCEL": "Cencel",
+    "ACTION_CREATE": "Create",
+    "ACTION_DELETE": "Delete",
+    "ACTION_EDIT": "Edit",
+    "ACTION_LOGIN": "Login",
+    "ACTION_LOGOUT": "Logout",
+    "ACTION_SAVE": "Save",
+    "ACTION_SIGNUP": "Sign Up",
+    "APP_NAME": "Everygram",
+    "ENTITY_GEAR": "Gear",
+    "ENTITY_TRIP": "Trip",
+    "PAGE_DASHBOARD": "Dashboard",
+    "PAGE_GEARS": "Gears",
+    "PAGE_HOME": "Home",
+    "PAGE_LOGIN": "Login",
+    "PAGE_SIGNUP": "Sign Up",
+    "WELCOME_TO_EVERYGRAM": "Welcom to @:APP_NAME"
+}

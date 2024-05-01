@@ -12,10 +12,33 @@ export default defineNuxtConfig({
         '/gears': { ssr: false },
         '/trip/**': { ssr: false },
     },
-    modules: ['@pinia/nuxt', 'nuxt-lodash'],
+    modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n'],
     lodash: {
         // https://nuxt.com/modules/lodash#config
         prefix: '_',
         upperAfterPrefix: false,
+    },
+    i18n: {
+        langDir: 'locales',
+        locales: [
+            {
+                code: 'en',
+                name: 'English',
+                iso: 'en-US',
+                file: 'en.json',
+            },
+            {
+                code: 'zh',
+                name: '繁體中文',
+                iso: 'zh-TW',
+                file: 'zh-tw.json',
+            },
+        ],
+        defaultLocale: 'en',
+        strategy: 'no_prefix',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'i18n_redirected',
+        },
     },
 });

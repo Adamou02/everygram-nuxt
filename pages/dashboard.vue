@@ -6,11 +6,17 @@
         <TripList />
         <hr />
         <nav>
-            <NuxtLink to="/">Home</NuxtLink>
+            <NuxtLink to="/">
+                {{ $t('PAGE_HOME') }}
+            </NuxtLink>
             |
-            <NuxtLink to="/gears">Gears</NuxtLink>
+            <NuxtLink to="/gears">
+                {{ $t('PAGE_GEARS') }}
+            </NuxtLink>
             |
-            <button @click="onSignOut">Sign Out</button>
+            <button @click="onSignOut">
+                {{ $t('ACTION_LOGOUT') }}
+            </button>
         </nav>
     </div>
 </template>

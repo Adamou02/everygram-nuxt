@@ -1,20 +1,43 @@
 <template>
     <div>
         <h1>Home</h1>
-        <p>Welcome to Everygram!</p>
+        <p>{{ $t('WELCOME_TO_EVERYGRAM') }}</p>
         <hr />
         <nav>
-            <NuxtLink v-if="isLoggedIn" to="/dashboard"> Dashboard </NuxtLink>
+            <NuxtLink v-if="isLoggedIn" to="/dashboard">
+                {{ $t('PAGE_DASHBOARD') }}
+            </NuxtLink>
             <template v-else>
-                <NuxtLink to="/login">Login</NuxtLink>
+                <NuxtLink to="/login">
+                    {{ $t('PAGE_LOGIN') }}
+                </NuxtLink>
                 |
-                <NuxtLink to="/signup">Sign Up</NuxtLink>
+                <NuxtLink to="/signup">
+                    {{ $t('PAGE_SIGNUP') }}
+                </NuxtLink>
             </template>
         </nav>
+        <div class="locale-changer">
+            <!-- buttons of locales -->
+            <button
+                v-for="locale in locales"
+                :key="`locale-${locale.code}`"
+                :disabled="locale.code === currentLocale"
+                @click="changeLanguage(locale.code)"
+            >
+                {{ locale.name }}
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 const userStore = useUserStore();
 const { isLoggedIn } = storeToRefs(userStore);
+const { setLocale, locale: currentLocale, locales } = useI18n();
+
+const changeLanguage = (localCode: string) => {
+    setLocale(localCode);
+};
 </script>

@@ -49,8 +49,12 @@
                 </select>
             </div>
             <div>
-                <button @click="onSubmit()">Save</button>
-                <button @click="$emit('cancel')">Cancel</button>
+                <button @click="onSubmit()">
+                    {{ isEditing ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
+                </button>
+                <button @click="$emit('cancel')">
+                    {{ $t('ACTION_CANCEL') }}
+                </button>
             </div>
             <p v-if="isSaving">Saving...</p>
         </div>

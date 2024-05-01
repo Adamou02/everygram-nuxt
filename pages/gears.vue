@@ -14,9 +14,15 @@
                         :key="gear.id"
                     >
                         <div>{{ gear.name }}: {{ gear.weight }} grams</div>
-                        <button @click="onEditGear(gear)">Edit</button>
-                        <button @click="onArchiveGear(gear)">Archive</button>
-                        <button @click="onDeleteGear(gear)">Delete</button>
+                        <button @click="onEditGear(gear)">
+                            {{ $t('ACTION_EDIT') }}
+                        </button>
+                        <button @click="onArchiveGear(gear)">
+                            {{ $t('ACTION_ARCHIVE') }}
+                        </button>
+                        <button @click="onDeleteGear(gear)">
+                            {{ $t('ACTION_DELETE') }}
+                        </button>
                     </li>
                 </ul>
             </li>
@@ -29,10 +35,14 @@
             @complete-edit="onCompleteEditGear"
             @cancel="onCancelEditGear"
         />
-        <button v-else @click="onAddGear">Add Gear</button>
+        <button v-else @click="onAddGear">
+            {{ $t('ACTION_ADD_GEAR') }}
+        </button>
         <hr />
         <nav>
-            <NuxtLink to="/dashboard">Dashboard</NuxtLink>
+            <NuxtLink to="/dashboard">
+                {{ $t('PAGE_DASHBOARD') }}
+            </NuxtLink>
         </nav>
     </div>
 </template>

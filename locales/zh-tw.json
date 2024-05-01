@@ -1,0 +1,23 @@
+{
+    "ACTION_ADD_GEAR": "@:ACTION_ADD@:ENTITY_GEAR",
+    "ACTION_ADD_TRIP": "@:ACTION_ADD@:ENTITY_TRIP",
+    "ACTION_ADD": "新增",
+    "ACTION_ARCHIVE": "封存",
+    "ACTION_CANCEL": "取消",
+    "ACTION_CREATE": "新增",
+    "ACTION_DELETE": "刪除",
+    "ACTION_EDIT": "編輯",
+    "ACTION_LOGIN": "登入",
+    "ACTION_LOGOUT": "登出",
+    "ACTION_SAVE": "儲存",
+    "ACTION_SIGNUP": "註冊",
+    "APP_NAME": "Everygram",
+    "ENTITY_GEAR": "裝備",
+    "ENTITY_TRIP": "行程",
+    "PAGE_DASHBOARD": "Dashboard",
+    "PAGE_GEARS": "裝備清單",
+    "PAGE_HOME": "首頁",
+    "PAGE_LOGIN": "登入",
+    "PAGE_SIGNUP": "註冊",
+    "WELCOME_TO_EVERYGRAM": "歡迎來到 @:APP_NAME"
+}
