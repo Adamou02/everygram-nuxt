@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         '/gears': { ssr: false },
         '/trip/**': { ssr: false },
     },
-    modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n'],
+    modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n', 'nuxt-primevue'],
     lodash: {
         // https://nuxt.com/modules/lodash#config
         prefix: '_',
@@ -41,4 +41,11 @@ export default defineNuxtConfig({
             cookieKey: 'i18n_redirected',
         },
     },
+    primevue: {
+        /* Options */
+    },
+    css: [
+        'primeflex/primeflex.css',
+        '~/assets/theme/themes/mytheme/theme.scss',
+    ],
 });
