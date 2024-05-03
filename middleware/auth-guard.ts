@@ -13,6 +13,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         );
     });
 
+    if (to.name === '') {
+        if (user) {
+            return navigateTo('/gears');
+        } else {
+            return navigateTo('/welcome');
+        }
+    }
+
     if (!user && to.name !== 'login' && to.name !== 'signup') {
         return navigateTo('/login');
     }

@@ -1,6 +1,11 @@
 <!-- A page to show data of a trip -->
 <template>
     <div>
+        <img
+            src="/image/illustration/illu-mountains.jpg"
+            alt=""
+            class="w-full border-round-md"
+        />
         <template v-if="isFetchingTrips">
             <p>Loading...</p>
         </template>
@@ -8,25 +13,91 @@
             <h1>{{ trip.title }}</h1>
             <p>{{ trip.description }}</p>
             <h2>Gear list</h2>
-            <!-- show the ul by displayCatergories -->
-            <ul>
-                <li v-for="category in displayCatergories" :key="category">
-                    <h3>{{ $t(`GEAR_CATEGORY_${category.toUpperCase()}`) }}</h3>
-                    <ul>
-                        <li
-                            v-for="gear in gearsInTripByCategory[category]"
-                            :key="gear.id"
+            <div class="flex flex-column gap-5">
+                <div v-for="category in displayCatergories" :key="category">
+                    <div
+                        class="flex justify-content-between align-items-center"
+                    >
+                        <h3>{{ categoryToLabel(category) }}</h3>
+                        <div class="text-color-secondary">
+                            {{ formatWeight(weightByCategory[category]) }}
+                        </div>
+                    </div>
+                    <!-- use PrimeDataTable to replace the following ul, the same in gears.vue -->
+                    <PrimeDataTable
+                        :value="gearsInTripByCategory[category]"
+                        dataKey="id"
+                        edit-mode="cell"
+                        @cell-edit-complete="onCellEditComplete"
+                    >
+                        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
+                            <template #editor="{ data, field }">
+                                <PrimeInputText
+                                    v-model="data[field]"
+                                    class="w-10rem"
+                                />
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn
+                            field="weight"
+                            :header="$t('LABEL_WEIGHT')"
+                            class="w-10rem"
                         >
-                            <div>
-                                {{ gear.name }}: {{ gear.weight }} grams x
-                                {{ trip.gears[gear.id].quantity }}
-                            </div>
-                            <button @click="onEditGear(gear)">Edit</button>
-                            <button @click="onRemoveGear(gear.id)">x</button>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                            <template #body="{ data }">
+                                {{ formatWeight(data.weight) }}
+                            </template>
+                            <template #editor="{ data, field }">
+                                <PrimeInputGroup class="w-8rem">
+                                    <PrimeInputNumber v-model="data[field]" />
+                                    <PrimeInputGroupAddon
+                                        >g</PrimeInputGroupAddon
+                                    >
+                                </PrimeInputGroup>
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn
+                            field="quantity"
+                            :header="$t('LABEL_QUANTITY')"
+                            class="w-10rem"
+                        >
+                            <template #editor="{ data, field }">
+                                <PrimeInputNumber
+                                    v-model="data[field]"
+                                    :min="1"
+                                    class="w-8rem"
+                                />
+                            </template>
+                        </PrimeColumn>
+                        <!-- <PrimeColumn
+                            field="quantity"
+                            :header="$t('LABEL_QUANTITY')"
+                        >
+                            <template #body="{ data }">
+                                {{ trip.gears[data.id].quantity }}
+                            </template>
+                            <template #editor="{ data }">
+                                <PrimeInputNumber
+                                    v-model="trip.gears[data.id].quantity"
+                                />
+                            </template>
+                        </PrimeColumn> -->
+                        <PrimeColumn :exportable="false" class="w-3rem">
+                            <template #body="{ data }">
+                                <TableRowActionButtons
+                                    :actions="[
+                                        {
+                                            icon: 'pi pi-times',
+                                            tooltip: $t('ACTION_REMOVE'),
+                                            onClick: () =>
+                                                onRemoveGear(data.id),
+                                        },
+                                    ]"
+                                />
+                            </template>
+                        </PrimeColumn>
+                    </PrimeDataTable>
+                </div>
+            </div>
 
             <GearsSelectorDialog
                 :is-open="isSelectingGears"
@@ -76,9 +147,10 @@ const trip = computed(() =>
 const gearsInTrip = computed(() =>
     trip.value
         ? _filter(
-              _map(trip.value.gears, (gear) =>
-                  userGearsStore.getGearById(gear.id),
-              ),
+              _map(trip.value.gears, (gear) => ({
+                  ...userGearsStore.getGearById(gear.id),
+                  quantity: gear.quantity,
+              })),
           )
         : [],
 );
@@ -90,6 +162,18 @@ const displayCatergories = computed(() =>
         (category) => gearsInTripByCategory.value[category],
     ),
 );
+const weightByCategory = computed(() =>
+    _mapValues(gearsInTripByCategory.value, (gears) =>
+        _sumBy(
+            gears,
+            (gear) =>
+                gear.weight *
+                (trip.value ? trip.value.gears[gear.id]?.quantity : 0),
+        ),
+    ),
+);
+
+const { categoryToLabel, formatWeight } = useLangUtils();
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);
@@ -97,7 +181,7 @@ const selectedGearIds = computed(() =>
     trip.value ? Object.keys(trip.value.gears) : [],
 );
 const onCompletSelectGears = (selectedGears: TripGear[]) => {
-    userTripsStore.addGearsToTrip(tripId, selectedGears);
+    userTripsStore.setGearsToTrip(tripId, selectedGears);
     isSelectingGears.value = false;
 };
 
@@ -107,14 +191,13 @@ const {
     isEditingGear,
     editingGear,
     onAddGear,
-    onEditGear,
     onCompleteAddGear,
     onCompleteEditGear,
     onCancelEditGear,
 } = useEditGear();
 
 const onCompleteAddGearInTrip = (gear: Gear) => {
-    userTripsStore.addGearsToTrip(tripId, [{ id: gear.id, quantity: 1 }]);
+    userTripsStore.setGearsToTrip(tripId, [{ id: gear.id, quantity: 1 }]);
     onCompleteAddGear();
 };
 
@@ -129,4 +212,36 @@ const {
     onCompleteEditTrip,
     onCancelEditTrip,
 } = useEditTrip();
+
+// for edit gear in table
+const onCellEditComplete = async (e: {
+    data: Gear & { quantity: number };
+    newValue: any;
+    field: string;
+}) => {
+    const { data, newValue, field } = e;
+    switch (field) {
+        case 'quantity':
+            await userTripsStore.setGearsToTrip(tripId, [
+                { id: data.id, quantity: newValue },
+            ]);
+            break;
+        case 'name':
+            await userGearsStore.updateGear({
+                id: data.id,
+                gear: {
+                    name: newValue,
+                },
+            });
+            break;
+        case 'weight':
+            await userGearsStore.updateGear({
+                id: data.id,
+                gear: {
+                    weight: newValue,
+                },
+            });
+            break;
+    }
+};
 </script>

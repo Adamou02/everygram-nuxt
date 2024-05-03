@@ -1,24 +1,39 @@
 <template>
-    <div>
+    <div class="flex flex-column gap-3">
         <div>
-            <label>Email</label>
-            <input type="email" v-model="email" placeholder="Email" />
+            <div class="field">
+                <label for="signup-email">{{ $t('LABEL_EMAIL') }}</label>
+                <PrimeInputText
+                    id="signup-email"
+                    v-model="email"
+                    class="w-full"
+                />
+            </div>
+            <div class="field">
+                <label for="signup-password">{{ $t('LABEL_PASSWORD') }}</label>
+                <PrimeInputText
+                    id="signup-password"
+                    v-model="password"
+                    type="password"
+                    class="w-full"
+                />
+            </div>
         </div>
-        <div>
-            <label>Password</label>
-            <input type="password" v-model="password" placeholder="Password" />
+        <div class="flex justify-content-center">
+            <PrimeButton
+                :label="$t('ACTION_SIGN_UP')"
+                @click="signUp"
+                :loading="isLoading"
+                class="w-full"
+            />
         </div>
-        <div>
-            <PrimeButton @click="signUp">
-                {{ $t('ACTION_SIGN_UP') }}
-            </PrimeButton>
+        <div class="flex justify-content-center">
+            <PrimeButton
+                text
+                :label="$t('ACTION_LOGIN')"
+                @click="navigateTo('/login')"
+            />
         </div>
-        <hr />
-        <nav>
-            <NuxtLink to="/">Home</NuxtLink>
-            |
-            <NuxtLink to="/login">Login</NuxtLink>
-        </nav>
     </div>
 </template>
 
@@ -28,6 +43,7 @@ import { ref } from 'vue';
 
 definePageMeta({
     middleware: ['auth-guard'],
+    layout: 'login-page',
 });
 
 const email = ref<string>('');

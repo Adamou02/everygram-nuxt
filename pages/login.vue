@@ -1,28 +1,43 @@
 <template>
-    <div>
+    <div class="flex flex-column gap-3">
         <div>
-            <label>
-                {{ $t('LABEL_EMAIL') }}
-            </label>
-            <input type="email" v-model="email" placeholder="Email" />
+            <div class="field">
+                <label for="login-email">
+                    {{ $t('LABEL_EMAIL') }}
+                </label>
+                <PrimeInputText
+                    id="login-email"
+                    v-model="email"
+                    class="w-full"
+                />
+            </div>
+            <div class="field">
+                <label for="login-password">
+                    {{ $t('LABEL_PASSWORD') }}
+                </label>
+                <PrimeInputText
+                    id="login-password"
+                    v-model="password"
+                    type="password"
+                    class="w-full"
+                />
+            </div>
         </div>
-        <div>
-            <label>
-                {{ $t('LABEL_PASSWORD') }}
-            </label>
-            <input type="password" v-model="password" placeholder="Password" />
+        <div class="flex justify-content-center">
+            <PrimeButton
+                :label="$t('ACTION_LOGIN')"
+                @click="login"
+                :loading="isLoading"
+                class="w-full"
+            />
         </div>
-        <div>
-            <button @click="login">
-                {{ $t('ACTION_LOGIN') }}
-            </button>
+        <div class="flex justify-content-center">
+            <PrimeButton
+                text
+                :label="$t('ACTION_SIGN_UP')"
+                @click="navigateTo('/signup')"
+            />
         </div>
-        <hr />
-        <nav>
-            <NuxtLink to="/">Home</NuxtLink>
-            |
-            <NuxtLink to="/signup">Sign Up</NuxtLink>
-        </nav>
     </div>
 </template>
 
@@ -32,6 +47,7 @@ import { ref } from 'vue';
 
 definePageMeta({
     middleware: ['auth-guard'],
+    layout: 'login-page',
 });
 
 const email = ref<string>('');

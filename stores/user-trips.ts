@@ -108,7 +108,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         }
     };
 
-    const addGearsToTrip = async (tripId: string, tripGears: TripGear[]) => {
+    const setGearsToTrip = async (tripId: string, tripGears: TripGear[]) => {
         const newGearsData = _keyBy(tripGears, (gear) => `gears.${gear.id}`);
         try {
             await updateTrip({ id: tripId, tripData: newGearsData });
@@ -142,7 +142,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         addTrip,
         updateTrip,
         deleteTrip,
-        addGearsToTrip,
+        setGearsToTrip,
         removeGearsFromTrip,
     };
 });

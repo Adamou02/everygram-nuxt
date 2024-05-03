@@ -11,7 +11,7 @@
                 <template #body="{ data }">
                     <NuxtLink
                         :to="`/trip/${data.id}`"
-                        class="text-color no-underline"
+                        class="text-color no-underline hover:underline"
                     >
                         {{ data.title }}
                     </NuxtLink>
@@ -23,8 +23,9 @@
             <PrimeColumn
                 field="weightTotal"
                 :header="$t('LABEL_WEIGHT_TOTAL')"
+                class="w-10rem"
             />
-            <PrimeColumn :exportable="false" style="width: 10rem">
+            <PrimeColumn :exportable="false" class="w-8rem">
                 <template #body="{ data }">
                     <TableRowActionButtons
                         :actions="[

@@ -13,7 +13,7 @@
                 </NuxtLink>
                 |
                 <NuxtLink to="/signup">
-                    {{ $t('PAGE_SIGNUP') }}
+                    {{ $t('PAGE_SIGN_UP') }}
                 </NuxtLink>
             </template>
         </nav>

@@ -17,16 +17,6 @@
                 />
             </div>
             <div class="field">
-                <label for="gear-brand">
-                    {{ $t('LABEL_BRAND') }}
-                </label>
-                <PrimeInputText
-                    id="gear-brand"
-                    v-model="editingGear.brand"
-                    class="w-full"
-                />
-            </div>
-            <div class="field">
                 <label for="gear-weight">
                     {{ $t('LABEL_WEIGHT') }}
                 </label>
@@ -36,7 +26,7 @@
                         v-model="editingGear.weight"
                         class="w-full"
                     />
-                    <PrimeInputGroupAddon> g </PrimeInputGroupAddon>
+                    <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
                 </PrimeInputGroup>
             </div>
             <div class="field">
@@ -52,19 +42,31 @@
                     class="w-full"
                 />
             </div>
+            <div class="field">
+                <label for="gear-brand">
+                    {{ $t('LABEL_BRAND') }}
+                </label>
+                <PrimeInputText
+                    id="gear-brand"
+                    v-model="editingGear.brand"
+                    class="w-full"
+                />
+            </div>
         </template>
         <template #footer>
-            <PrimeButton
-                text
-                severity="secondary"
-                :disabled="isSaving"
-                @click="$emit('cancel')"
-            >
-                {{ $t('ACTION_CANCEL') }}
-            </PrimeButton>
-            <PrimeButton :loading="isSaving" @click="onSubmit()">
-                {{ props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
-            </PrimeButton>
+            <div class="flex justify-content-end">
+                <PrimeButton
+                    text
+                    severity="secondary"
+                    :disabled="isSaving"
+                    @click="$emit('cancel')"
+                >
+                    {{ $t('ACTION_CANCEL') }}
+                </PrimeButton>
+                <PrimeButton :loading="isSaving" @click="onSubmit()">
+                    {{ props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
+                </PrimeButton>
+            </div>
         </template>
     </PrimeDialog>
 </template>
@@ -81,7 +83,7 @@ const emit = defineEmits<{
     cancel: [];
 }>();
 
-const i18n = useI18n();
+const { categoryToLabel } = useLangUtils();
 
 const emptyGear: EditingGear = {
     brand: '',
@@ -102,7 +104,7 @@ watch(
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
 const categoryOptions = constants.GEAR_CATEGORIES.map((category) => ({
-    name: i18n.t(`GEAR_CATEGORY_${category.toUpperCase()}`),
+    name: categoryToLabel(category),
     value: category,
 }));
 

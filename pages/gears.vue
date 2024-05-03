@@ -9,7 +9,7 @@
         </div>
         <p v-if="isFetchingGears">Loading...</p>
         <template v-for="category in displayCatergories" :key="category">
-            <h2>{{ $t(`GEAR_CATEGORY_${category.toUpperCase()}`) }}</h2>
+            <h2>{{ categoryToLabel(category) }}</h2>
             <PrimeDataTable
                 :value="gearsGroupByCategory[category]"
                 v-model:editingRows="editingRows"
@@ -24,13 +24,16 @@
                 <PrimeColumn
                     field="weight"
                     :header="$t('LABEL_WEIGHT')"
-                    style="width: 8rem"
+                    class="w-10rem"
                 >
+                    <template #body="{ data }">
+                        {{ formatWeight(data.weight) }}
+                    </template>
                     <template #editor="{ data, field }">
                         <PrimeInputNumber v-model="data[field]" />
                     </template>
                 </PrimeColumn>
-                <PrimeColumn :exportable="false" style="width: 10rem">
+                <PrimeColumn :exportable="false" class="w-10rem">
                     <template #body="{ data }">
                         <TableRowActionButtons
                             :actions="[
@@ -101,6 +104,7 @@ const displayCatergories = computed(() =>
         (category) => gearsGroupByCategory.value[category],
     ),
 );
+const { categoryToLabel, formatWeight } = useLangUtils();
 
 // for GearEditor
 const {

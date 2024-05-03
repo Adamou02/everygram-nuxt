@@ -26,17 +26,19 @@
             />
         </div>
         <template #footer>
-            <PrimeButton
-                text
-                severity="secondary"
-                :disabled="isSaving"
-                @click="$emit('cancel')"
-            >
-                {{ $t('ACTION_CANCEL') }}
-            </PrimeButton>
-            <PrimeButton :loading="isSaving" @click="onSubmit()">
-                {{ props.trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
-            </PrimeButton>
+            <div class="flex justify-content-end">
+                <PrimeButton
+                    text
+                    severity="secondary"
+                    :disabled="isSaving"
+                    @click="$emit('cancel')"
+                >
+                    {{ $t('ACTION_CANCEL') }}
+                </PrimeButton>
+                <PrimeButton :loading="isSaving" @click="onSubmit()">
+                    {{ props.trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
+                </PrimeButton>
+            </div>
         </template>
     </PrimeDialog>
 </template>

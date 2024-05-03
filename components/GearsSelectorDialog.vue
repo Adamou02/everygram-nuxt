@@ -10,7 +10,7 @@
             <PrimeDataTable
                 v-model:selection="selectedGears"
                 selectionMode="multiple"
-                :value="gears"
+                :value="notSelectedGears"
                 dataKey="id"
             >
                 <PrimeColumn selectionMode="multiple" />
@@ -35,12 +35,33 @@
                 </PrimeColumn>
             </PrimeDataTable>
             <template #footer>
-                <PrimeButton text severity="secondary" @click="$emit('cancel')">
-                    {{ $t('ACTION_CANCEL') }}
-                </PrimeButton>
-                <PrimeButton @click="onSubmit()">
-                    {{ $t('ACTION_CONFIRM') }}
-                </PrimeButton>
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        {{
+                            $t(
+                                'INFO_SELECTED_GEAR_NUM',
+                                {
+                                    num: selectedGears.length,
+                                },
+                                selectedGears.length,
+                            )
+                        }}
+                        |
+                        {{ formatWeight(weightOfSelectedGears) }}
+                    </div>
+                    <div>
+                        <PrimeButton
+                            text
+                            severity="secondary"
+                            @click="$emit('cancel')"
+                        >
+                            {{ $t('ACTION_CANCEL') }}
+                        </PrimeButton>
+                        <PrimeButton @click="onSubmit()">
+                            {{ $t('ACTION_ADD') }}
+                        </PrimeButton>
+                    </div>
+                </div>
             </template>
         </PrimeDialog>
     </div>
@@ -58,22 +79,24 @@ const emit = defineEmits<{
 
 const { categoryToLabel, formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
-const { gears, gearMap } = storeToRefs(userGearsStore);
-const selectedGears = ref<Gear[]>(
-    props.selectedGearIds.map((id) => gearMap.value[id]),
+const { gears } = storeToRefs(userGearsStore);
+const notSelectedGears = computed(() =>
+    gears.value.filter((gear) => !props.selectedGearIds.includes(gear.id)),
 );
-const newSelectedTripGears = computed(() =>
-    selectedGears.value
-        .filter((gear) => !props.selectedGearIds.includes(gear.id))
-        .map(
+const selectedGears = ref<Gear[]>([]);
+const weightOfSelectedGears = computed(() =>
+    _sum(selectedGears.value.map((gear) => +gear.weight)),
+);
+const onSubmit = () => {
+    emit(
+        'complete',
+        selectedGears.value.map(
             (gear) =>
                 ({
                     id: gear.id,
                     quantity: 1,
                 }) as TripGear,
         ),
-);
-const onSubmit = () => {
-    emit('complete', newSelectedTripGears.value);
+    );
 };
 </script>
