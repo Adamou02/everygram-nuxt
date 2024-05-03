@@ -1,11 +1,15 @@
 <template>
     <div>
         <div>
-            <label>Email</label>
+            <label>
+                {{ $t('LABEL_EMAIL') }}
+            </label>
             <input type="email" v-model="email" placeholder="Email" />
         </div>
         <div>
-            <label>Password</label>
+            <label>
+                {{ $t('LABEL_PASSWORD') }}
+            </label>
             <input type="password" v-model="password" placeholder="Password" />
         </div>
         <div>
@@ -43,7 +47,7 @@ const login = async () => {
             email: email.value,
             password: password.value,
         });
-        navigateTo('/dashboard');
+        navigateTo('/gears');
     } catch (error) {
         console.error(errorMessageLang((error as AuthError).code));
         isLoading.value = false;

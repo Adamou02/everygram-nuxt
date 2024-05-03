@@ -1,5 +1,12 @@
 <template>
-    <slot />
+    <div class="user-page flex flex-row">
+        <div class="flex-grow-0 px-6 py-8 w-20rem">
+            <UserPageNavMenu />
+        </div>
+        <div class="flex-grow-1 px-6 py-8">
+            <slot />
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -14,3 +21,11 @@ onUnmounted(() => {
     userTripsStore.destroy();
 });
 </script>
+
+<style lang="scss">
+@import '~/assets/theme/themes/mytheme/_variables.scss';
+
+.user-page {
+    border-top: 8px solid $eg-c-primary;
+}
+</style>

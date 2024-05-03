@@ -4,8 +4,8 @@
         <p>{{ $t('WELCOME_TO_EVERYGRAM') }}</p>
         <hr />
         <nav>
-            <NuxtLink v-if="isLoggedIn" to="/dashboard">
-                {{ $t('PAGE_DASHBOARD') }}
+            <NuxtLink v-if="isLoggedIn" to="/gears">
+                {{ $t('PAGE_GEARS') }}
             </NuxtLink>
             <template v-else>
                 <NuxtLink to="/login">

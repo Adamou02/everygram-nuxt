@@ -1,22 +1,9 @@
 <template>
     <div>
-        <h1>Dashboard</h1>
-        <p>You're signed in as {{ user?.email }}</p>
-        <h2>Trips</h2>
-        <TripList />
-        <hr />
         <nav>
-            <NuxtLink to="/">
-                {{ $t('PAGE_HOME') }}
-            </NuxtLink>
-            |
-            <NuxtLink to="/gears">
-                {{ $t('PAGE_GEARS') }}
-            </NuxtLink>
-            |
-            <button @click="onSignOut">
+            <PrimeButton @click="onSignOut">
                 {{ $t('ACTION_LOGOUT') }}
-            </button>
+            </PrimeButton>
         </nav>
     </div>
 </template>
@@ -30,7 +17,6 @@ definePageMeta({
 });
 
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
 
 const onSignOut = async () => {
     try {

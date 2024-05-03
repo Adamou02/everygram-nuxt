@@ -1,15 +1,45 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     devtools: { enabled: true },
-
+    app: {
+        head: {
+            link: [
+                // material icons
+                {
+                    rel: 'stylesheet',
+                    href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300',
+                },
+                {
+                    rel: 'preconnect',
+                    href: 'https://fonts.googleapis.com',
+                },
+                {
+                    rel: 'preconnect',
+                    href: 'https://fonts.gstatic.com',
+                    crossorigin: 'anonymous',
+                },
+                {
+                    href: 'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap',
+                    rel: 'stylesheet',
+                },
+            ],
+        },
+    },
+    css: [
+        'primeicons/primeicons.css', // prime icons
+        '~/assets/theme/themes/mytheme/theme.scss', // prime components
+        '~/assets/theme/primeflex/primeflex.scss', // prime flex utilities
+        '~/assets/theme/eg-custom.scss', // everygram custom styles
+    ],
     routeRules: {
         '/': { prerender: true },
 
         // pages that require authentication
         '/login': { ssr: false },
         '/signup': { ssr: false },
-        '/dashboard': { ssr: false },
         '/gears': { ssr: false },
+        '/trips': { ssr: false },
+        '/settings': { ssr: false },
         '/trip/**': { ssr: false },
     },
     modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n', 'nuxt-primevue'],
@@ -46,10 +76,4 @@ export default defineNuxtConfig({
             prefix: 'Prime',
         },
     },
-    css: [
-        'primeicons/primeicons.css', // prime icons
-        '~/assets/theme/themes/mytheme/theme.scss', // prime components
-        '~/assets/theme/primeflex/primeflex.scss', // prime flex utilities
-        '~/assets/theme/eg-custom.scss', // everygram custom styles
-    ],
 });

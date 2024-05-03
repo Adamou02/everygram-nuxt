@@ -9,9 +9,9 @@
             <input type="password" v-model="password" placeholder="Password" />
         </div>
         <div>
-            <button @click="signUp">
+            <PrimeButton @click="signUp">
                 {{ $t('ACTION_SIGN_UP') }}
-            </button>
+            </PrimeButton>
         </div>
         <hr />
         <nav>
@@ -43,7 +43,7 @@ const signUp = async () => {
             email: email.value,
             password: password.value,
         });
-        navigateTo('/dashboard');
+        navigateTo('/gears');
     } catch (error) {
         console.error(errorMessageLang((error as AuthError).code));
         isLoading.value = false;

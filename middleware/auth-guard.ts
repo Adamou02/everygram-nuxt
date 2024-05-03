@@ -14,12 +14,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     });
 
     if (!user && to.name !== 'login' && to.name !== 'signup') {
-        // Redirect to the login page if the user is not logged in
         return navigateTo('/login');
     }
 
     if (user && (to.name === 'login' || to.name === 'signup')) {
-        // Redirect to the user's dashboard if the user is already logged in
-        return navigateTo('/dashboard');
+        return navigateTo('/gears');
     }
 });

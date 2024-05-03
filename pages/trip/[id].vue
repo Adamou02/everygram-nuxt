@@ -11,7 +11,7 @@
             <!-- show the ul by displayCatergories -->
             <ul>
                 <li v-for="category in displayCatergories" :key="category">
-                    <h3>{{ category }}</h3>
+                    <h3>{{ $t(`GEAR_CATEGORY_${category.toUpperCase()}`) }}</h3>
                     <ul>
                         <li
                             v-for="gear in gearsInTripByCategory[category]"
@@ -28,33 +28,34 @@
                 </li>
             </ul>
 
-            <GearsSelector
-                v-if="isSelectingGears"
+            <GearsSelectorDialog
+                :is-open="isSelectingGears"
                 :selected-gear-ids="selectedGearIds"
                 @complete="onCompletSelectGears"
                 @cancel="isSelectingGears = false"
             />
-            <GearEditor
-                v-if="isAddingGear || isEditingGear"
+            <GearEditorDialog
+                :is-open="isAddingGear || isEditingGear"
                 :gear="editingGear"
                 @complete-add="onCompleteAddGearInTrip"
                 @complete-edit="onCompleteEditGear"
                 @cancel="onCancelEditGear"
             />
-            <TripInfoEditor
-                v-if="isEditingTrip"
+            <TripInfoEditorDialog
+                :is-open="isEditingTrip"
                 :trip="editingTrip"
                 @complete-edit="onCompleteEditTrip"
                 @cancel="onCancelEditTrip"
             />
-            <button @click="isSelectingGears = true">Select Gears</button>
-            <button @click="onAddGear">Add Gears</button>
-            <button @click="onEditTrip(trip)">Edit Trip Info</button>
+            <PrimeButton @click="isSelectingGears = true"
+                >Select Gears</PrimeButton
+            >
+            <PrimeButton @click="onAddGear">Add New Gear</PrimeButton>
+            <PrimeButton @click="onEditTrip(trip)">Edit Trip Info</PrimeButton>
         </template>
         <template v-else>
             <p>Trip not found</p>
         </template>
-        <NuxtLink to="/dashboard">Back to Trips</NuxtLink>
     </div>
 </template>
 
