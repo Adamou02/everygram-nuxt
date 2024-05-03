@@ -9,7 +9,7 @@ export default function () {
                   });
         },
         categoryToLabel: (category: GearCategory) => {
-            if (!CONSTANTS.GEAR_CATEGORIES.includes(category)) {
+            if (!constants.GEAR_CATEGORIES.includes(category)) {
                 return i18n.t('GEAR_CATEGORY_OTHERS');
             }
             return i18n.t(`GEAR_CATEGORY_${category.toUpperCase()}`);

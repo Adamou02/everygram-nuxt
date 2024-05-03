@@ -86,7 +86,7 @@ const gearsInTripByCategory = computed(() =>
     gearUtils.groupGearsByCategory(gearsInTrip.value),
 );
 const displayCatergories = computed(() =>
-    CONSTANTS.GEAR_CATEGORIES.filter(
+    constants.GEAR_CATEGORIES.filter(
         (category) => gearsInTripByCategory.value[category],
     ),
 );

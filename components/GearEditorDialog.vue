@@ -101,7 +101,7 @@ watch(
 );
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
-const categoryOptions = CONSTANTS.GEAR_CATEGORIES.map((category) => ({
+const categoryOptions = constants.GEAR_CATEGORIES.map((category) => ({
     name: i18n.t(`GEAR_CATEGORY_${category.toUpperCase()}`),
     value: category,
 }));

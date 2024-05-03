@@ -14,9 +14,7 @@ const GEAR_CATEGORIES: GearCategory[] = [
     'others',
 ];
 
-const CONSTANTS = {
+export default {
     ROLE_OWNER: 'owner',
     GEAR_CATEGORIES,
 };
-
-export default CONSTANTS;
