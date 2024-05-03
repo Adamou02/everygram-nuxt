@@ -32,11 +32,11 @@ $dialogHeaderFontSize: 1.25rem;
 
 /// Padding of a dialog header
 /// @group overlay
-$dialogHeaderPadding: 1.5rem;
+$dialogHeaderPadding: 1rem 1.5rem;
 
 /// Padding of a dialog content
 /// @group overlay
-$dialogContentPadding: 0 1.5rem;
+$dialogContentPadding: 1rem 1.5rem;
 
 /// Border of a dialog footer
 /// @group overlay
@@ -44,7 +44,7 @@ $dialogFooterBorder: 1px solid #dee2e6;
 
 /// Padding of a dialog footer
 /// @group overlay
-$dialogFooterPadding: 1.5rem;
+$dialogFooterPadding: 1rem 1.5rem;
 
 /// Padding of a confirmpopup content
 /// @group overlay

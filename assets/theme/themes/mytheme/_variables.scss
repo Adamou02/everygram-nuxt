@@ -1,8 +1,8 @@
 // Theme Specific Variables
-$primaryColor: #9d8b73;
-$primaryDarkColor: #6c5647;
-$primaryDarkerColor: #4a3a2f;
-$primaryTextColor: #ffffff;
+$primaryColor: $eg-c-primary;
+$primaryDarkColor: $eg-c-primary-dark;
+$primaryDarkerColor: $eg-c-primary-dark;
+$primaryTextColor: $eg-c-on-primary;
 
 $colors: (
     'blue': #2196f3,
@@ -46,7 +46,7 @@ $colors: (
     --surface-f: #ffffff;
     --text-color: #495057;
     --text-color-secondary: #6c757d;
-    --primary-color: #2196f3;
+    --primary-color: #{$primaryColor};
     --primary-color-text: #ffffff;
     --surface-0: #ffffff;
     --surface-50: #fafafa;

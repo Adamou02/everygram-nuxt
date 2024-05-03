@@ -42,10 +42,14 @@ export default defineNuxtConfig({
         },
     },
     primevue: {
-        /* Options */
+        components: {
+            prefix: 'Prime',
+        },
     },
     css: [
-        'primeflex/primeflex.css',
-        '~/assets/theme/themes/mytheme/theme.scss',
+        'primeicons/primeicons.css', // prime icons
+        '~/assets/theme/themes/mytheme/theme.scss', // prime components
+        '~/assets/theme/primeflex/primeflex.scss', // prime flex utilities
+        '~/assets/theme/eg-custom.scss', // everygram custom styles
     ],
 });
