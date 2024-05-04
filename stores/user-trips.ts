@@ -57,7 +57,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         isInitialized.value = false;
     };
 
-    const addTrip = async (trip: EditingTrip) => {
+    const createTrip = async (trip: EditingTrip) => {
         if (!user.value) {
             return;
         }
@@ -139,7 +139,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         getTripById,
         initialize,
         destroy,
-        addTrip,
+        createTrip,
         updateTrip,
         deleteTrip,
         setGearsToTrip,

@@ -60,7 +60,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         isInitialized.value = false;
     };
 
-    const addGear = async (gear: EditingGear) => {
+    const createGear = async (gear: EditingGear) => {
         if (!user.value) {
             return;
         }
@@ -111,7 +111,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         getGearById,
         initialize,
         destroy,
-        addGear,
+        createGear,
         updateGear,
         deleteGear,
     };

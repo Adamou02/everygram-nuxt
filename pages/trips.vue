@@ -9,8 +9,8 @@
                     type="text"
                     :actions="[
                         {
-                            label: $t('ACTION_ADD_TRIP'),
-                            onClick: () => onAddTrip(),
+                            label: $t('ACTION_CREATE_TRIP'),
+                            onClick: () => onCreateTrip(),
                         },
                     ]"
                 />
@@ -62,7 +62,7 @@
     <TripInfoEditorDialog
         :is-open="isAddingTrip || isEditingTrip"
         :trip="editingTrip"
-        @complete-add="onCompleteAddTrip"
+        @complete-add="onCompleteCreateTrip"
         @complete-edit="onCompleteEditTrip"
         @cancel="onCancelEditTrip"
     />
@@ -91,9 +91,9 @@ const {
     isAddingTrip,
     isEditingTrip,
     editingTrip,
-    onAddTrip,
+    onCreateTrip,
     onEditTrip,
-    onCompleteAddTrip,
+    onCompleteCreateTrip,
     onCompleteEditTrip,
     onCancelEditTrip,
 } = useEditTrip();

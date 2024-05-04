@@ -21,12 +21,12 @@
                         type="text"
                         :actions="[
                             {
-                                label: $t('ACTION_SELECT_GEARS'),
+                                label: $t('ACTION_ADD_FROM_GEARS'),
                                 onClick: () => (isSelectingGears = true),
                             },
                             {
-                                label: $t('ACTION_ADD_NEW_GEAR'),
-                                onClick: () => onAddGear(),
+                                label: $t('ACTION_CREATE_GEAR'),
+                                onClick: () => onCreateGear(),
                             },
                             {
                                 label: $t('ACTION_EDIT_TRIP'),
@@ -129,7 +129,7 @@
             <GearEditorDialog
                 :is-open="isAddingGear || isEditingGear"
                 :gear="editingGear"
-                @complete-add="onCompleteAddGearInTrip"
+                @complete-add="onCompleteCreateGearInTrip"
                 @complete-edit="onCompleteEditGear"
                 @cancel="onCancelEditGear"
             />
@@ -210,16 +210,16 @@ const {
     isAddingGear,
     isEditingGear,
     editingGear,
-    onAddGear,
+    onCreateGear,
     onEditGear,
-    onCompleteAddGear,
+    onCompleteCreateGear,
     onCompleteEditGear,
     onCancelEditGear,
 } = useEditGear();
 
-const onCompleteAddGearInTrip = (gear: Gear) => {
+const onCompleteCreateGearInTrip = (gear: Gear) => {
     userTripsStore.setGearsToTrip(tripId, [{ id: gear.id, quantity: 1 }]);
-    onCompleteAddGear();
+    onCompleteCreateGear();
 };
 
 const onRemoveGear = (gearId: string) => {

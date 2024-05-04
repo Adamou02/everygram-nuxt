@@ -1,7 +1,7 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="props.trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_ADD_TRIP')"
+        :header="props.trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')"
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
@@ -84,9 +84,9 @@ const onSubmit = async () => {
             });
             emit('complete-edit', userTripsStore.getTripById(props.trip.id));
         } else {
-            const tripId = await userTripsStore.addTrip(editingTrip.value);
+            const tripId = await userTripsStore.createTrip(editingTrip.value);
             if (!tripId) {
-                throw new Error('Failed to add trip');
+                throw new Error('Failed to create trip');
             }
             emit('complete-add', userTripsStore.getTripById(tripId));
         }

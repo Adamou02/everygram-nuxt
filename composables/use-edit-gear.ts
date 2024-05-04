@@ -9,7 +9,7 @@ export default function useEditGear() {
         isEditingGear,
         editingGear,
         defaultGearCategory,
-        onAddGear: (props?: { category?: GearCategory }) => {
+        onCreateGear: (props?: { category?: GearCategory }) => {
             defaultGearCategory.value = props?.category || undefined;
             isAddingGear.value = true;
         },
@@ -17,7 +17,7 @@ export default function useEditGear() {
             editingGear.value = gear;
             isEditingGear.value = true;
         },
-        onCompleteAddGear: () => {
+        onCompleteCreateGear: () => {
             isAddingGear.value = false;
         },
         onCompleteEditGear: () => {

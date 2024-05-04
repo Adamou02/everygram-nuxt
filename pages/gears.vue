@@ -10,8 +10,8 @@
                     type="text"
                     :actions="[
                         {
-                            label: $t('ACTION_ADD_GEAR'),
-                            onClick: () => onAddGear(),
+                            label: $t('ACTION_CREATE_GEAR'),
+                            onClick: () => onCreateGear(),
                         },
                     ]"
                 />
@@ -29,8 +29,8 @@
                         :actions="[
                             {
                                 icon: 'pi pi-plus',
-                                label: $t('ACTION_ADD_GEAR'),
-                                onClick: () => onAddGear({ category }),
+                                label: $t('ACTION_CREATE_GEAR'),
+                                onClick: () => onCreateGear({ category }),
                             },
                         ]"
                     />
@@ -91,7 +91,7 @@
         :is-open="isAddingGear || isEditingGear"
         :gear="editingGear"
         :default-category="defaultGearCategory"
-        @complete-add="onCompleteAddGear"
+        @complete-add="onCompleteCreateGear"
         @complete-edit="onCompleteEditGear"
         @cancel="onCancelEditGear"
     />
@@ -118,9 +118,9 @@ const { formatWeight } = useLangUtils();
 
 // for GearEditor
 const {
-    onAddGear,
+    onCreateGear,
     onEditGear,
-    onCompleteAddGear,
+    onCompleteCreateGear,
     onCompleteEditGear,
     onCancelEditGear,
     isAddingGear,

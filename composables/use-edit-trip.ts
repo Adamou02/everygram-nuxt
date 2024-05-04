@@ -7,14 +7,14 @@ export default function useEditTrip() {
         isAddingTrip,
         isEditingTrip,
         editingTrip,
-        onAddTrip: () => {
+        onCreateTrip: () => {
             isAddingTrip.value = true;
         },
         onEditTrip: (trip: Trip) => {
             editingTrip.value = trip;
             isEditingTrip.value = true;
         },
-        onCompleteAddTrip: () => {
+        onCompleteCreateTrip: () => {
             isAddingTrip.value = false;
         },
         onCompleteEditTrip: () => {

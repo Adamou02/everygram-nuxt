@@ -1,7 +1,7 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="props.gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_ADD_GEAR')"
+        :header="props.gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
@@ -140,7 +140,7 @@ const onSubmit = async () => {
             });
             emit('complete-edit', userGearsStore.getGearById(props.gear.id));
         } else {
-            const docId = await userGearsStore.addGear(editingGear.value);
+            const docId = await userGearsStore.createGear(editingGear.value);
             if (!docId) {
                 throw new Error('Failed to add gear');
             }
