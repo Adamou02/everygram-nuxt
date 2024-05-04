@@ -80,14 +80,15 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
     const updateGear = async ({
         id,
-        gear,
+        gearData,
     }: {
         id: string;
-        gear: EditingGear;
+        gearData: EditingGear;
     }) => {
         try {
             const gearRef = doc(db, 'gear', id);
-            await updateDoc(gearRef, gear);
+            delete gearData.id;
+            await updateDoc(gearRef, gearData);
         } catch (error) {
             console.error(error);
             throw error;

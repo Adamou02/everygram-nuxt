@@ -165,11 +165,16 @@ const trip = computed(() =>
 );
 const gearsInTrip = computed(() =>
     trip.value
-        ? _filter(
-              _map(trip.value.gears, (gear) => ({
-                  ...userGearsStore.getGearById(gear.id),
-                  quantity: gear.quantity,
-              })),
+        ? _map(
+              _filter(
+                  _map(trip.value.gears, (gear) =>
+                      userGearsStore.getGearById(gear.id),
+                  ),
+              ),
+              (gear) => ({
+                  ...gear,
+                  quantity: trip.value?.gears[gear.id]?.quantity,
+              }),
           )
         : [],
 );
@@ -251,7 +256,7 @@ const onCellEditComplete = async (e: {
         case 'name':
             await userGearsStore.updateGear({
                 id: data.id,
-                gear: {
+                gearData: {
                     name: newValue,
                 },
             });
@@ -259,7 +264,7 @@ const onCellEditComplete = async (e: {
         case 'weight':
             await userGearsStore.updateGear({
                 id: data.id,
-                gear: {
+                gearData: {
                     weight: newValue,
                 },
             });

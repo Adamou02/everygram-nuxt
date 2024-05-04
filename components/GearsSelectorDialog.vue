@@ -59,15 +59,15 @@
                     </div>
                     <div>
                         <PrimeButton
+                            :label="$t('ACTION_CANCEL')"
                             text
                             severity="secondary"
                             @click="$emit('cancel')"
-                        >
-                            {{ $t('ACTION_CANCEL') }}
-                        </PrimeButton>
-                        <PrimeButton @click="onSubmit()">
-                            {{ $t('ACTION_ADD') }}
-                        </PrimeButton>
+                        />
+                        <PrimeButton
+                            :label="$t('ACTION_ADD')"
+                            @click="onSubmit()"
+                        />
                     </div>
                 </div>
             </template>

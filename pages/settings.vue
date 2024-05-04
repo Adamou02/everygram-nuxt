@@ -1,9 +1,7 @@
 <template>
     <div>
         <nav>
-            <PrimeButton @click="onSignOut">
-                {{ $t('ACTION_LOGOUT') }}
-            </PrimeButton>
+            <PrimeButton :label="$t('ACTION_LOGOUT')" @click="onSignOut" />
         </nav>
     </div>
 </template>

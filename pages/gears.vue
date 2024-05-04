@@ -167,7 +167,7 @@ const onCellEditComplete = async (e: {
         case 'name':
             await userGearsStore.updateGear({
                 id: data.id,
-                gear: {
+                gearData: {
                     name: newValue,
                 },
             });
@@ -175,7 +175,7 @@ const onCellEditComplete = async (e: {
         case 'weight':
             await userGearsStore.updateGear({
                 id: data.id,
-                gear: {
+                gearData: {
                     weight: newValue,
                 },
             });

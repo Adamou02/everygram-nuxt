@@ -88,6 +88,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             return;
         }
         try {
+            delete tripData.id;
             await updateDoc(doc(tripCollectionRef, id), tripData);
         } catch (error) {
             console.error(error);

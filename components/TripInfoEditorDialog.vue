@@ -30,16 +30,17 @@
         </template>
         <template #footer>
             <PrimeButton
+                :label="$t('ACTION_CANCEL')"
                 text
                 severity="secondary"
                 :disabled="isSaving"
                 @click="$emit('cancel')"
-            >
-                {{ $t('ACTION_CANCEL') }}
-            </PrimeButton>
-            <PrimeButton :loading="isSaving" @click="onSubmit()">
-                {{ props.trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
-            </PrimeButton>
+            />
+            <PrimeButton
+                :label="props.trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :loading="isSaving"
+                @click="onSubmit()"
+            />
         </template>
     </PrimeDialog>
 </template>
@@ -60,25 +61,19 @@ const emptyTrip: EditingTrip = {
     title: '',
     description: '',
 };
-const isEditing = !!props.trip;
 const editingTrip = ref<EditingTrip>({});
-watch(
-    () => props.trip,
-    (trip) => {
-        if (trip) {
-            editingTrip.value = { ...trip };
-        } else {
-            editingTrip.value = { ...emptyTrip };
-        }
-    },
-);
+watchEffect(() => {
+    if (props.isOpen) {
+        editingTrip.value = props.trip ? { ...props.trip } : { ...emptyTrip };
+    }
+});
 const isSaving = ref<boolean>(false);
 const userTripsStore = useUserTripsStore();
 
 const onSubmit = async () => {
     try {
         isSaving.value = true;
-        if (isEditing) {
+        if (props.trip) {
             await userTripsStore.updateTrip({
                 id: props.trip.id,
                 tripData: editingTrip.value,
@@ -93,6 +88,7 @@ const onSubmit = async () => {
         }
     } catch (error) {
         console.error(error);
+    } finally {
         isSaving.value = false;
     }
 };

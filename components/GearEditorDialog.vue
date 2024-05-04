@@ -82,16 +82,17 @@
         </template>
         <template #footer>
             <PrimeButton
+                :label="$t('ACTION_CANCEL')"
                 text
                 severity="secondary"
                 :disabled="isSaving"
                 @click="$emit('cancel')"
-            >
-                {{ $t('ACTION_CANCEL') }}
-            </PrimeButton>
-            <PrimeButton :loading="isSaving" @click="onSubmit()">
-                {{ props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
-            </PrimeButton>
+            />
+            <PrimeButton
+                :label="props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :loading="isSaving"
+                @click="onSubmit()"
+            />
         </template>
     </PrimeDialog>
 </template>
@@ -135,7 +136,7 @@ const onSubmit = async () => {
         if (props.gear) {
             await userGearsStore.updateGear({
                 id: props.gear.id,
-                gear: editingGear.value,
+                gearData: editingGear.value,
             });
             emit('complete-edit', userGearsStore.getGearById(props.gear.id));
         } else {
