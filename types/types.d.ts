@@ -16,13 +16,19 @@ type GearCategory =
 
 type Gear = {
     id: string;
-    brand: string;
     name: string;
     role: Record<string, GearRole>;
-    weight: number; // grams
+    weight?: number; // grams
+    brand?: string;
     category: GearCategory;
-    isArchived: boolean;
-    archiveReason: 'sold' | 'donated' | 'trashed' | 'lost' | 'broken' | 'other';
+    isArchived?: boolean;
+    archiveReason?:
+        | 'sold'
+        | 'donated'
+        | 'trashed'
+        | 'lost'
+        | 'broken'
+        | 'other';
 };
 type EditingGear = Partial<Gear>;
 

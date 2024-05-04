@@ -1,19 +1,45 @@
 <!-- a page to list all gear the user has -->
 <template>
-    <div>
+    <div class="flex flex-column gap-5">
         <div class="flex justify-content-between align-items-center">
             <div class="text-color-secondary">
                 {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
             </div>
-            <div></div>
+            <div>
+                <ActionButtonsGroup
+                    type="text"
+                    :actions="[
+                        {
+                            label: $t('ACTION_ADD_GEAR'),
+                            onClick: () => onAddGear(),
+                        },
+                    ]"
+                />
+            </div>
         </div>
-        <p v-if="isFetchingGears">Loading...</p>
-        <template v-for="category in displayCatergories" :key="category">
-            <h2>{{ categoryToLabel(category) }}</h2>
+        <div
+            v-for="category in displayCatergories"
+            :key="category"
+            class="flex flex-column gap-2"
+        >
+            <GearCategoryHeader :category="category">
+                <template #actions>
+                    <ActionButtonsGroup
+                        type="icon"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_ADD_GEAR'),
+                                onClick: () => onAddGear({ category }),
+                            },
+                        ]"
+                    />
+                </template>
+            </GearCategoryHeader>
             <PrimeDataTable
                 :value="gearsGroupByCategory[category]"
-                v-model:editingRows="editingRows"
-                editMode="row"
+                edit-mode="cell"
+                @cell-edit-complete="onCellEditComplete"
                 dataKey="id"
             >
                 <PrimeColumn field="name" :header="$t('LABEL_NAME')">
@@ -27,65 +53,49 @@
                     class="w-10rem"
                 >
                     <template #body="{ data }">
-                        {{ formatWeight(data.weight) }}
+                        {{ data.weight ? formatWeight(data.weight) : '-' }}
                     </template>
                     <template #editor="{ data, field }">
-                        <PrimeInputNumber v-model="data[field]" />
+                        <PrimeInputGroup>
+                            <PrimeInputNumber v-model="data[field]" />
+                            <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
+                        </PrimeInputGroup>
                     </template>
                 </PrimeColumn>
-                <PrimeColumn :exportable="false" class="w-10rem">
+                <PrimeColumn :exportable="false" class="w-3rem">
                     <template #body="{ data }">
-                        <TableRowActionButtons
-                            :actions="[
+                        <MoreActionsMenuButton
+                            :items="[
                                 {
                                     icon: 'pi pi-pencil',
-                                    tooltip: $t('ACTION_EDIT'),
-                                    onClick: () =>
-                                        (editingRows = [...editingRows, data]),
-                                },
-                                {
-                                    icon: 'pi pi-inbox',
-                                    tooltip: $t('ACTION_ARCHIVE'),
-                                    onClick: () => onArchiveGear(data),
+                                    label: $t('ACTION_EDIT'),
+                                    command: () => {
+                                        onEditGear(data);
+                                    },
                                 },
                                 {
                                     icon: 'pi pi-trash',
-                                    tooltip: $t('ACTION_DELETE'),
-                                    onClick: () => onDeleteGear(data),
-                                },
-                            ]"
-                        />
-                    </template>
-                    <template #editor="{ data }">
-                        <TableRowActionButtons
-                            :actions="[
-                                {
-                                    icon: 'pi pi-check',
-                                    tooltip: $t('ACTION_SAVE'),
-                                    onClick: () => onSaveRowEdit(data),
-                                },
-                                {
-                                    icon: 'pi pi-times',
-                                    tooltip: $t('ACTION_CANCEL'),
-                                    onClick: () => onCancelRowEdit(data),
+                                    label: $t('ACTION_DELETE'),
+                                    command: () => {
+                                        onDeleteGear(data);
+                                    },
                                 },
                             ]"
                         />
                     </template>
                 </PrimeColumn>
             </PrimeDataTable>
-        </template>
-        <GearEditorDialog
-            :is-open="isAddingGear || isEditingGear"
-            :gear="editingGear"
-            @complete-add="onCompleteAddGear"
-            @complete-edit="onCompleteEditGear"
-            @cancel="onCancelEditGear"
-        />
-        <PrimeButton @click="onAddGear">
-            {{ $t('ACTION_ADD_GEAR') }}
-        </PrimeButton>
+        </div>
     </div>
+    <GearEditorDialog
+        :is-open="isAddingGear || isEditingGear"
+        :gear="editingGear"
+        :default-category="defaultGearCategory"
+        @complete-add="onCompleteAddGear"
+        @complete-edit="onCompleteEditGear"
+        @cancel="onCancelEditGear"
+    />
+    <p v-if="isFetchingGears">Loading...</p>
 </template>
 
 <script setup lang="ts">
@@ -100,11 +110,11 @@ const gearsGroupByCategory = computed(() =>
     gearUtils.groupGearsByCategory(gears.value),
 );
 const displayCatergories = computed(() =>
-    constants.GEAR_CATEGORIES.filter(
+    constants.GEAR_CATEGORY_KEYS.filter(
         (category) => gearsGroupByCategory.value[category],
     ),
 );
-const { categoryToLabel, formatWeight } = useLangUtils();
+const { formatWeight } = useLangUtils();
 
 // for GearEditor
 const {
@@ -116,6 +126,7 @@ const {
     isAddingGear,
     isEditingGear,
     editingGear,
+    defaultGearCategory,
 } = useEditGear();
 
 const onDeleteGear = async (gear: Gear) => {
@@ -132,26 +143,30 @@ const onArchiveGear = async (gear: Gear) => {
     console.log('archive gear', gear);
 };
 
-const editingRows = ref<Gear[]>([]);
-const onSaveRowEdit = async (gear: Gear) => {
-    try {
-        await userGearsStore.updateGear({
-            id: gear.id,
-            gear: {
-                name: gear.name,
-                weight: gear.weight,
-            },
-        });
-        editingRows.value = [...editingRows.value].filter(
-            (editingRow) => editingRow.id !== gear.id,
-        );
-    } catch (error) {
-        console.error(error);
+// for edit gear in table
+const onCellEditComplete = async (e: {
+    data: Gear & { quantity: number };
+    newValue: any;
+    field: string;
+}) => {
+    const { data, newValue, field } = e;
+    switch (field) {
+        case 'name':
+            await userGearsStore.updateGear({
+                id: data.id,
+                gear: {
+                    name: newValue,
+                },
+            });
+            break;
+        case 'weight':
+            await userGearsStore.updateGear({
+                id: data.id,
+                gear: {
+                    weight: newValue,
+                },
+            });
+            break;
     }
-};
-const onCancelRowEdit = (gear: Gear) => {
-    editingRows.value = [...editingRows.value].filter(
-        (editingRow) => editingRow.id !== gear.id,
-    );
 };
 </script>

@@ -17,6 +17,9 @@
     border-radius: $borderRadius;
     outline-color: transparent;
 
+    // custom modifications
+    max-width: 100%;
+
     &:enabled:hover {
         border-color: $inputHoverBorderColor;
     }

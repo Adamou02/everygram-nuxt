@@ -21,7 +21,7 @@
                     sortable
                 >
                     <template #body="{ data }">
-                        {{ formatWeight(data.weight) }}
+                        {{ data.weight ? formatWeight(data.weight) : '-' }}
                     </template>
                 </PrimeColumn>
                 <PrimeColumn
@@ -30,7 +30,13 @@
                     sortable
                 >
                     <template #body="{ data }">
-                        {{ categoryToLabel(data.category) }}
+                        <div class="flex align-items-center gap-2">
+                            <CategoryAvatar
+                                :category="data.category"
+                                size="small"
+                            />
+                            {{ categoryToLabel(data.category) }}
+                        </div>
                     </template>
                 </PrimeColumn>
             </PrimeDataTable>

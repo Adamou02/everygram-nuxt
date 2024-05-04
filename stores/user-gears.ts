@@ -34,13 +34,17 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 where(`role.${user.value.uid}`, '==', constants.ROLE_OWNER),
             ),
             (querySnapshot) => {
-                gears.value = querySnapshot.docs.map(
-                    (doc) =>
-                        ({
-                            id: doc.id,
-                            ...doc.data(),
-                        }) as Gear,
-                );
+                gears.value = querySnapshot.docs.map((doc) => {
+                    const docData = doc.data();
+                    return {
+                        id: doc.id,
+                        weight:
+                            docData.weight === undefined
+                                ? undefined
+                                : +docData.weight,
+                        ...docData,
+                    } as Gear;
+                });
                 if (isFirstFetching.value) {
                     isFirstFetching.value = false;
                 }

@@ -1,5 +1,6 @@
 {
     "ACTION_ADD_GEAR": "@:ACTION_ADD @:ENTITY_GEAR",
+    "ACTION_ADD_NEW_GEAR": "@:ACTION_ADD New @:ENTITY_GEAR",
     "ACTION_ADD_TRIP": "@:ACTION_ADD @:ENTITY_TRIP",
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",
@@ -14,8 +15,8 @@
     "ACTION_LOGOUT": "Logout",
     "ACTION_REMOVE": "Remove",
     "ACTION_SAVE": "Save",
-    "ACTION_SELECT_A_CATEGORY": "Select a category",
-    "ACTION_SELECT_GEARS": "Select gears",
+    "ACTION_SELECT_A_CATEGORY": "Select a Category",
+    "ACTION_SELECT_GEARS": "Select Gears",
     "ACTION_SELECT": "Select",
     "ACTION_SIGN_UP": "Sign Up",
     "APP_NAME": "Everygram",
@@ -52,6 +53,7 @@
     "PAGE_TRIPS": "Trips",
     "INFO_GEAR_NUM": "No gears | {num} gear | {num} gears",
     "INFO_SELECTED_GEAR_NUM": "No gear selected | {num} gear selected | {num} gears selected",
+    "INFO_TRIP_NUM": "No trips | {num} trip | {num} trips",
     "INFO_WEIGHT_GRAM": "{weight} g",
     "INFO_WEIGHT_KILOGRAM": "{weight} kg",
     "WELCOME_TO_EVERYGRAM": "Welcom to @:APP_NAME"

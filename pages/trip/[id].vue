@@ -1,29 +1,51 @@
 <!-- A page to show data of a trip -->
 <template>
-    <div>
+    <div class="flex flex-column gap-5">
         <img
             src="/image/illustration/illu-mountains.jpg"
             alt=""
             class="w-full border-round-md"
         />
-        <template v-if="isFetchingTrips">
-            <p>Loading...</p>
-        </template>
-        <template v-else-if="trip">
-            <h1>{{ trip.title }}</h1>
-            <p>{{ trip.description }}</p>
-            <h2>Gear list</h2>
+        <template v-if="trip">
+            <div>
+                <h1>{{ trip.title }}</h1>
+                <p>{{ trip.description }}</p>
+            </div>
+            <div class="flex justify-content-between align-items-center">
+                <div class="text-color-secondary">
+                    {{ $t('LABEL_WEIGHT_TOTAL') }}:
+                    {{ formatWeight(getTripWeightTotal(trip)) }}
+                </div>
+                <div>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                label: $t('ACTION_SELECT_GEARS'),
+                                onClick: () => (isSelectingGears = true),
+                            },
+                            {
+                                label: $t('ACTION_ADD_NEW_GEAR'),
+                                onClick: () => onAddGear(),
+                            },
+                            {
+                                label: $t('ACTION_EDIT_TRIP'),
+                                onClick: () => trip && onEditTrip(trip),
+                            },
+                        ]"
+                    />
+                </div>
+            </div>
             <div class="flex flex-column gap-5">
                 <div v-for="category in displayCatergories" :key="category">
                     <div
                         class="flex justify-content-between align-items-center"
                     >
-                        <h3>{{ categoryToLabel(category) }}</h3>
-                        <div class="text-color-secondary">
-                            {{ formatWeight(weightByCategory[category]) }}
-                        </div>
+                        <GearCategoryHeader
+                            :category="category"
+                            :weight="weightByCategory[category]"
+                        />
                     </div>
-                    <!-- use PrimeDataTable to replace the following ul, the same in gears.vue -->
                     <PrimeDataTable
                         :value="gearsInTripByCategory[category]"
                         dataKey="id"
@@ -44,10 +66,14 @@
                             class="w-10rem"
                         >
                             <template #body="{ data }">
-                                {{ formatWeight(data.weight) }}
+                                {{
+                                    data.weight
+                                        ? formatWeight(data.weight)
+                                        : '-'
+                                }}
                             </template>
                             <template #editor="{ data, field }">
-                                <PrimeInputGroup class="w-8rem">
+                                <PrimeInputGroup>
                                     <PrimeInputNumber v-model="data[field]" />
                                     <PrimeInputGroupAddon
                                         >g</PrimeInputGroupAddon
@@ -58,38 +84,33 @@
                         <PrimeColumn
                             field="quantity"
                             :header="$t('LABEL_QUANTITY')"
-                            class="w-10rem"
+                            class="w-5rem"
                         >
                             <template #editor="{ data, field }">
                                 <PrimeInputNumber
                                     v-model="data[field]"
                                     :min="1"
-                                    class="w-8rem"
+                                    class="w-3rem"
                                 />
                             </template>
                         </PrimeColumn>
-                        <!-- <PrimeColumn
-                            field="quantity"
-                            :header="$t('LABEL_QUANTITY')"
-                        >
-                            <template #body="{ data }">
-                                {{ trip.gears[data.id].quantity }}
-                            </template>
-                            <template #editor="{ data }">
-                                <PrimeInputNumber
-                                    v-model="trip.gears[data.id].quantity"
-                                />
-                            </template>
-                        </PrimeColumn> -->
                         <PrimeColumn :exportable="false" class="w-3rem">
                             <template #body="{ data }">
-                                <TableRowActionButtons
-                                    :actions="[
+                                <MoreActionsMenuButton
+                                    :items="[
+                                        {
+                                            icon: 'pi pi-pencil',
+                                            label: $t('ACTION_EDIT'),
+                                            command: () => {
+                                                onEditGear(data);
+                                            },
+                                        },
                                         {
                                             icon: 'pi pi-times',
-                                            tooltip: $t('ACTION_REMOVE'),
-                                            onClick: () =>
-                                                onRemoveGear(data.id),
+                                            label: $t('ACTION_REMOVE'),
+                                            command: () => {
+                                                onRemoveGear(data.id);
+                                            },
                                         },
                                     ]"
                                 />
@@ -118,11 +139,9 @@
                 @complete-edit="onCompleteEditTrip"
                 @cancel="onCancelEditTrip"
             />
-            <PrimeButton @click="isSelectingGears = true"
-                >Select Gears</PrimeButton
-            >
-            <PrimeButton @click="onAddGear">Add New Gear</PrimeButton>
-            <PrimeButton @click="onEditTrip(trip)">Edit Trip Info</PrimeButton>
+        </template>
+        <template v-else-if="isFetchingTrips">
+            <p>Loading...</p>
         </template>
         <template v-else>
             <p>Trip not found</p>
@@ -158,7 +177,7 @@ const gearsInTripByCategory = computed(() =>
     gearUtils.groupGearsByCategory(gearsInTrip.value),
 );
 const displayCatergories = computed(() =>
-    constants.GEAR_CATEGORIES.filter(
+    constants.GEAR_CATEGORY_KEYS.filter(
         (category) => gearsInTripByCategory.value[category],
     ),
 );
@@ -167,13 +186,14 @@ const weightByCategory = computed(() =>
         _sumBy(
             gears,
             (gear) =>
-                gear.weight *
+                (gear.weight || 0) *
                 (trip.value ? trip.value.gears[gear.id]?.quantity : 0),
         ),
     ),
 );
 
-const { categoryToLabel, formatWeight } = useLangUtils();
+const { formatWeight } = useLangUtils();
+const { getTripWeightTotal } = useDataUtils();
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);
@@ -185,12 +205,13 @@ const onCompletSelectGears = (selectedGears: TripGear[]) => {
     isSelectingGears.value = false;
 };
 
-// for add gear
+// for GearEditorDialog
 const {
     isAddingGear,
     isEditingGear,
     editingGear,
     onAddGear,
+    onEditGear,
     onCompleteAddGear,
     onCompleteEditGear,
     onCancelEditGear,
@@ -205,6 +226,7 @@ const onRemoveGear = (gearId: string) => {
     userTripsStore.removeGearsFromTrip(tripId, [gearId]);
 };
 
+// for TripInfoEditorDialog
 const {
     isEditingTrip,
     editingTrip,

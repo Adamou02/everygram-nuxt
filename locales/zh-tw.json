@@ -1,5 +1,6 @@
 {
     "ACTION_ADD_GEAR": "@:ACTION_ADD@:ENTITY_GEAR",
+    "ACTION_ADD_NEW_GEAR": "@:ACTION_ADD新@:ENTITY_GEAR",
     "ACTION_ADD_TRIP": "@:ACTION_ADD@:ENTITY_TRIP",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",
@@ -52,6 +53,7 @@
     "PAGE_TRIPS": "行程裝備",
     "INFO_GEAR_NUM": "{num} 件裝備",
     "INFO_SELECTED_GEAR_NUM": "已選取 {num} 件裝備",
+    "INFO_TRIP_NUM": "{num} 個行程",
     "INFO_WEIGHT_GRAM": "{weight} 公克",
     "INFO_WEIGHT_KILOGRAM": "{weight} 公斤",
     "WELCOME_TO_EVERYGRAM": "歡迎來到 @:APP_NAME"

@@ -2,12 +2,15 @@ export default function useEditGear() {
     const isAddingGear = ref<boolean>(false);
     const isEditingGear = ref<boolean>(false);
     const editingGear = ref<Gear | null>(null);
+    const defaultGearCategory = ref<GearCategory | undefined>();
 
     return {
         isAddingGear,
         isEditingGear,
         editingGear,
-        onAddGear: () => {
+        defaultGearCategory,
+        onAddGear: (props?: { category?: GearCategory }) => {
+            defaultGearCategory.value = props?.category || undefined;
             isAddingGear.value = true;
         },
         onEditGear: (gear: Gear) => {

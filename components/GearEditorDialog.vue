@@ -36,13 +36,39 @@
                 <PrimeDropdown
                     v-model="editingGear.category"
                     :options="categoryOptions"
-                    optionLabel="name"
                     optionValue="value"
                     :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
                     class="w-full"
-                />
+                >
+                    <template #value="slotProps">
+                        <div
+                            v-if="slotProps.value"
+                            class="flex align-items-center gap-2"
+                        >
+                            <CategoryAvatar
+                                :category="slotProps.value"
+                                size="small"
+                            />
+                            <div>{{ categoryToLabel(slotProps.value) }}</div>
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex align-items-center gap-2">
+                            <CategoryAvatar
+                                :category="slotProps.option.value"
+                                size="small"
+                            />
+                            <div>
+                                {{ categoryToLabel(slotProps.option.value) }}
+                            </div>
+                        </div>
+                    </template>
+                </PrimeDropdown>
             </div>
-            <div class="field">
+            <!-- <div class="field">
                 <label for="gear-brand">
                     {{ $t('LABEL_BRAND') }}
                 </label>
@@ -51,7 +77,7 @@
                     v-model="editingGear.brand"
                     class="w-full"
                 />
-            </div>
+            </div> -->
         </template>
         <template #footer>
             <div class="flex justify-content-end">
@@ -75,6 +101,7 @@
 const props = defineProps<{
     isOpen: boolean;
     gear: Gear | null;
+    defaultCategory?: GearCategory;
 }>();
 
 const emit = defineEmits<{
@@ -86,25 +113,20 @@ const emit = defineEmits<{
 const { categoryToLabel } = useLangUtils();
 
 const emptyGear: EditingGear = {
-    brand: '',
     name: '',
-    weight: 0,
 };
+
 const editingGear = ref<EditingGear>({});
-watch(
-    () => props.gear,
-    (gear) => {
-        if (gear) {
-            editingGear.value = { ...gear };
-        } else {
-            editingGear.value = { ...emptyGear };
-        }
-    },
-);
+watchEffect(() => {
+    if (props.isOpen) {
+        editingGear.value = props.gear
+            ? { ...props.gear }
+            : { ...emptyGear, category: props.defaultCategory };
+    }
+});
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
-const categoryOptions = constants.GEAR_CATEGORIES.map((category) => ({
-    name: categoryToLabel(category),
+const categoryOptions = constants.GEAR_CATEGORY_KEYS.map((category) => ({
     value: category,
 }));
 
