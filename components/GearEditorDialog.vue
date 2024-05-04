@@ -5,7 +5,7 @@
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
-        <template #default>
+        <template v-if="isOpen" #default>
             <div class="field">
                 <label for="gear-name">
                     {{ $t('LABEL_NAME') }}
@@ -14,6 +14,7 @@
                     id="gear-name"
                     v-model="editingGear.name"
                     class="w-full"
+                    autofocus
                 />
             </div>
             <div class="field">
@@ -80,19 +81,17 @@
             </div> -->
         </template>
         <template #footer>
-            <div class="flex justify-content-end">
-                <PrimeButton
-                    text
-                    severity="secondary"
-                    :disabled="isSaving"
-                    @click="$emit('cancel')"
-                >
-                    {{ $t('ACTION_CANCEL') }}
-                </PrimeButton>
-                <PrimeButton :loading="isSaving" @click="onSubmit()">
-                    {{ props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
-                </PrimeButton>
-            </div>
+            <PrimeButton
+                text
+                severity="secondary"
+                :disabled="isSaving"
+                @click="$emit('cancel')"
+            >
+                {{ $t('ACTION_CANCEL') }}
+            </PrimeButton>
+            <PrimeButton :loading="isSaving" @click="onSubmit()">
+                {{ props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE') }}
+            </PrimeButton>
         </template>
     </PrimeDialog>
 </template>

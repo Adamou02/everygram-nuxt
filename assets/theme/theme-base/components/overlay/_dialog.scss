@@ -173,8 +173,8 @@
         background: $overlayContentBg;
         color: $panelFooterTextColor;
         padding: $dialogFooterPadding;
-        // display: flex;
-        // justify-content: flex-end;
+        display: flex;
+        justify-content: flex-end;
         gap: $inlineSpacing;
         border-bottom-right-radius: $borderRadius;
         border-bottom-left-radius: $borderRadius;

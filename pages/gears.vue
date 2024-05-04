@@ -77,7 +77,7 @@
                                     icon: 'pi pi-trash',
                                     label: $t('ACTION_DELETE'),
                                     command: () => {
-                                        onDeleteGear(data);
+                                        confirmDeleteGear(data);
                                     },
                                 },
                             ]"
@@ -115,6 +115,8 @@ const displayCatergories = computed(() =>
     ),
 );
 const { formatWeight } = useLangUtils();
+const { confirmDeleteDialog } = useUiUitls();
+const i18n = useI18n();
 
 // for GearEditor
 const {
@@ -136,6 +138,17 @@ const onDeleteGear = async (gear: Gear) => {
     } catch (error) {
         console.error(error);
     }
+};
+
+const confirmDeleteGear = (gear: Gear) => {
+    confirmDeleteDialog({
+        message: i18n.t('MESSAGE_CONFIRM_DELETE_GEAR', { gearName: gear.name }),
+        header: i18n.t('ACTION_DELETE_GEAR'),
+        toastSummary: i18n.t('FEEDBACK_GEAR_DELETED'),
+        onAccept: async () => {
+            await onDeleteGear(gear);
+        },
+    });
 };
 
 const onArchiveGear = async (gear: Gear) => {

@@ -50,7 +50,7 @@
                                 icon: 'pi pi-trash',
                                 label: $t('ACTION_DELETE'),
                                 command: () => {
-                                    onDeleteTrip(data);
+                                    confirmDeleteTrip(data);
                                 },
                             },
                         ]"
@@ -76,6 +76,8 @@ definePageMeta({
 
 const langUtils = useLangUtils();
 const { getTripWeightTotal } = useDataUtils();
+const i18n = useI18n();
+const { confirmDeleteDialog } = useUiUitls();
 const userTripsStore = useUserTripsStore();
 const { trips } = storeToRefs(userTripsStore);
 const tripsWithMoreData = computed(() =>
@@ -104,5 +106,18 @@ const onDeleteTrip = async (trip: Trip) => {
     } catch (error) {
         console.error(error);
     }
+};
+
+const confirmDeleteTrip = (trip: Trip) => {
+    confirmDeleteDialog({
+        message: i18n.t('MESSAGE_CONFIRM_DELETE_TRIP', {
+            tripName: trip.title,
+        }),
+        header: i18n.t('ACTION_DELETE_TRIP'),
+        toastSummary: i18n.t('FEEDBACK_TRIP_DELETED'),
+        onAccept: async () => {
+            await onDeleteTrip(trip);
+        },
+    });
 };
 </script>

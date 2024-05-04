@@ -7,6 +7,8 @@
             <slot />
         </div>
     </div>
+    <PrimeToast position="bottom-right" />
+    <PrimeConfirmDialog />
 </template>
 
 <script setup lang="ts">
