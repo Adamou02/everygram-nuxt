@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         );
     });
 
-    if (to.name === '') {
+    if (to.name === 'index') {
         if (user) {
             return navigateTo('/gears');
         } else {

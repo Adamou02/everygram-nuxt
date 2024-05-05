@@ -32,10 +32,10 @@ export default defineNuxtConfig({
         '~/assets/theme/eg-custom.scss', // everygram custom styles
     ],
     routeRules: {
-        '/': { redirect: '/gears' },
         '/welcome': { prerender: true },
 
         // pages that require authentication
+        '/': { ssr: false },
         '/login': { ssr: false },
         '/signup': { ssr: false },
         '/gears': { ssr: false },
