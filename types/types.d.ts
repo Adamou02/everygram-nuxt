@@ -31,6 +31,7 @@ type Gear = {
         | 'other';
 };
 type EditingGear = Partial<Gear>;
+type GearWithQuantity = Gear & { quantity: number };
 
 type TripRole = 'owner' | 'participant';
 type TripGear = {

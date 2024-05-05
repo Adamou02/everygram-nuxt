@@ -14,7 +14,11 @@
             <div class="flex justify-content-between align-items-center">
                 <div class="text-color-secondary">
                     {{ $t('LABEL_WEIGHT_TOTAL') }}:
-                    {{ formatWeight(getTripWeightTotal(trip)) }}
+                    {{
+                        formatWeight(
+                            dataUtils.getTripWeightTotal(trip, gearMap),
+                        )
+                    }}
                 </div>
                 <div>
                     <ActionButtonsGroup
@@ -155,31 +159,25 @@ definePageMeta({
     layout: 'user-page',
 });
 const userTripsStore = useUserTripsStore();
+const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const userGearsStore = useUserGearsStore();
+const { gearMap } = storeToRefs(userGearsStore);
 
 const route = useRoute();
 const tripId = route.params.id as string;
-const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const trip = computed(() =>
     trips.value.find((trip: Trip) => trip.id === tripId),
 );
-const gearsInTrip = computed(() =>
+const gearsInTrip = computed<GearWithQuantity[]>(() =>
     trip.value
-        ? _map(
-              _filter(
-                  _map(trip.value.gears, (gear) =>
-                      userGearsStore.getGearById(gear.id),
-                  ),
-              ),
-              (gear) => ({
-                  ...gear,
-                  quantity: trip.value?.gears[gear.id]?.quantity,
-              }),
-          )
+        ? _map(dataUtils.getGearsInTrip(trip.value, gearMap.value), (gear) => ({
+              ...gear,
+              quantity: trip.value?.gears[gear.id]?.quantity || 0,
+          }))
         : [],
 );
 const gearsInTripByCategory = computed(() =>
-    gearUtils.groupGearsByCategory(gearsInTrip.value),
+    dataUtils.groupGearsByCategory(gearsInTrip.value),
 );
 const displayCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
@@ -188,17 +186,11 @@ const displayCatergories = computed(() =>
 );
 const weightByCategory = computed(() =>
     _mapValues(gearsInTripByCategory.value, (gears) =>
-        _sumBy(
-            gears,
-            (gear) =>
-                (gear.weight || 0) *
-                (trip.value ? trip.value.gears[gear.id]?.quantity : 0),
-        ),
+        _sumBy(gears, (gear) => (gear.weight || 0) * gear.quantity),
     ),
 );
 
 const { formatWeight } = useLangUtils();
-const { getTripWeightTotal } = useDataUtils();
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);

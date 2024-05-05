@@ -75,14 +75,15 @@ definePageMeta({
 });
 
 const langUtils = useLangUtils();
-const { getTripWeightTotal } = useDataUtils();
 const i18n = useI18n();
 const { confirmDeleteDialog } = useUiUitls();
 const userTripsStore = useUserTripsStore();
 const { trips } = storeToRefs(userTripsStore);
+const userGearsStore = useUserGearsStore();
+const { gearMap } = storeToRefs(userGearsStore);
 const tripsWithMoreData = computed(() =>
     trips.value.map((trip) => {
-        const weightTotal = getTripWeightTotal(trip);
+        const weightTotal = dataUtils.getTripWeightTotal(trip, gearMap.value);
         return {
             ...trip,
             weightTotal: langUtils.formatWeight(weightTotal),

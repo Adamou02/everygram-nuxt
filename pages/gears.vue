@@ -107,7 +107,7 @@ definePageMeta({
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
 const gearsGroupByCategory = computed(() =>
-    gearUtils.groupGearsByCategory(gears.value),
+    dataUtils.groupGearsByCategory(gears.value),
 );
 const displayCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
