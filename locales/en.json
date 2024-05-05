@@ -1,4 +1,6 @@
 {
+    "ACTION_RESET_PASSWORD": "Reset Password",
+    "ACTION_SEND_RESET_PASSWORD_EMAIL": "Send Reset Password Email",
     "ACTION_ADD_FROM_GEARS": "Add From Gears",
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",

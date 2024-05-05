@@ -21,11 +21,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
     }
 
-    if (!user && to.name !== 'login' && to.name !== 'signup') {
+    if (
+        !user &&
+        to.name !== 'login' &&
+        to.name !== 'signup' &&
+        to.name !== 'reset-password'
+    ) {
         return navigateTo('/login');
     }
 
-    if (user && (to.name === 'login' || to.name === 'signup')) {
+    if (
+        user &&
+        (to.name === 'login' ||
+            to.name === 'signup' ||
+            to.name === 'reset-password')
+    ) {
         return navigateTo('/gears');
     }
 });

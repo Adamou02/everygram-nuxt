@@ -38,6 +38,7 @@ export default defineNuxtConfig({
         '/': { ssr: false },
         '/login': { ssr: false },
         '/signup': { ssr: false },
+        '/reset-password': { ssr: false },
         '/gears': { ssr: false },
         '/trips': { ssr: false },
         '/settings': { ssr: false },

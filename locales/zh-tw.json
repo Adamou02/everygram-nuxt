@@ -1,4 +1,6 @@
 {
+    "ACTION_RESET_PASSWORD": "重設密碼",
+    "ACTION_SEND_RESET_PASSWORD_EMAIL": "發送密碼重設信件",
     "ACTION_ADD_FROM_GEARS": "從裝備庫加入",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",

@@ -31,11 +31,17 @@
                 class="w-full"
             />
         </div>
-        <div class="flex justify-content-center">
+        <div class="flex justify-content-center align-items-center gap-2">
             <PrimeButton
                 text
                 :label="$t('ACTION_SIGN_UP')"
                 @click="navigateTo('/signup')"
+            />
+            |
+            <PrimeButton
+                text
+                :label="$t('ACTION_RESET_PASSWORD')"
+                @click="navigateTo('/reset-password')"
             />
         </div>
     </div>
