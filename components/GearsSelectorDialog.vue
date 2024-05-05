@@ -92,7 +92,7 @@ const notSelectedGears = computed(() =>
 );
 const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>
-    _sum(selectedGears.value.map((gear) => +gear.weight)),
+    _sum(selectedGears.value.map((gear) => +gear.weight || 0)),
 );
 const onSubmit = () => {
     emit(

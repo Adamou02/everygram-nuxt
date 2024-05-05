@@ -327,7 +327,7 @@ const displayGearCatergories = computed(() =>
 );
 const gearWeightByCategory = computed(() =>
     _mapValues(gearsInTripByCategory.value, (gears) =>
-        _sumBy(gears, (gear) => gear.weight * gear.quantity),
+        _sumBy(gears, (gear) => (+gear.weight || 0) * gear.quantity),
     ),
 );
 
@@ -352,7 +352,7 @@ const displayConsumableCategories = computed(() =>
 
 const consumableWeightByCategory = computed(() =>
     _mapValues(consumablesByCategory.value, (consumables) =>
-        _sumBy(consumables, (consumable) => consumable.weight),
+        _sumBy(consumables, (consumable) => +consumable.weight || 0),
     ),
 );
 

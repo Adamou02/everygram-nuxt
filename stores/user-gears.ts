@@ -38,10 +38,6 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                     const docData = doc.data();
                     return {
                         id: doc.id,
-                        weight:
-                            docData.weight === undefined
-                                ? undefined
-                                : +docData.weight,
                         ...docData,
                     } as Gear;
                 });

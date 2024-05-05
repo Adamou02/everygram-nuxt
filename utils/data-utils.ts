@@ -29,7 +29,7 @@ const getTripGearsWeight = (
     );
 
 const getTripConsumablessWeight = (trip: Trip): number =>
-    _sum(_map(trip.consumables || [], (consumable) => consumable.weight));
+    _sum(_map(trip.consumables || [], (consumable) => +consumable.weight || 0));
 
 const getTripWeightTotal = (
     trip: Trip,
