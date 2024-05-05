@@ -1,4 +1,4 @@
-const GEAR_CATEGORIES: Record<string, { icon: string; color: string }> = {
+const GEAR_CATEGORIES: Record<GearCategory, { icon: string; color: string }> = {
     accessories: {
         icon: 'eyeglasses',
         color: '#A7A4A2',
@@ -69,8 +69,39 @@ const GEAR_CATEGORY_KEYS: GearCategory[] = [
     'others',
 ];
 
+const CONSUMABLE_CATEGORIES: Record<
+    ConsumableCategory,
+    { icon: string; color: string }
+> = {
+    food: {
+        icon: 'restaurant',
+        color: '#FFB74D',
+    },
+    drinks: {
+        icon: 'local_drink',
+        color: '#4DB6AC',
+    },
+    fuel: {
+        icon: 'local_fire_department',
+        color: '#FF7043',
+    },
+    others: {
+        icon: 'more_horiz',
+        color: '#9E9E9E',
+    },
+};
+
+const CONSUMABLE_CATEGORY_KEYS: ConsumableCategory[] = [
+    'food',
+    'drinks',
+    'fuel',
+    'others',
+];
+
 export default {
     ROLE_OWNER: 'owner',
     GEAR_CATEGORIES,
     GEAR_CATEGORY_KEYS,
+    CONSUMABLE_CATEGORIES,
+    CONSUMABLE_CATEGORY_KEYS,
 };

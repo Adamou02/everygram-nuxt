@@ -133,6 +133,91 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         });
     };
 
+    const addConsumableToTrip = async ({
+        tripId,
+        consumable,
+    }: {
+        tripId: string;
+        consumable: Consumable;
+    }) => {
+        try {
+            const trip = getTripById.value(tripId);
+            if (!trip) {
+                throw 'fail to add consumable to trip, trip not found';
+            }
+            const tripConsumables = trip.consumables || [];
+            await updateTrip({
+                id: tripId,
+                tripData: {
+                    consumables: [...tripConsumables, consumable],
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    const updateConsumableInTrip = async ({
+        tripId,
+        consumableIndex,
+        consumable,
+    }: {
+        tripId: string;
+        consumableIndex: number;
+        consumable: Consumable;
+    }) => {
+        try {
+            const trip = getTripById.value(tripId);
+            if (!trip) {
+                throw 'fail to update consumable in trip, trip not found';
+            }
+            const newConsumables = [...(trip.consumables || [])];
+            if (consumableIndex > newConsumables.length - 1) {
+                throw 'fail to update consumable in trip, consumable index out of bound';
+            }
+            newConsumables[consumableIndex] = consumable;
+            await updateTrip({
+                id: tripId,
+                tripData: {
+                    consumables: newConsumables,
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    const deleteConsumableFromTrip = async ({
+        tripId,
+        consumableIndex,
+    }: {
+        tripId: string;
+        consumableIndex: number;
+    }) => {
+        try {
+            const trip = getTripById.value(tripId);
+            if (!trip) {
+                throw 'fail to remove consumable from trip, trip not found';
+            }
+            const newConsumables = [...(trip.consumables || [])];
+            if (consumableIndex > newConsumables.length - 1) {
+                throw 'fail to remove consumable from trip, consumable index out of bound';
+            }
+            newConsumables.splice(consumableIndex, 1);
+            await updateTrip({
+                id: tripId,
+                tripData: {
+                    consumables: newConsumables,
+                },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
     return {
         trips,
         tripMap,
@@ -145,5 +230,8 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         deleteTrip,
         setGearsToTrip,
         removeGearsFromTrip,
+        addConsumableToTrip,
+        updateConsumableInTrip,
+        deleteConsumableFromTrip,
     };
 });

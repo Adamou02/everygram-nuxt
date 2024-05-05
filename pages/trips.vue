@@ -32,7 +32,7 @@
             </PrimeColumn>
             <PrimeColumn
                 field="weightTotal"
-                :header="$t('LABEL_WEIGHT_TOTAL')"
+                :header="$t('LABEL_TOTAL_WEIGHT')"
                 class="w-10rem"
             />
             <PrimeColumn :exportable="false" class="w-3rem">
@@ -62,7 +62,7 @@
     <TripInfoEditorDialog
         :is-open="isAddingTrip || isEditingTrip"
         :trip="editingTrip"
-        @complete-add="onCompleteCreateTrip"
+        @complete-create="onCompleteCreateTrip"
         @complete-edit="onCompleteEditTrip"
         @cancel="onCancelEditTrip"
     />

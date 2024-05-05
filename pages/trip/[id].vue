@@ -11,15 +11,34 @@
                 <h1>{{ trip.title }}</h1>
                 <p>{{ trip.description }}</p>
             </div>
-            <div class="flex justify-content-between align-items-center">
+            <div class="flex gap-2">
                 <div class="text-color-secondary">
-                    {{ $t('LABEL_WEIGHT_TOTAL') }}:
+                    {{ $t('LABEL_TOTAL_WEIGHT') }}:
                     {{
                         formatWeight(
                             dataUtils.getTripWeightTotal(trip, gearMap),
                         )
                     }}
                 </div>
+                <div class="text-color-secondary">|</div>
+                <div class="text-color-secondary">
+                    {{ $t('LABEL_GEARS_WEIGHT') }}:
+                    {{
+                        formatWeight(
+                            dataUtils.getTripGearsWeight(trip, gearMap),
+                        )
+                    }}
+                </div>
+                <div class="text-color-secondary">|</div>
+                <div class="text-color-secondary">
+                    {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
+                    {{
+                        formatWeight(dataUtils.getTripConsumablessWeight(trip))
+                    }}
+                </div>
+            </div>
+            <div class="flex justify-content-between align-items-center">
+                <h2>{{ $t('LABEL_GEARS') }}</h2>
                 <div>
                     <ActionButtonsGroup
                         type="text"
@@ -41,20 +60,31 @@
                 </div>
             </div>
             <div class="flex flex-column gap-5">
-                <div v-for="category in displayCatergories" :key="category">
-                    <div
-                        class="flex justify-content-between align-items-center"
+                <div v-for="category in displayGearCatergories" :key="category">
+                    <CategoryHeader
+                        :category="category"
+                        type="gear"
+                        :weight="gearWeightByCategory[category]"
                     >
-                        <GearCategoryHeader
-                            :category="category"
-                            :weight="weightByCategory[category]"
-                        />
-                    </div>
+                        <template #actions>
+                            <ActionButtonsGroup
+                                type="icon"
+                                :actions="[
+                                    {
+                                        icon: 'pi pi-plus',
+                                        label: $t('ACTION_CREATE_GEAR'),
+                                        onClick: () =>
+                                            onCreateGear({ category }),
+                                    },
+                                ]"
+                            />
+                        </template>
+                    </CategoryHeader>
                     <PrimeDataTable
                         :value="gearsInTripByCategory[category]"
                         dataKey="id"
                         edit-mode="cell"
-                        @cell-edit-complete="onCellEditComplete"
+                        @cell-edit-complete="onGearCellEditComplete"
                     >
                         <PrimeColumn field="name" :header="$t('LABEL_NAME')">
                             <template #editor="{ data, field }">
@@ -124,25 +154,106 @@
                 </div>
             </div>
 
-            <GearsSelectorDialog
-                :is-open="isSelectingGears"
-                :selected-gear-ids="selectedGearIds"
-                @complete="onCompletSelectGears"
-                @cancel="isSelectingGears = false"
-            />
-            <GearEditorDialog
-                :is-open="isAddingGear || isEditingGear"
-                :gear="editingGear"
-                @complete-add="onCompleteCreateGearInTrip"
-                @complete-edit="onCompleteEditGear"
-                @cancel="onCancelEditGear"
-            />
-            <TripInfoEditorDialog
-                :is-open="isEditingTrip"
-                :trip="editingTrip"
-                @complete-edit="onCompleteEditTrip"
-                @cancel="onCancelEditTrip"
-            />
+            <div class="flex justify-content-between align-items-center">
+                <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
+                <div>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                label: $t('ACTION_CREATE_CONSUMABLE'),
+                                onClick: () => onCreateConsumable(),
+                            },
+                        ]"
+                    />
+                </div>
+            </div>
+            <div class="flex flex-column gap-5">
+                <div
+                    v-for="category in displayConsumableCategories"
+                    :key="category"
+                >
+                    <CategoryHeader
+                        :category="category"
+                        type="consumable"
+                        :weight="consumableWeightByCategory[category]"
+                    >
+                        <template #actions>
+                            <ActionButtonsGroup
+                                type="icon"
+                                :actions="[
+                                    {
+                                        icon: 'pi pi-plus',
+                                        label: $t('ACTION_CREATE_CONSUMABLE'),
+                                        onClick: () =>
+                                            onCreateConsumable({ category }),
+                                    },
+                                ]"
+                            />
+                        </template>
+                    </CategoryHeader>
+                    <PrimeDataTable
+                        :value="consumablesByCategory[category]"
+                        dataKey="id"
+                        edit-mode="cell"
+                        @cell-edit-complete="onConsumableCellEditComplete"
+                    >
+                        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
+                            <template #editor="{ data, field }">
+                                <PrimeInputText
+                                    v-model="data[field]"
+                                    class="w-10rem"
+                                />
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn
+                            field="weight"
+                            :header="$t('LABEL_WEIGHT')"
+                            class="w-10rem"
+                        >
+                            <template #body="{ data }">
+                                {{
+                                    data.weight
+                                        ? formatWeight(data.weight)
+                                        : '-'
+                                }}
+                            </template>
+                            <template #editor="{ data, field }">
+                                <PrimeInputGroup>
+                                    <PrimeInputNumber v-model="data[field]" />
+                                    <PrimeInputGroupAddon
+                                        >g</PrimeInputGroupAddon
+                                    >
+                                </PrimeInputGroup>
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn :exportable="false" class="w-3rem">
+                            <template #body="{ data }">
+                                <MoreActionsMenuButton
+                                    :items="[
+                                        {
+                                            icon: 'pi pi-pencil',
+                                            label: $t('ACTION_EDIT'),
+                                            command: () => {
+                                                onEditConsumable(data.index);
+                                            },
+                                        },
+                                        {
+                                            icon: 'pi pi-times',
+                                            label: $t('ACTION_DELETE'),
+                                            command: () => {
+                                                confirmDeleteConsumable(
+                                                    data.index,
+                                                );
+                                            },
+                                        },
+                                    ]"
+                                />
+                            </template>
+                        </PrimeColumn>
+                    </PrimeDataTable>
+                </div>
+            </div>
         </template>
         <template v-else-if="isFetchingTrips">
             <p>Loading...</p>
@@ -151,6 +262,35 @@
             <p>Trip not found</p>
         </template>
     </div>
+    <GearsSelectorDialog
+        :is-open="isSelectingGears"
+        :selected-gear-ids="selectedGearIds"
+        @complete="onCompletSelectGears"
+        @cancel="isSelectingGears = false"
+    />
+    <GearEditorDialog
+        :is-open="isAddingGear || isEditingGear"
+        :gear="editingGear"
+        :default-category="defaultGearCategory"
+        @complete-create="onCompleteCreateGearInTrip"
+        @complete-edit="onCompleteEditGear"
+        @cancel="onCancelEditGear"
+    />
+    <TripInfoEditorDialog
+        :is-open="isEditingTrip"
+        :trip="editingTrip"
+        @complete-edit="onCompleteEditTrip"
+        @cancel="onCancelEditTrip"
+    />
+    <ConsumableEditorDialog
+        :is-open="isAddingConsumable || isEditingConsumable"
+        :trip-id="tripId"
+        :consumable-index="editingConsumableIndex"
+        :default-category="defaultConsumableCategory"
+        @complete-create="onCompleteCreateConsumable"
+        @complete-edit="onCompleteEditConsumable"
+        @cancel="onCancelEditConsumable"
+    />
 </template>
 
 <script setup lang="ts">
@@ -162,6 +302,7 @@ const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const userGearsStore = useUserGearsStore();
 const { gearMap } = storeToRefs(userGearsStore);
+const i18n = useI18n();
 
 const route = useRoute();
 const tripId = route.params.id as string;
@@ -179,14 +320,39 @@ const gearsInTrip = computed<GearWithQuantity[]>(() =>
 const gearsInTripByCategory = computed(() =>
     dataUtils.groupGearsByCategory(gearsInTrip.value),
 );
-const displayCatergories = computed(() =>
+const displayGearCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
         (category) => gearsInTripByCategory.value[category],
     ),
 );
-const weightByCategory = computed(() =>
+const gearWeightByCategory = computed(() =>
     _mapValues(gearsInTripByCategory.value, (gears) =>
-        _sumBy(gears, (gear) => (gear.weight || 0) * gear.quantity),
+        _sumBy(gears, (gear) => gear.weight * gear.quantity),
+    ),
+);
+
+const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
+    trip.value
+        ? _map(trip.value.consumables || [], (consumable, index) => ({
+              ...consumable,
+              index,
+          }))
+        : [],
+);
+
+const consumablesByCategory = computed(() =>
+    dataUtils.groupConsumablesByCategory(consumablesInTrip.value),
+);
+
+const displayConsumableCategories = computed(() =>
+    constants.CONSUMABLE_CATEGORY_KEYS.filter(
+        (category) => consumablesByCategory.value[category],
+    ),
+);
+
+const consumableWeightByCategory = computed(() =>
+    _mapValues(consumablesByCategory.value, (consumables) =>
+        _sumBy(consumables, (consumable) => consumable.weight),
     ),
 );
 
@@ -207,6 +373,7 @@ const {
     isAddingGear,
     isEditingGear,
     editingGear,
+    defaultGearCategory,
     onCreateGear,
     onEditGear,
     onCompleteCreateGear,
@@ -233,8 +400,8 @@ const {
 } = useEditTrip();
 
 // for edit gear in table
-const onCellEditComplete = async (e: {
-    data: Gear & { quantity: number };
+const onGearCellEditComplete = async (e: {
+    data: GearWithQuantity;
     newValue: any;
     field: string;
 }) => {
@@ -262,5 +429,61 @@ const onCellEditComplete = async (e: {
             });
             break;
     }
+};
+
+// for edit consumable cell
+const onConsumableCellEditComplete = async (e: {
+    data: ConsumableWithIndex;
+    newValue: any;
+    field: string;
+}) => {
+    const { data, newValue, field } = e;
+    switch (field) {
+        case 'name':
+        case 'weight':
+            await userTripsStore.updateConsumableInTrip({
+                tripId,
+                consumableIndex: data.index,
+                consumable: {
+                    ...consumablesInTrip.value[data.index],
+                    [field]: newValue,
+                },
+            });
+            break;
+    }
+};
+
+// consumables
+const {
+    isAddingConsumable,
+    isEditingConsumable,
+    editingConsumableIndex,
+    defaultConsumableCategory,
+    onCreateConsumable,
+    onEditConsumable,
+    onCompleteCreateConsumable,
+    onCompleteEditConsumable,
+    onCancelEditConsumable,
+} = useEditConsumable();
+
+const onDeleteConsumable = async (consumableIndex: number) => {
+    await userTripsStore.deleteConsumableFromTrip({
+        tripId,
+        consumableIndex,
+    });
+};
+
+const { confirmDeleteDialog } = useUiUitls();
+const confirmDeleteConsumable = (consumableIndex: number) => {
+    confirmDeleteDialog({
+        message: i18n.t('MESSAGE_CONFIRM_DELETE_CONSUMABLE', {
+            consumableName: consumablesInTrip.value[consumableIndex].name,
+        }),
+        header: i18n.t('ACTION_DELETE_CONSUMABLE'),
+        toastSummary: i18n.t('FEEDBACK_CONSUMABLE_DELETED'),
+        onAccept: async () => {
+            await onDeleteConsumable(consumableIndex);
+        },
+    });
 };
 </script>

@@ -52,7 +52,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    'complete-add': [trip: Trip];
+    'complete-create': [trip: Trip];
     'complete-edit': [trip: Trip];
     cancel: [];
 }>();
@@ -84,7 +84,7 @@ const onSubmit = async () => {
             if (!tripId) {
                 throw new Error('Failed to create trip');
             }
-            emit('complete-add', userTripsStore.getTripById(tripId));
+            emit('complete-create', userTripsStore.getTripById(tripId));
         }
     } catch (error) {
         console.error(error);

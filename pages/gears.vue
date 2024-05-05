@@ -18,11 +18,11 @@
             </div>
         </div>
         <div
-            v-for="category in displayCatergories"
+            v-for="category in displayGearCatergories"
             :key="category"
             class="flex flex-column gap-2"
         >
-            <GearCategoryHeader :category="category">
+            <CategoryHeader :category="category" type="gear">
                 <template #actions>
                     <ActionButtonsGroup
                         type="icon"
@@ -35,7 +35,7 @@
                         ]"
                     />
                 </template>
-            </GearCategoryHeader>
+            </CategoryHeader>
             <PrimeDataTable
                 :value="gearsGroupByCategory[category]"
                 edit-mode="cell"
@@ -91,7 +91,7 @@
         :is-open="isAddingGear || isEditingGear"
         :gear="editingGear"
         :default-category="defaultGearCategory"
-        @complete-add="onCompleteCreateGear"
+        @complete-create="onCompleteCreateGear"
         @complete-edit="onCompleteEditGear"
         @cancel="onCancelEditGear"
     />
@@ -109,7 +109,7 @@ const { gears, isFetchingGears } = storeToRefs(userGearsStore);
 const gearsGroupByCategory = computed(() =>
     dataUtils.groupGearsByCategory(gears.value),
 );
-const displayCatergories = computed(() =>
+const displayGearCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
         (category) => gearsGroupByCategory.value[category],
     ),

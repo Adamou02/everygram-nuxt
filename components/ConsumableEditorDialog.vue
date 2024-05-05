@@ -1,41 +1,45 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="props.gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
+        :header="
+            existingConsumable
+                ? $t('ACTION_EDIT_CONSUMABLE')
+                : $t('ACTION_CREATE_CONSUMABLE')
+        "
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
         <template v-if="isOpen" #default>
             <div class="field">
-                <label for="gear-name">
+                <label for="consumable-name">
                     {{ $t('LABEL_NAME') }}
                 </label>
                 <PrimeInputText
-                    id="gear-name"
-                    v-model="editingGear.name"
+                    id="consumable-name"
+                    v-model="editingConsumable.name"
                     class="w-full"
                     autofocus
                 />
             </div>
             <div class="field">
-                <label for="gear-weight">
+                <label for="consumable-weight">
                     {{ $t('LABEL_WEIGHT') }}
                 </label>
                 <PrimeInputGroup>
                     <PrimeInputNumber
-                        id="gear-weight"
-                        v-model="editingGear.weight"
+                        id="consumable-weight"
+                        v-model="editingConsumable.weight"
                         class="w-full"
                     />
                     <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
                 </PrimeInputGroup>
             </div>
             <div class="field">
-                <label for="gear-category">
+                <label for="consumable-category">
                     {{ $t('LABEL_CATEGORY') }}
                 </label>
                 <PrimeDropdown
-                    v-model="editingGear.category"
+                    v-model="editingConsumable.category"
                     :options="categoryOptions"
                     optionValue="value"
                     :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
@@ -46,12 +50,12 @@
                             v-if="slotProps.value"
                             class="flex align-items-center gap-2"
                         >
-                            <GearCategoryAvatar
+                            <ConsumableCategoryAvatar
                                 :category="slotProps.value"
                                 size="small"
                             />
                             <div>
-                                {{ gearCategoryToLabel(slotProps.value) }}
+                                {{ consumableCategoryToLabel(slotProps.value) }}
                             </div>
                         </div>
                         <span v-else>
@@ -60,29 +64,21 @@
                     </template>
                     <template #option="slotProps">
                         <div class="flex align-items-center gap-2">
-                            <GearCategoryAvatar
+                            <ConsumableCategoryAvatar
                                 :category="slotProps.option.value"
                                 size="small"
                             />
                             <div>
                                 {{
-                                    gearCategoryToLabel(slotProps.option.value)
+                                    consumableCategoryToLabel(
+                                        slotProps.option.value,
+                                    )
                                 }}
                             </div>
                         </div>
                     </template>
                 </PrimeDropdown>
             </div>
-            <!-- <div class="field">
-                <label for="gear-brand">
-                    {{ $t('LABEL_BRAND') }}
-                </label>
-                <PrimeInputText
-                    id="gear-brand"
-                    v-model="editingGear.brand"
-                    class="w-full"
-                />
-            </div> -->
         </template>
         <template #footer>
             <PrimeButton
@@ -93,7 +89,9 @@
                 @click="$emit('cancel')"
             />
             <PrimeButton
-                :label="props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :label="
+                    existingConsumable ? $t('ACTION_SAVE') : $t('ACTION_CREATE')
+                "
                 :loading="isSaving"
                 @click="onSubmit()"
             />
@@ -104,51 +102,70 @@
 <script setup lang="ts">
 const props = defineProps<{
     isOpen: boolean;
-    gear: Gear | null;
-    defaultCategory?: GearCategory;
+    tripId: string;
+    consumableIndex: number | null;
+    defaultCategory?: ConsumableCategory;
 }>();
 
 const emit = defineEmits<{
-    'complete-create': [gear: Gear];
-    'complete-edit': [gear: Gear];
+    'complete-create': [consumable: Consumable];
+    'complete-edit': [consumable: Consumable];
     cancel: [];
 }>();
 
-const { gearCategoryToLabel } = useLangUtils();
-
-const emptyGear: EditingGear = {
+const { consumableCategoryToLabel } = useLangUtils();
+const userTripsStore = useUserTripsStore();
+const trip = computed(() => userTripsStore.getTripById(props.tripId));
+const emptyConsumable: EditingConsumable = {
     name: '',
 };
 
-const editingGear = ref<EditingGear>({});
+const existingConsumable = computed<Consumable | null>(() => {
+    return (
+        (isNumber(props.consumableIndex) &&
+            trip.value &&
+            trip.value.consumables &&
+            trip.value.consumables[props.consumableIndex]) ||
+        null
+    );
+});
+const editingConsumable = ref<EditingConsumable>({
+    name: '',
+    weight: 0,
+});
 watchEffect(() => {
     if (props.isOpen) {
-        editingGear.value = props.gear
-            ? { ...props.gear }
-            : { ...emptyGear, category: props.defaultCategory };
+        editingConsumable.value = existingConsumable.value
+            ? { ...existingConsumable.value }
+            : { ...emptyConsumable, category: props.defaultCategory };
     }
 });
 const isSaving = ref<boolean>(false);
-const userGearsStore = useUserGearsStore();
-const categoryOptions = constants.GEAR_CATEGORY_KEYS.map((category) => ({
+const categoryOptions = constants.CONSUMABLE_CATEGORY_KEYS.map((category) => ({
     value: category,
 }));
 
 const onSubmit = async () => {
     try {
         isSaving.value = true;
-        if (props.gear) {
-            await userGearsStore.updateGear({
-                id: props.gear.id,
-                gearData: editingGear.value,
+        const newConsumable: Consumable = {
+            name: editingConsumable.value.name || '',
+            weight: editingConsumable.value.weight || 0,
+            category: editingConsumable.value.category || 'others',
+        };
+        if (isNumber(props.consumableIndex) && existingConsumable) {
+            await userTripsStore.updateConsumableInTrip({
+                tripId: props.tripId,
+                consumableIndex: props.consumableIndex,
+                consumable: newConsumable,
             });
-            emit('complete-edit', userGearsStore.getGearById(props.gear.id));
+            emit('complete-edit', newConsumable);
         } else {
-            const docId = await userGearsStore.createGear(editingGear.value);
-            if (!docId) {
-                throw new Error('Failed to add gear');
-            }
-            emit('complete-create', userGearsStore.getGearById(docId));
+            await userTripsStore.addConsumableToTrip({
+                tripId: props.tripId,
+                consumable: newConsumable,
+            });
+            emit('complete-create', newConsumable);
         }
     } catch (error) {
         console.error(error);

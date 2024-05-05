@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- show the ul by displayCatergories -->
         <PrimeDialog
             :visible="isOpen"
             :header="$t('ACTION_SELECT_GEARS')"
@@ -31,11 +30,11 @@
                 >
                     <template #body="{ data }">
                         <div class="flex align-items-center gap-2">
-                            <CategoryAvatar
+                            <GearCategoryAvatar
                                 :category="data.category"
                                 size="small"
                             />
-                            {{ categoryToLabel(data.category) }}
+                            {{ gearCategoryToLabel(data.category) }}
                         </div>
                     </template>
                 </PrimeColumn>
@@ -85,7 +84,7 @@ const emit = defineEmits<{
     cancel: [];
 }>();
 
-const { categoryToLabel, formatWeight } = useLangUtils();
+const { gearCategoryToLabel, formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
 const notSelectedGears = computed(() =>
@@ -93,7 +92,7 @@ const notSelectedGears = computed(() =>
 );
 const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>
-    _sum(selectedGears.value.map((gear) => +(gear.weight || 0))),
+    _sum(selectedGears.value.map((gear) => +gear.weight)),
 );
 const onSubmit = () => {
     emit(

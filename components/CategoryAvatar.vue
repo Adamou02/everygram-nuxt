@@ -2,27 +2,21 @@
     <div
         :class="['category-avatar', `category-avatar--${size}`]"
         :style="{
-            backgroundColor: constants.GEAR_CATEGORIES[formattedCategory].color,
+            backgroundColor,
         }"
     >
         <div class="category-avatar__icon material-symbols-outlined">
-            {{ constants.GEAR_CATEGORIES[formattedCategory].icon }}
+            {{ icon }}
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
-    category?: GearCategory;
+    icon: string;
     size: 'small' | 'medium' | 'large';
+    backgroundColor: string;
 }>();
-
-const formattedCategory = computed(() => {
-    return props.category &&
-        constants.GEAR_CATEGORY_KEYS.includes(props.category)
-        ? props.category
-        : 'others';
-});
 </script>
 
 <style lang="scss">
