@@ -72,6 +72,9 @@ export default defineNuxtConfig({
             useCookie: true,
             cookieKey: 'i18n_redirected',
         },
+        experimental: {
+            localeDetector: './localeDetector.ts',
+        },
     },
     primevue: {
         components: {

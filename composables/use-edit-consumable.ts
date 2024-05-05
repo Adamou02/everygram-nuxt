@@ -1,4 +1,4 @@
-export default function useEditConsumable() {
+export default function () {
     const isAddingConsumable = ref<boolean>(false);
     const isEditingConsumable = ref<boolean>(false);
     const editingConsumableIndex = ref<number | null>(null);

@@ -1,4 +1,4 @@
-export default function useEditTrip() {
+export default function () {
     const isAddingTrip = ref<boolean>(false);
     const isEditingTrip = ref<boolean>(false);
     const editingTrip = ref<Trip | null>(null);

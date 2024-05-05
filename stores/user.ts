@@ -4,6 +4,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
+    signInWithPopup,
+    GoogleAuthProvider,
+    getAdditionalUserInfo,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
@@ -75,6 +78,17 @@ export const useUserStore = defineStore('userStore', () => {
         signOutUser: async () => {
             try {
                 await signOut(auth);
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        },
+        signInWithGoogle: async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const userCredential = await signInWithPopup(auth, provider);
+                user.value = userCredential.user;
+                // const additionalUserInfo = getAdditionalUserInfo(userCredential);
             } catch (error) {
                 console.error(error);
                 throw error;

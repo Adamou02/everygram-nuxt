@@ -39,7 +39,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 10rem 5rem;
+        padding: 0 5rem;
         background-position: bottom;
         background-size: cover;
         background-repeat: no-repeat;

@@ -1,4 +1,4 @@
-export default function useEditGear() {
+export default function () {
     const isAddingGear = ref<boolean>(false);
     const isEditingGear = ref<boolean>(false);
     const editingGear = ref<Gear | null>(null);
