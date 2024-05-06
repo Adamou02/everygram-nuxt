@@ -2,21 +2,21 @@
     <div class="flex flex-column gap-3">
         <div>
             <div class="field">
-                <label for="login-email">
+                <label for="user-email">
                     {{ $t('LABEL_EMAIL') }}
                 </label>
                 <PrimeInputText
-                    id="login-email"
+                    id="user-email"
                     v-model="email"
                     class="w-full"
                 />
             </div>
             <div class="field">
-                <label for="login-password">
+                <label for="user-password">
                     {{ $t('LABEL_PASSWORD') }}
                 </label>
                 <PrimeInputText
-                    id="login-password"
+                    id="user-password"
                     v-model="password"
                     type="password"
                     class="w-full"
@@ -25,8 +25,8 @@
         </div>
         <div class="flex justify-content-center">
             <PrimeButton
-                :label="$t('ACTION_LOGIN')"
-                @click="login"
+                :label="$t('ACTION_SIGN_IN')"
+                @click="signIn"
                 :loading="isLoading"
                 class="w-full"
             />
@@ -53,7 +53,7 @@ import { ref } from 'vue';
 
 definePageMeta({
     middleware: ['auth-guard'],
-    layout: 'login-page',
+    layout: 'user-page',
 });
 
 const email = ref<string>('');
@@ -62,7 +62,7 @@ const isLoading = ref<boolean>(false);
 
 const userStore = useUserStore();
 
-const login = async () => {
+const signIn = async () => {
     isLoading.value = true;
     try {
         await userStore.signInWithEmail({

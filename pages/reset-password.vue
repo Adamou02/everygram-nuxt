@@ -23,8 +23,8 @@
         <div class="flex justify-content-center align-items-center gap-2">
             <PrimeButton
                 text
-                :label="$t('ACTION_LOGIN')"
-                @click="navigateTo('/login')"
+                :label="$t('ACTION_SIGN_IN')"
+                @click="navigateTo('/signin')"
             />
             |
             <PrimeButton
@@ -42,7 +42,7 @@ import { ref } from 'vue';
 
 definePageMeta({
     middleware: ['auth-guard'],
-    layout: 'login-page',
+    layout: 'signin-page',
 });
 
 const email = ref<string>('');

@@ -27,14 +27,22 @@ export const useUserStore = defineStore('userStore', () => {
                 auth,
                 (authUser) => {
                     user.value = authUser;
+                    const userMemberStore = useUserMemberStore();
+                    if (authUser) {
+                        userMemberStore.initialize({
+                            userId: authUser.uid,
+                        });
+                    } else {
+                        userMemberStore.destroy();
+                    }
                 },
             );
+
             isInitialized.value = true;
         },
         destroy: () => {
             unsubscribeOnAuthStateChangedRef.value?.();
             isInitialized.value = false;
-            console.log('destroy useUserStore');
         },
         signUpWithEmail: async ({
             email,
@@ -85,10 +93,26 @@ export const useUserStore = defineStore('userStore', () => {
         },
         signInWithGoogle: async () => {
             const provider = new GoogleAuthProvider();
+            const userMemberStore = useUserMemberStore();
+
             try {
                 const userCredential = await signInWithPopup(auth, provider);
                 user.value = userCredential.user;
-                // const additionalUserInfo = getAdditionalUserInfo(userCredential);
+                const additionalUserInfo =
+                    getAdditionalUserInfo(userCredential);
+
+                if (additionalUserInfo) {
+                    userMemberStore.setMember(user.value.uid, {
+                        displayName:
+                            (additionalUserInfo.profile?.name as string) ||
+                            'Google User',
+                        photoUrl:
+                            (additionalUserInfo.profile?.picture as string) ||
+                            '',
+                        email:
+                            (additionalUserInfo.profile?.email as string) || '',
+                    });
+                }
             } catch (error) {
                 console.error(error);
                 throw error;

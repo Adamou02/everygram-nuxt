@@ -1,31 +1,48 @@
 <template>
-    <div class="user-page flex flex-row">
-        <div class="flex-grow-0 px-6 py-8 w-20rem">
-            <UserPageNavMenu />
-        </div>
-        <div class="flex-grow-1 px-6 py-8">
-            <slot />
-        </div>
+    <AppHeader>
+        <template #navigation>
+            <UserNavButtons />
+        </template>
+        <template #actions>
+            <UserMenu />
+        </template>
+        <template #menu>
+            <UserMobileMenu />
+        </template>
+    </AppHeader>
+    <div class="user-page">
+        <slot />
     </div>
+    <AppFooter />
 </template>
 
 <script setup lang="ts">
 const userGearsStore = useUserGearsStore();
 const userTripsStore = useUserTripsStore();
+const userStore = useUserStore();
 onBeforeMount(() => {
     userGearsStore.initialize();
     userTripsStore.initialize();
+    userStore.initialize();
 });
 onUnmounted(() => {
     userGearsStore.destroy();
     userTripsStore.destroy();
+    userStore.destroy();
 });
 </script>
 
 <style lang="scss">
-@import '~/assets/theme/themes/mytheme/_variables.scss';
+@import '~/assets/theme/primeflex/core/_variables.scss';
 
 .user-page {
-    border-top: 8px solid $eg-c-primary;
+    max-width: 900px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 40px 20px;
+
+    @media (max-width: $lg) {
+        padding: 20px;
+    }
 }
 </style>

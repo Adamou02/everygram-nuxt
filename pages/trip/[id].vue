@@ -22,7 +22,7 @@
                 </div>
                 <div class="text-color-secondary">|</div>
                 <div class="text-color-secondary">
-                    {{ $t('LABEL_GEARS_WEIGHT') }}:
+                    {{ $t('LABEL_BASE_WEIGHT') }}:
                     {{
                         formatWeight(
                             dataUtils.getTripGearsWeight(trip, gearMap),
@@ -85,6 +85,7 @@
                         dataKey="id"
                         edit-mode="cell"
                         @cell-edit-complete="onGearCellEditComplete"
+                        class="p-datatable-hide-thead"
                     >
                         <PrimeColumn field="name" :header="$t('LABEL_NAME')">
                             <template #editor="{ data, field }">
@@ -120,6 +121,9 @@
                             :header="$t('LABEL_QUANTITY')"
                             class="w-5rem"
                         >
+                            <template #body="{ data }">
+                                x {{ data.quantity }}
+                            </template>
                             <template #editor="{ data, field }">
                                 <PrimeInputNumber
                                     v-model="data[field]"
@@ -197,6 +201,7 @@
                         dataKey="id"
                         edit-mode="cell"
                         @cell-edit-complete="onConsumableCellEditComplete"
+                        class="p-datatable-hide-thead"
                     >
                         <PrimeColumn field="name" :header="$t('LABEL_NAME')">
                             <template #editor="{ data, field }">

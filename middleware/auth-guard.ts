@@ -21,18 +21,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
     }
 
-    if (
-        !user &&
-        to.name !== 'login' &&
-        to.name !== 'signup' &&
-        to.name !== 'reset-password'
-    ) {
-        return navigateTo('/login');
+    if (!user) {
+        return navigateTo('/welcome');
     }
 
     if (
         user &&
-        (to.name === 'login' ||
+        (to.name === 'signin' ||
             to.name === 'signup' ||
             to.name === 'reset-password')
     ) {

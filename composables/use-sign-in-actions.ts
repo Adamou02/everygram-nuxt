@@ -1,7 +1,7 @@
 export default function () {
     const userStore = useUserStore();
     return {
-        signInWWithGoogle: async () => {
+        signInWithGoogle: async () => {
             try {
                 await userStore.signInWithGoogle();
                 navigateTo('/gears');

@@ -1,3 +1,11 @@
+type Member = {
+    userId: string;
+    email: string;
+    locale: string;
+    displayName: string;
+    photoUrl: string;
+};
+
 type GearRole = 'owner' | 'co-owner';
 type GearCategory =
     | 'accessories'

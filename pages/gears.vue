@@ -41,6 +41,7 @@
                 edit-mode="cell"
                 @cell-edit-complete="onCellEditComplete"
                 dataKey="id"
+                class="p-datatable-hide-thead"
             >
                 <PrimeColumn field="name" :header="$t('LABEL_NAME')">
                     <template #editor="{ data, field }">

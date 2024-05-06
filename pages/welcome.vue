@@ -2,7 +2,7 @@
     <div class="flex flex-column gap-1">
         <template v-if="user">
             <PrimeButton
-                :label="$t('ACTION_GO_TO_EVERYGRAM')"
+                :label="$t('ACTION_START_USING_EVERYGRAM')"
                 class="w-full"
                 @click="navigateTo('/gears')"
             />
@@ -12,7 +12,7 @@
                 :label="$t('ACTION_SIGN_IN_WITH_GOOGLE')"
                 class="w-full"
                 icon="pi pi-google"
-                @click="signInWWithGoogle"
+                @click="signInWithGoogle"
             />
         </template>
     </div>
@@ -20,10 +20,10 @@
 
 <script setup lang="ts">
 definePageMeta({
-    layout: 'login-page',
+    layout: 'siginin-page',
 });
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const { signInWWithGoogle } = useSignInActions();
+const { signInWithGoogle } = useSignInActions();
 </script>

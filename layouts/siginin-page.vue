@@ -1,11 +1,11 @@
 <template>
-    <div class="login-page-container flex align-items-stretch">
-        <div class="login-page-container__banner hidden lg:flex w-6">
+    <div class="signin-page-container flex align-items-stretch">
+        <div class="signin-page-container__banner hidden lg:flex w-6">
             <h1 class="text-white text-center text-4xl mb-6">
                 Start managing your gears with Everygram
             </h1>
             <img
-                src="/image/illustration/login.png"
+                src="/image/illustration/signin.png"
                 alt=""
                 class="max-w-full"
             />
@@ -31,10 +31,10 @@
 <style lang="scss">
 @import '~/assets/theme/themes/mytheme/_variables.scss';
 
-.login-page-container {
+.signin-page-container {
     &__banner {
         min-height: 100vh;
-        background-image: url('/image/illustration/login-bg.png');
+        background-image: url('/image/illustration/signin-bg.png');
         display: flex;
         flex-direction: column;
         justify-content: center;

@@ -36,12 +36,11 @@ export default defineNuxtConfig({
 
         // pages that require authentication
         '/': { ssr: false },
-        '/login': { ssr: false },
+        '/signin': { ssr: false },
         '/signup': { ssr: false },
         '/reset-password': { ssr: false },
         '/gears': { ssr: false },
         '/trips': { ssr: false },
-        '/settings': { ssr: false },
         '/trip/**': { ssr: false },
     },
     modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n', 'nuxt-primevue'],
