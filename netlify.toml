@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/__/auth"
+  to = "https://everygram.firebaseapp.com"
+  status = 200
+  force = true

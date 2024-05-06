@@ -43,7 +43,7 @@ import { ref } from 'vue';
 
 definePageMeta({
     middleware: ['auth-guard'],
-    layout: 'siginin-page',
+    layout: 'signin-page',
 });
 
 const email = ref<string>('');

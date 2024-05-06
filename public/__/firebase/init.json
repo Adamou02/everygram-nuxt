@@ -1,0 +1,9 @@
+{
+    "apiKey": "AIzaSyDvb1GToZ-PqIkjmvcGtqkhdz4_1uy-wLk",
+    "appId": "1:267934001060:web:58f221b86ee988ba2e4331",
+    "authDomain": "everygram.firebaseapp.com",
+    "databaseURL": "https://everygram.firebaseio.com",
+    "messagingSenderId": "267934001060",
+    "projectId": "everygram",
+    "storageBucket": "everygram.appspot.com"
+}

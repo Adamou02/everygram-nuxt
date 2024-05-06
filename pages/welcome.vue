@@ -20,10 +20,13 @@
 
 <script setup lang="ts">
 definePageMeta({
-    layout: 'siginin-page',
+    layout: 'signin-page',
 });
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const { signInWithGoogle } = useSignInActions();
+const { signInWithGoogle, getGoogleRedirectResult } = useSignInActions();
+onBeforeMount(() => {
+    getGoogleRedirectResult();
+});
 </script>

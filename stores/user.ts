@@ -4,7 +4,8 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     GoogleAuthProvider,
     getAdditionalUserInfo,
 } from 'firebase/auth';
@@ -91,16 +92,58 @@ export const useUserStore = defineStore('userStore', () => {
                 throw error;
             }
         },
-        signInWithGoogle: async () => {
+        signInWithGoogle: () => {
             const provider = new GoogleAuthProvider();
+
+            try {
+                signInWithRedirect(auth, provider);
+                // user.value = userCredential.user;
+                // const additionalUserInfo =
+                //     getAdditionalUserInfo(userCredential);
+
+                // if (additionalUserInfo) {
+                //     userMemberStore.setMember(user.value.uid, {
+                //         displayName:
+                //             (additionalUserInfo.profile?.name as string) ||
+                //             'Google User',
+                //         photoUrl:
+                //             (additionalUserInfo.profile?.picture as string) ||
+                //             '',
+                //         email:
+                //             (additionalUserInfo.profile?.email as string) || '',
+                //     });
+                // }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        },
+        getGoogleRedirectResult: async () => {
             const userMemberStore = useUserMemberStore();
 
             try {
-                const userCredential = await signInWithPopup(auth, provider);
-                user.value = userCredential.user;
-                const additionalUserInfo =
-                    getAdditionalUserInfo(userCredential);
+                const result = await getRedirectResult(auth);
+                console.log('getGoogleRedirectResult result', result);
+                if (!result) {
+                    return;
+                }
+                const credential =
+                    GoogleAuthProvider.credentialFromResult(result);
 
+                console.log('getGoogleRedirectResult credential', credential);
+                if (!credential) {
+                    return;
+                }
+
+                // The signed-in user info.
+                // const user = result.user;
+                user.value = result.user;
+                const additionalUserInfo = getAdditionalUserInfo(result);
+                console.log(
+                    'getGoogleRedirectResult',
+                    user.value,
+                    additionalUserInfo,
+                );
                 if (additionalUserInfo) {
                     userMemberStore.setMember(user.value.uid, {
                         displayName:
