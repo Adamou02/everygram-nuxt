@@ -1,3 +1,6 @@
+@import './eg-colors';
+@import '~/assets/theme/primeflex/core/_variables.scss';
+
 $c-background: #f2f3f2;
 
 body {
@@ -11,4 +14,13 @@ body {
 
 .p-datatable-hide-thead thead {
     display: none;
+}
+
+:root {
+    --app-header-height: 60px;
+    @media (max-width: $lg) {
+        --app-header-height: 48px;
+    }
+
+    --app-background-color: #{$c-background};
 }

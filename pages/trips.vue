@@ -1,21 +1,15 @@
 <template>
     <div class="flex flex-column gap-5">
-        <div class="flex justify-content-between align-items-center">
-            <div class="text-color-secondary">
+        <SectionTitleBar>
+            <div class="text-600">
                 {{ $t('INFO_TRIP_NUM', { num: trips.length }, trips.length) }}
             </div>
-            <div>
-                <ActionButtonsGroup
-                    type="text"
-                    :actions="[
-                        {
-                            label: $t('ACTION_CREATE_TRIP'),
-                            onClick: () => onCreateTrip(),
-                        },
-                    ]"
-                />
-            </div>
-        </div>
+            <PrimeButton
+                :label="$t('ACTION_CREATE_TRIP')"
+                icon="pi pi-plus"
+                @click="onCreateTrip"
+            />
+        </SectionTitleBar>
         <PrimeDataTable :value="tripsWithMoreData" dataKey="id">
             <PrimeColumn field="title" :header="$t('LABEL_TITLE')">
                 <template #body="{ data }">

@@ -24,7 +24,7 @@
 @import '~/assets/theme/primeflex/core/_variables.scss';
 
 .app-header {
-    height: 60px;
+    height: var(--app-header-height);
     padding: 0 40px;
     display: grid;
     grid-template-columns: 200px 1fr 200px;
@@ -48,7 +48,6 @@
     }
 
     @media (max-width: $lg) {
-        height: 48px;
         padding: 0 20px;
         grid-template-columns: 200px 1fr;
         &__menu {

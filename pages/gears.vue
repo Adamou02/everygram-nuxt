@@ -1,22 +1,16 @@
 <!-- a page to list all gear the user has -->
 <template>
     <div class="flex flex-column gap-5">
-        <div class="flex justify-content-between align-items-center">
-            <div class="text-color-secondary">
+        <SectionTitleBar>
+            <div class="text-600">
                 {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
             </div>
-            <div>
-                <ActionButtonsGroup
-                    type="text"
-                    :actions="[
-                        {
-                            label: $t('ACTION_CREATE_GEAR'),
-                            onClick: () => onCreateGear(),
-                        },
-                    ]"
-                />
-            </div>
-        </div>
+            <PrimeButton
+                :label="$t('ACTION_CREATE_GEAR')"
+                icon="pi pi-plus"
+                @click="() => onCreateGear()"
+            />
+        </SectionTitleBar>
         <div
             v-for="category in displayGearCatergories"
             :key="category"

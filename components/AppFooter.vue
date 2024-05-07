@@ -10,7 +10,7 @@
             <div class="app-footer__hr-line"></div>
         </div>
         <div class="app-footer__content">
-            <div class="text-color-secondary">
+            <div class="text-600">
                 <small>Copyright &copy; 2024 Everygram</small>
             </div>
             <div class="flex gap-2">

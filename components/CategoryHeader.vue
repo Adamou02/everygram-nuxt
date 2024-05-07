@@ -25,7 +25,7 @@
             </template>
             <template v-if="weight !== undefined">
                 <div>|</div>
-                <div class="text-color-secondary">
+                <div class="text-600">
                     {{ formatWeight(weight) }}
                 </div>
             </template>

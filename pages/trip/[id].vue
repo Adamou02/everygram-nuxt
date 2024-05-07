@@ -1,45 +1,84 @@
 <!-- A page to show data of a trip -->
 <template>
-    <div class="flex flex-column gap-5">
-        <img
-            src="/image/illustration/illu-mountains.jpg"
-            alt=""
-            class="w-full border-round-md"
-        />
+    <div class="flex flex-column gap-6">
         <template v-if="trip">
             <div>
-                <h1>{{ trip.title }}</h1>
-                <p>{{ trip.description }}</p>
+                <img
+                    src="/image/illustration/illu-mountains.jpg"
+                    alt=""
+                    class="w-full border-round-md"
+                />
+                <div class="flex justify-content-between align-items-center">
+                    <h1>{{ trip.title }}</h1>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                label: $t('ACTION_EDIT_TRIP'),
+                                onClick: () => trip && onEditTrip(trip),
+                            },
+                        ]"
+                    />
+                </div>
+                <p v-if="trip.description">{{ trip.description }}</p>
             </div>
-            <div class="flex gap-2">
-                <div class="text-color-secondary">
-                    {{ $t('LABEL_TOTAL_WEIGHT') }}:
-                    {{
-                        formatWeight(
-                            dataUtils.getTripWeightTotal(trip, gearMap),
-                        )
-                    }}
+
+            <!-- weigh bars -->
+            <div class="flex flex-column gap-4">
+                <div
+                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                >
+                    <div class="text-lg">
+                        {{ $t('LABEL_TOTAL_WEIGHT') }}:
+                        {{
+                            formatWeight(
+                                dataUtils.getTripWeightTotal(trip, gearMap),
+                            )
+                        }}
+                    </div>
+                    <WeightBarChart
+                        :items="totalWeightItems"
+                        :showLabel="true"
+                    />
                 </div>
-                <div class="text-color-secondary">|</div>
-                <div class="text-color-secondary">
-                    {{ $t('LABEL_BASE_WEIGHT') }}:
-                    {{
-                        formatWeight(
-                            dataUtils.getTripGearsWeight(trip, gearMap),
-                        )
-                    }}
+                <div
+                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                >
+                    <div class="text-lg">
+                        {{ $t('LABEL_BASE_WEIGHT') }}:
+                        {{
+                            formatWeight(
+                                dataUtils.getTripGearsWeight(trip, gearMap),
+                            )
+                        }}
+                    </div>
+                    <WeightBarChart
+                        :items="baseWeightItems"
+                        :showLabel="true"
+                    />
                 </div>
-                <div class="text-color-secondary">|</div>
-                <div class="text-color-secondary">
-                    {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
-                    {{
-                        formatWeight(dataUtils.getTripConsumablessWeight(trip))
-                    }}
+                <div
+                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                >
+                    <div class="text-lg">
+                        {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
+                        {{
+                            formatWeight(
+                                dataUtils.getTripConsumablessWeight(trip),
+                            )
+                        }}
+                    </div>
+                    <WeightBarChart
+                        :items="consumablesWeightItems"
+                        :showLabel="true"
+                    />
                 </div>
             </div>
-            <div class="flex justify-content-between align-items-center">
-                <h2>{{ $t('LABEL_GEARS') }}</h2>
-                <div>
+
+            <!-- gears -->
+            <div class="flex flex-column gap-3">
+                <SectionTitleBar :sticky="true">
+                    <h2>{{ $t('LABEL_GEARS') }}</h2>
                     <ActionButtonsGroup
                         type="text"
                         :actions="[
@@ -51,15 +90,9 @@
                                 label: $t('ACTION_CREATE_GEAR'),
                                 onClick: () => onCreateGear(),
                             },
-                            {
-                                label: $t('ACTION_EDIT_TRIP'),
-                                onClick: () => trip && onEditTrip(trip),
-                            },
                         ]"
                     />
-                </div>
-            </div>
-            <div class="flex flex-column gap-5">
+                </SectionTitleBar>
                 <div v-for="category in displayGearCatergories" :key="category">
                     <CategoryHeader
                         :category="category"
@@ -98,7 +131,7 @@
                         <PrimeColumn
                             field="weight"
                             :header="$t('LABEL_WEIGHT')"
-                            class="w-10rem"
+                            class="w-5rem lg:w-9rem"
                         >
                             <template #body="{ data }">
                                 {{
@@ -119,7 +152,7 @@
                         <PrimeColumn
                             field="quantity"
                             :header="$t('LABEL_QUANTITY')"
-                            class="w-5rem"
+                            class="w-4rem lg:w-5rem"
                         >
                             <template #body="{ data }">
                                 x {{ data.quantity }}
@@ -158,9 +191,10 @@
                 </div>
             </div>
 
-            <div class="flex justify-content-between align-items-center">
-                <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
-                <div>
+            <!-- comsumables -->
+            <div class="flex flex-column gap-4">
+                <SectionTitleBar :sticky="true">
+                    <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
                     <ActionButtonsGroup
                         type="text"
                         :actions="[
@@ -170,9 +204,7 @@
                             },
                         ]"
                     />
-                </div>
-            </div>
-            <div class="flex flex-column gap-5">
+                </SectionTitleBar>
                 <div
                     v-for="category in displayConsumableCategories"
                     :key="category"
@@ -214,7 +246,7 @@
                         <PrimeColumn
                             field="weight"
                             :header="$t('LABEL_WEIGHT')"
-                            class="w-10rem"
+                            class="w-5rem lg:w-9rem"
                         >
                             <template #body="{ data }">
                                 {{
@@ -361,7 +393,55 @@ const consumableWeightByCategory = computed(() =>
     ),
 );
 
-const { formatWeight } = useLangUtils();
+const tripWeightTotal = computed<number>(() =>
+    trip.value ? dataUtils.getTripWeightTotal(trip.value, gearMap.value) : 0,
+);
+const tripGearsWeight = computed<number>(() =>
+    trip.value ? dataUtils.getTripGearsWeight(trip.value, gearMap.value) : 0,
+);
+const tripConsumablesWeight = computed<number>(() =>
+    trip.value ? dataUtils.getTripConsumablessWeight(trip.value) : 0,
+);
+
+const totalWeightItems = computed<WeightBarChartItem[]>(() => [
+    {
+        label: i18n.t('LABEL_BASE_WEIGHT'),
+        weight: trip.value
+            ? dataUtils.getTripGearsWeight(trip.value, gearMap.value)
+            : 0,
+        color: constants.COLORS.BASE_WEIGHT,
+    },
+    {
+        label: i18n.t('LABEL_CONSUMABLES_WEIGHT'),
+        weight: trip.value
+            ? dataUtils.getTripConsumablessWeight(trip.value)
+            : 0,
+        color: constants.COLORS.CONSUMABLES_WEIGHT,
+    },
+]);
+
+const baseWeightItems = computed<WeightBarChartItem[]>(() =>
+    Object.entries(gearWeightByCategory.value).map(([category, weight]) => ({
+        label: gearCategoryToLabel(category as GearCategory),
+        weight,
+        color: constants.GEAR_CATEGORIES[category as GearCategory].color,
+    })),
+);
+
+const consumablesWeightItems = computed<WeightBarChartItem[]>(() =>
+    Object.entries(consumableWeightByCategory.value).map(
+        ([category, weight]) => ({
+            label: consumableCategoryToLabel(category as ConsumableCategory),
+            weight,
+            color: constants.CONSUMABLE_CATEGORIES[
+                category as ConsumableCategory
+            ].color,
+        }),
+    ),
+);
+
+const { formatWeight, gearCategoryToLabel, consumableCategoryToLabel } =
+    useLangUtils();
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);

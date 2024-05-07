@@ -9,13 +9,12 @@ type Member = {
 type GearRole = 'owner' | 'co-owner';
 type GearCategory =
     | 'accessories'
-    | 'backpack'
+    | 'packs'
     | 'clothing'
     | 'cooking'
     | 'electronics'
-    | 'footwear'
+    | 'photography'
     | 'hydration'
-    | 'medical'
     | 'sanitary'
     | 'shelter'
     | 'sleeping'
@@ -56,7 +55,7 @@ type Trip = {
 };
 type EditingTrip = Partial<Trip>;
 
-type ConsumableCategory = 'food' | 'drinks' | 'fuel' | 'others';
+type ConsumableCategory = 'food' | 'drinks' | 'fuel' | 'medical' | 'others';
 type Consumable = {
     name: string;
     weight: number; // grams
@@ -64,3 +63,9 @@ type Consumable = {
 };
 type EditingConsumable = Partial<Consumable>;
 type ConsumableWithIndex = Consumable & { index: number };
+
+type WeightBarChartItem = {
+    weight: number;
+    label: string;
+    color: string;
+};
