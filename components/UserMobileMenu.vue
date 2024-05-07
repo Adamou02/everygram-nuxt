@@ -9,22 +9,18 @@
     />
     <PrimeSidebar v-model:visible="isOpen" position="right">
         <template #header>
-            <div v-if="isFetchingMember" class="flex gap-2 align-items-center">
-                <PrimeSkeleton width="32px" height="32px" shape="circle" />
-                <PrimeSkeleton width="8rem" height="1rem" />
-            </div>
-            <div v-else class="user-menu flex gap-2 align-items-center">
+            <div class="user-menu flex gap-2 align-items-center">
                 <img
                     class="border-circle"
                     width="32px"
                     height="32px"
-                    :src="member?.photoUrl"
-                    alt="Member Photo"
+                    :src="user?.photoURL"
+                    alt="User Photo"
                 />
                 <div
                     class="white-space-nowrap text-overflow-ellipsis overflow-hidden"
                 >
-                    {{ member?.displayName }}
+                    {{ user?.displayName }}
                 </div>
             </div>
         </template>
@@ -98,29 +94,18 @@
 
 <script setup>
 const userStore = useUserStore();
-const userMemberStore = useUserMemberStore();
+const { user } = storeToRefs(userStore);
 const isOpen = ref(false);
-const { member, isFetchingMember } = storeToRefs(userMemberStore);
-const { $i18n } = useNuxtApp();
 
 const onSignOut = async () => {
-    try {
-        await userStore.signOutUser();
-        navigateTo('/');
-    } catch (error) {
-        // console.error(errorMessageLang((error as AuthError).code));
-    }
+    await userStore.signOutUser();
+    navigateTo('/');
 };
 </script>
 
 <style lang="scss">
 @import '~/assets/theme/themes/mytheme/_variables.scss';
 .user-mobile-menu {
-    &__avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-    }
     &__button--active {
         background-color: rgba($buttonBg, $textButtonActiveBgOpacity);
     }

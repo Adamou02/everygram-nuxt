@@ -4,10 +4,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    signInWithRedirect,
+    signInWithPopup,
     getRedirectResult,
     GoogleAuthProvider,
-    getAdditionalUserInfo,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
@@ -27,15 +26,7 @@ export const useUserStore = defineStore('userStore', () => {
             unsubscribeOnAuthStateChangedRef.value = onAuthStateChanged(
                 auth,
                 (authUser) => {
-                    user.value = authUser;
-                    const userMemberStore = useUserMemberStore();
-                    if (authUser) {
-                        userMemberStore.initialize({
-                            userId: authUser.uid,
-                        });
-                    } else {
-                        userMemberStore.destroy();
-                    }
+                    user.value = authUser || null;
                 },
             );
 
@@ -92,69 +83,29 @@ export const useUserStore = defineStore('userStore', () => {
                 throw error;
             }
         },
-        signInWithGoogle: () => {
+        signInWithGoogle: async () => {
             const provider = new GoogleAuthProvider();
 
             try {
-                signInWithRedirect(auth, provider);
-                // user.value = userCredential.user;
-                // const additionalUserInfo =
-                //     getAdditionalUserInfo(userCredential);
-
-                // if (additionalUserInfo) {
-                //     userMemberStore.setMember(user.value.uid, {
-                //         displayName:
-                //             (additionalUserInfo.profile?.name as string) ||
-                //             'Google User',
-                //         photoUrl:
-                //             (additionalUserInfo.profile?.picture as string) ||
-                //             '',
-                //         email:
-                //             (additionalUserInfo.profile?.email as string) || '',
-                //     });
-                // }
+                // await signInWithRedirect(auth, provider); TODO: Implement this
+                const userCredential = await signInWithPopup(auth, provider);
+                user.value = userCredential.user || null;
             } catch (error) {
                 console.error(error);
                 throw error;
             }
         },
         getGoogleRedirectResult: async () => {
-            const userMemberStore = useUserMemberStore();
-
             try {
                 const result = await getRedirectResult(auth);
-                console.log('getGoogleRedirectResult result', result);
                 if (!result) {
                     return;
                 }
                 const credential =
                     GoogleAuthProvider.credentialFromResult(result);
 
-                console.log('getGoogleRedirectResult credential', credential);
                 if (!credential) {
                     return;
-                }
-
-                // The signed-in user info.
-                // const user = result.user;
-                user.value = result.user;
-                const additionalUserInfo = getAdditionalUserInfo(result);
-                console.log(
-                    'getGoogleRedirectResult',
-                    user.value,
-                    additionalUserInfo,
-                );
-                if (additionalUserInfo) {
-                    userMemberStore.setMember(user.value.uid, {
-                        displayName:
-                            (additionalUserInfo.profile?.name as string) ||
-                            'Google User',
-                        photoUrl:
-                            (additionalUserInfo.profile?.picture as string) ||
-                            '',
-                        email:
-                            (additionalUserInfo.profile?.email as string) || '',
-                    });
                 }
             } catch (error) {
                 console.error(error);

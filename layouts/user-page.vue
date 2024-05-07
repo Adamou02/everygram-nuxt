@@ -19,16 +19,13 @@
 <script setup lang="ts">
 const userGearsStore = useUserGearsStore();
 const userTripsStore = useUserTripsStore();
-const userStore = useUserStore();
 onBeforeMount(() => {
     userGearsStore.initialize();
     userTripsStore.initialize();
-    userStore.initialize();
 });
 onUnmounted(() => {
     userGearsStore.destroy();
     userTripsStore.destroy();
-    userStore.destroy();
 });
 </script>
 

@@ -12,7 +12,7 @@
                 :label="$t('ACTION_SIGN_IN_WITH_GOOGLE')"
                 class="w-full"
                 icon="pi pi-google"
-                @click="signInWithGoogle"
+                @click="onSignInWithGoogle"
             />
         </template>
     </div>
@@ -25,8 +25,9 @@ definePageMeta({
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const { signInWithGoogle, getGoogleRedirectResult } = useSignInActions();
-onBeforeMount(() => {
-    getGoogleRedirectResult();
-});
+const { signInWithGoogle } = useSignInActions();
+const onSignInWithGoogle = async () => {
+    await signInWithGoogle();
+    navigateTo('/gears');
+};
 </script>

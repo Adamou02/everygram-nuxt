@@ -1,40 +1,33 @@
 <template>
-    <div v-if="isFetchingMember" class="flex gap-2 align-items-center">
-        <PrimeSkeleton width="32px" height="32px" shape="circle" />
-        <PrimeSkeleton width="8rem" height="1rem" />
-    </div>
-    <template v-else>
-        <PrimeButton
-            type="button"
-            @click="menu?.toggle"
-            aria-haspopup="true"
-            aria-controls="user-menu"
-            text
-        >
-            <div class="user-menu flex gap-2 align-items-center">
-                <img
-                    class="border-circle"
-                    width="32px"
-                    height="32px"
-                    :src="member?.photoUrl"
-                    alt="Member Photo"
-                />
-                <div
-                    class="white-space-nowrap text-overflow-ellipsis overflow-hidden"
-                >
-                    {{ member?.displayName }}
-                </div>
-                <span class="pi pi-angle-down"></span>
+    <PrimeButton
+        type="button"
+        @click="menu?.toggle"
+        aria-haspopup="true"
+        aria-controls="user-menu"
+        text
+    >
+        <div class="user-menu flex gap-2 align-items-center">
+            <img
+                class="border-circle"
+                width="32px"
+                height="32px"
+                :src="user?.photoURL"
+                alt="User Photo"
+            />
+            <div
+                class="white-space-nowrap text-overflow-ellipsis overflow-hidden"
+            >
+                {{ user?.displayName }}
             </div>
-        </PrimeButton>
-        <PrimeMenu ref="menu" id="user-menu" :model="items" :popup="true" />
-    </template>
+            <span class="pi pi-angle-down"></span>
+        </div>
+    </PrimeButton>
+    <PrimeMenu ref="menu" id="user-menu" :model="items" :popup="true" />
 </template>
 
 <script setup>
 const userStore = useUserStore();
-const userMemberStore = useUserMemberStore();
-const { member, isFetchingMember } = storeToRefs(userMemberStore);
+const { user } = storeToRefs(userStore);
 const { $i18n } = useNuxtApp();
 
 const onSignOut = async () => {
@@ -51,13 +44,3 @@ const items = ref([
     },
 ]);
 </script>
-
-<style lang="scss">
-// .user-menu {
-//     &__avatar {
-//         width: 32px;
-//         height: 32px;
-//         border-radius: 50%;
-//     }
-// }
-</style>

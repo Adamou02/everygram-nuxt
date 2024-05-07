@@ -12,7 +12,6 @@ export default function () {
         getGoogleRedirectResult: async () => {
             try {
                 await userStore.getGoogleRedirectResult();
-                navigateTo('/gears');
             } catch (error) {
                 console.error(error);
                 throw error;
