@@ -1,4 +1,5 @@
 {
+    "INFO_DAYS": "{num} 天",
     "ACTION_ADD_FROM_GEARS": "從裝備庫加入",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",

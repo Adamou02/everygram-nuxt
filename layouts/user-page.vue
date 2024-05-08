@@ -33,7 +33,7 @@ onUnmounted(() => {
 @import '~/assets/theme/primeflex/core/_variables.scss';
 
 .user-page {
-    max-width: 900px;
+    max-width: 1200px;
     min-height: 100vh;
     margin: auto;
     padding: 40px 20px;

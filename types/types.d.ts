@@ -48,7 +48,7 @@ type TripDateMode = 'single' | 'multi';
 type Trip = {
     id: string;
     title: string;
-    description: string;
+    description?: string;
     dateMode: TripDateMode;
     startDate: string;
     endDate: string;

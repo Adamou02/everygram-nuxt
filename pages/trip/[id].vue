@@ -1,6 +1,6 @@
 <!-- A page to show data of a trip -->
 <template>
-    <div class="flex flex-column gap-6">
+    <div class="flex flex-column">
         <template v-if="trip">
             <div>
                 <img
@@ -8,287 +8,360 @@
                     alt=""
                     class="w-full border-round-md"
                 />
-                <div class="flex justify-content-between align-items-center">
-                    <h1>{{ trip.title }}</h1>
-                    <ActionButtonsGroup
-                        type="text"
-                        :actions="[
-                            {
-                                label: $t('ACTION_EDIT_TRIP'),
-                                onClick: () => trip && onEditTrip(trip),
-                            },
-                        ]"
-                    />
-                </div>
-                <p v-if="trip.description">{{ trip.description }}</p>
-            </div>
-
-            <!-- weigh bars -->
-            <div class="flex flex-column gap-4">
-                <div
-                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
-                >
-                    <div class="text-lg">
-                        {{ $t('LABEL_TOTAL_WEIGHT') }}:
-                        {{
-                            formatWeight(
-                                dataUtils.getTripWeightTotal(trip, gearMap),
-                            )
-                        }}
-                    </div>
-                    <WeightBarChart
-                        :items="totalWeightItems"
-                        :showLabel="true"
-                    />
-                </div>
-                <div
-                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
-                >
-                    <div class="text-lg">
-                        {{ $t('LABEL_BASE_WEIGHT') }}:
-                        {{
-                            formatWeight(
-                                dataUtils.getTripGearsWeight(trip, gearMap),
-                            )
-                        }}
-                    </div>
-                    <WeightBarChart
-                        :items="baseWeightItems"
-                        :showLabel="true"
-                    />
-                </div>
-                <div
-                    class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
-                >
-                    <div class="text-lg">
-                        {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
-                        {{
-                            formatWeight(
-                                dataUtils.getTripConsumablessWeight(trip),
-                            )
-                        }}
-                    </div>
-                    <WeightBarChart
-                        :items="consumablesWeightItems"
-                        :showLabel="true"
-                    />
-                </div>
-            </div>
-
-            <!-- gears -->
-            <div class="flex flex-column gap-3">
-                <SectionTitleBar :sticky="true">
-                    <h2>{{ $t('LABEL_GEARS') }}</h2>
-                    <ActionButtonsGroup
-                        type="text"
-                        :actions="[
-                            {
-                                label: $t('ACTION_ADD_FROM_GEARS'),
-                                onClick: () => (isSelectingGears = true),
-                            },
-                            {
-                                label: $t('ACTION_CREATE_GEAR'),
-                                onClick: () => onCreateGear(),
-                            },
-                        ]"
-                    />
-                </SectionTitleBar>
-                <div v-for="category in displayGearCatergories" :key="category">
-                    <CategoryHeader
-                        :category="category"
-                        type="gear"
-                        :weight="gearWeightByCategory[category]"
+                <div class="flex flex-column py-6">
+                    <div
+                        class="flex justify-content-between align-items-center"
                     >
-                        <template #actions>
+                        <h1>{{ trip.title }}</h1>
+                        <MoreActionsMenuButton
+                            outlined
+                            :items="[
+                                {
+                                    icon: 'pi pi-pencil',
+                                    label: $t('ACTION_EDIT_TRIP'),
+                                    command: () => trip && onEditTrip(trip),
+                                },
+                                {
+                                    icon: 'pi pi-trash',
+                                    label: $t('ACTION_DELETE_TRIP'),
+                                    severity: 'danger',
+                                    command: () =>
+                                        trip && confirmDeleteTrip(trip),
+                                },
+                            ]"
+                        />
+                    </div>
+
+                    <!-- trip date -->
+                    <div
+                        v-if="
+                            trip.dateMode === 'multi' &&
+                            trip.startDate &&
+                            trip.endDate
+                        "
+                        class="py-3"
+                    >
+                        {{ dataUtils.formatDateString(trip.startDate, '/') }} ~
+                        {{ dataUtils.formatDateString(trip.endDate, '/') }}
+                    </div>
+                    <div
+                        v-else-if="trip.dateMode === 'single' && trip.startDate"
+                        class="py-3"
+                    >
+                        {{ dataUtils.formatDateString(trip.startDate, '/') }}
+                    </div>
+                </div>
+            </div>
+            <div class="grid row-gap-5 lg:flex-row-reverse">
+                <!-- right -->
+                <div class="col-12 lg:block lg:col-4">
+                    <!-- weigh bars -->
+                    <div class="flex flex-column gap-4">
+                        <div
+                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                        >
+                            <div class="text-lg">
+                                {{ $t('LABEL_TOTAL_WEIGHT') }}:
+                                {{
+                                    formatWeight(
+                                        dataUtils.getTripWeightTotal(
+                                            trip,
+                                            gearMap,
+                                        ),
+                                    )
+                                }}
+                            </div>
+                            <WeightBarChart
+                                :items="totalWeightItems"
+                                :showLabel="true"
+                            />
+                        </div>
+                        <div
+                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                        >
+                            <div class="text-lg">
+                                {{ $t('LABEL_BASE_WEIGHT') }}:
+                                {{
+                                    formatWeight(
+                                        dataUtils.getTripGearsWeight(
+                                            trip,
+                                            gearMap,
+                                        ),
+                                    )
+                                }}
+                            </div>
+                            <WeightBarChart
+                                :items="baseWeightItems"
+                                :showLabel="true"
+                            />
+                        </div>
+                        <div
+                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                        >
+                            <div class="text-lg">
+                                {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
+                                {{
+                                    formatWeight(
+                                        dataUtils.getTripConsumablessWeight(
+                                            trip,
+                                        ),
+                                    )
+                                }}
+                            </div>
+                            <WeightBarChart
+                                :items="consumablesWeightItems"
+                                :showLabel="true"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- left -->
+                <div class="col-12 lg:col-8 flex flex-column gap-6">
+                    <!-- gears -->
+                    <div class="flex flex-column gap-4">
+                        <SectionTitleBar>
+                            <h2>{{ $t('LABEL_GEARS') }}</h2>
                             <ActionButtonsGroup
-                                type="icon"
+                                type="text"
                                 :actions="[
                                     {
-                                        icon: 'pi pi-plus',
+                                        label: $t('ACTION_ADD_FROM_GEARS'),
+                                        onClick: () =>
+                                            (isSelectingGears = true),
+                                    },
+                                    {
                                         label: $t('ACTION_CREATE_GEAR'),
-                                        onClick: () =>
-                                            onCreateGear({ category }),
+                                        onClick: () => onCreateGear(),
                                     },
                                 ]"
                             />
-                        </template>
-                    </CategoryHeader>
-                    <PrimeDataTable
-                        :value="gearsInTripByCategory[category]"
-                        dataKey="id"
-                        edit-mode="cell"
-                        @cell-edit-complete="onGearCellEditComplete"
-                        class="p-datatable-hide-thead"
-                    >
-                        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
-                            <template #editor="{ data, field }">
-                                <PrimeInputText
-                                    v-model="data[field]"
-                                    class="w-10rem"
-                                />
-                            </template>
-                        </PrimeColumn>
-                        <PrimeColumn
-                            field="weight"
-                            :header="$t('LABEL_WEIGHT')"
-                            class="w-5rem lg:w-9rem text-right"
+                        </SectionTitleBar>
+                        <div
+                            v-for="category in displayGearCatergories"
+                            :key="category"
+                            class="flex flex-column gap-3"
                         >
-                            <template #body="{ data }">
-                                {{
-                                    data.weight
-                                        ? formatWeight(data.weight)
-                                        : '-'
-                                }}
-                            </template>
-                            <template #editor="{ data, field }">
-                                <PrimeInputGroup>
-                                    <PrimeInputNumber v-model="data[field]" />
-                                    <PrimeInputGroupAddon
-                                        >g</PrimeInputGroupAddon
-                                    >
-                                </PrimeInputGroup>
-                            </template>
-                        </PrimeColumn>
-                        <PrimeColumn
-                            field="quantity"
-                            :header="$t('LABEL_QUANTITY')"
-                            class="w-4rem lg:w-5rem"
-                        >
-                            <template #body="{ data }">
-                                x {{ data.quantity }}
-                            </template>
-                            <template #editor="{ data, field }">
-                                <PrimeInputNumber
-                                    v-model="data[field]"
-                                    :min="1"
-                                    class="w-3rem"
-                                />
-                            </template>
-                        </PrimeColumn>
-                        <PrimeColumn :exportable="false" class="w-3rem">
-                            <template #body="{ data }">
-                                <MoreActionsMenuButton
-                                    :items="[
-                                        {
-                                            icon: 'pi pi-pencil',
-                                            label: $t('ACTION_EDIT'),
-                                            command: () => {
-                                                onEditGear(data);
+                            <CategoryHeader
+                                :category="category"
+                                type="gear"
+                                :weight="gearWeightByCategory[category]"
+                            >
+                                <template #actions>
+                                    <ActionButtonsGroup
+                                        type="icon"
+                                        :actions="[
+                                            {
+                                                icon: 'pi pi-plus',
+                                                label: $t('ACTION_CREATE_GEAR'),
+                                                onClick: () =>
+                                                    onCreateGear({ category }),
                                             },
-                                        },
-                                        {
-                                            icon: 'pi pi-times',
-                                            label: $t('ACTION_REMOVE'),
-                                            command: () => {
-                                                onRemoveGear(data.id);
-                                            },
-                                        },
-                                    ]"
-                                />
-                            </template>
-                        </PrimeColumn>
-                    </PrimeDataTable>
-                </div>
-            </div>
+                                        ]"
+                                    />
+                                </template>
+                            </CategoryHeader>
+                            <PrimeDataTable
+                                :value="gearsInTripByCategory[category]"
+                                dataKey="id"
+                                edit-mode="cell"
+                                @cell-edit-complete="onGearCellEditComplete"
+                                class="p-datatable-hide-thead"
+                            >
+                                <PrimeColumn
+                                    field="name"
+                                    :header="$t('LABEL_NAME')"
+                                >
+                                    <template #editor="{ data, field }">
+                                        <PrimeInputText
+                                            v-model="data[field]"
+                                            class="w-10rem"
+                                        />
+                                    </template>
+                                </PrimeColumn>
+                                <PrimeColumn
+                                    field="weight"
+                                    :header="$t('LABEL_WEIGHT')"
+                                    class="w-5rem lg:w-9rem text-right"
+                                >
+                                    <template #body="{ data }">
+                                        {{
+                                            data.weight
+                                                ? formatWeight(data.weight)
+                                                : '-'
+                                        }}
+                                    </template>
+                                    <template #editor="{ data, field }">
+                                        <PrimeInputGroup>
+                                            <PrimeInputNumber
+                                                v-model="data[field]"
+                                            />
+                                            <PrimeInputGroupAddon
+                                                >g</PrimeInputGroupAddon
+                                            >
+                                        </PrimeInputGroup>
+                                    </template>
+                                </PrimeColumn>
+                                <PrimeColumn
+                                    field="quantity"
+                                    :header="$t('LABEL_QUANTITY')"
+                                    class="w-4rem lg:w-5rem"
+                                >
+                                    <template #body="{ data }">
+                                        x {{ data.quantity }}
+                                    </template>
+                                    <template #editor="{ data, field }">
+                                        <PrimeInputNumber
+                                            v-model="data[field]"
+                                            :min="1"
+                                            class="w-3rem"
+                                        />
+                                    </template>
+                                </PrimeColumn>
+                                <PrimeColumn :exportable="false" class="w-3rem">
+                                    <template #body="{ data }">
+                                        <MoreActionsMenuButton
+                                            text
+                                            rounded
+                                            :items="[
+                                                {
+                                                    icon: 'pi pi-pencil',
+                                                    label: $t('ACTION_EDIT'),
+                                                    command: () => {
+                                                        onEditGear(data);
+                                                    },
+                                                },
+                                                {
+                                                    icon: 'pi pi-times',
+                                                    label: $t('ACTION_REMOVE'),
+                                                    command: () => {
+                                                        onRemoveGear(data.id);
+                                                    },
+                                                },
+                                            ]"
+                                        />
+                                    </template>
+                                </PrimeColumn>
+                            </PrimeDataTable>
+                        </div>
+                    </div>
 
-            <!-- comsumables -->
-            <div class="flex flex-column gap-4">
-                <SectionTitleBar :sticky="true">
-                    <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
-                    <ActionButtonsGroup
-                        type="text"
-                        :actions="[
-                            {
-                                label: $t('ACTION_CREATE_CONSUMABLE'),
-                                onClick: () => onCreateConsumable(),
-                            },
-                        ]"
-                    />
-                </SectionTitleBar>
-                <div
-                    v-for="category in displayConsumableCategories"
-                    :key="category"
-                >
-                    <CategoryHeader
-                        :category="category"
-                        type="consumable"
-                        :weight="consumableWeightByCategory[category]"
-                    >
-                        <template #actions>
+                    <!-- comsumables -->
+                    <div class="flex flex-column gap-4">
+                        <SectionTitleBar>
+                            <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
                             <ActionButtonsGroup
-                                type="icon"
+                                type="text"
                                 :actions="[
                                     {
-                                        icon: 'pi pi-plus',
                                         label: $t('ACTION_CREATE_CONSUMABLE'),
-                                        onClick: () =>
-                                            onCreateConsumable({ category }),
+                                        onClick: () => onCreateConsumable(),
                                     },
                                 ]"
                             />
-                        </template>
-                    </CategoryHeader>
-                    <PrimeDataTable
-                        :value="consumablesByCategory[category]"
-                        dataKey="id"
-                        edit-mode="cell"
-                        @cell-edit-complete="onConsumableCellEditComplete"
-                        class="p-datatable-hide-thead"
-                    >
-                        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
-                            <template #editor="{ data, field }">
-                                <PrimeInputText
-                                    v-model="data[field]"
-                                    class="w-10rem"
-                                />
-                            </template>
-                        </PrimeColumn>
-                        <PrimeColumn
-                            field="weight"
-                            :header="$t('LABEL_WEIGHT')"
-                            class="w-5rem lg:w-9rem text-right"
+                        </SectionTitleBar>
+                        <div
+                            v-for="category in displayConsumableCategories"
+                            :key="category"
+                            class="flex flex-column gap-3"
                         >
-                            <template #body="{ data }">
-                                {{
-                                    data.weight
-                                        ? formatWeight(data.weight)
-                                        : '-'
-                                }}
-                            </template>
-                            <template #editor="{ data, field }">
-                                <PrimeInputGroup>
-                                    <PrimeInputNumber v-model="data[field]" />
-                                    <PrimeInputGroupAddon
-                                        >g</PrimeInputGroupAddon
-                                    >
-                                </PrimeInputGroup>
-                            </template>
-                        </PrimeColumn>
-                        <PrimeColumn :exportable="false" class="w-3rem">
-                            <template #body="{ data }">
-                                <MoreActionsMenuButton
-                                    :items="[
-                                        {
-                                            icon: 'pi pi-pencil',
-                                            label: $t('ACTION_EDIT'),
-                                            command: () => {
-                                                onEditConsumable(data.index);
+                            <CategoryHeader
+                                :category="category"
+                                type="consumable"
+                                :weight="consumableWeightByCategory[category]"
+                            >
+                                <template #actions>
+                                    <ActionButtonsGroup
+                                        type="icon"
+                                        :actions="[
+                                            {
+                                                icon: 'pi pi-plus',
+                                                label: $t(
+                                                    'ACTION_CREATE_CONSUMABLE',
+                                                ),
+                                                onClick: () =>
+                                                    onCreateConsumable({
+                                                        category,
+                                                    }),
                                             },
-                                        },
-                                        {
-                                            icon: 'pi pi-times',
-                                            label: $t('ACTION_DELETE'),
-                                            command: () => {
-                                                confirmDeleteConsumable(
-                                                    data.index,
-                                                );
-                                            },
-                                        },
-                                    ]"
-                                />
-                            </template>
-                        </PrimeColumn>
-                    </PrimeDataTable>
+                                        ]"
+                                    />
+                                </template>
+                            </CategoryHeader>
+                            <PrimeDataTable
+                                :value="consumablesByCategory[category]"
+                                dataKey="id"
+                                edit-mode="cell"
+                                @cell-edit-complete="
+                                    onConsumableCellEditComplete
+                                "
+                                class="p-datatable-hide-thead"
+                            >
+                                <PrimeColumn
+                                    field="name"
+                                    :header="$t('LABEL_NAME')"
+                                >
+                                    <template #editor="{ data, field }">
+                                        <PrimeInputText
+                                            v-model="data[field]"
+                                            class="w-10rem"
+                                        />
+                                    </template>
+                                </PrimeColumn>
+                                <PrimeColumn
+                                    field="weight"
+                                    :header="$t('LABEL_WEIGHT')"
+                                    class="w-5rem lg:w-9rem text-right"
+                                >
+                                    <template #body="{ data }">
+                                        {{
+                                            data.weight
+                                                ? formatWeight(data.weight)
+                                                : '-'
+                                        }}
+                                    </template>
+                                    <template #editor="{ data, field }">
+                                        <PrimeInputGroup>
+                                            <PrimeInputNumber
+                                                v-model="data[field]"
+                                            />
+                                            <PrimeInputGroupAddon
+                                                >g</PrimeInputGroupAddon
+                                            >
+                                        </PrimeInputGroup>
+                                    </template>
+                                </PrimeColumn>
+                                <PrimeColumn :exportable="false" class="w-3rem">
+                                    <template #body="{ data }">
+                                        <MoreActionsMenuButton
+                                            text
+                                            rounded
+                                            :items="[
+                                                {
+                                                    icon: 'pi pi-pencil',
+                                                    label: $t('ACTION_EDIT'),
+                                                    command: () => {
+                                                        onEditConsumable(
+                                                            data.index,
+                                                        );
+                                                    },
+                                                },
+                                                {
+                                                    icon: 'pi pi-times',
+                                                    label: $t('ACTION_DELETE'),
+                                                    command: () => {
+                                                        confirmDeleteConsumable(
+                                                            data.index,
+                                                        );
+                                                    },
+                                                },
+                                            ]"
+                                        />
+                                    </template>
+                                </PrimeColumn>
+                            </PrimeDataTable>
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>
@@ -571,4 +644,6 @@ const confirmDeleteConsumable = (consumableIndex: number) => {
         },
     });
 };
+
+const { confirmDeleteTrip } = useDeleteTrip();
 </script>

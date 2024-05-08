@@ -17,9 +17,7 @@
                     :src="user?.photoURL"
                     alt="User Photo"
                 />
-                <div
-                    class="white-space-nowrap text-overflow-ellipsis overflow-hidden"
-                >
+                <div class="text-ellipsis">
                     {{ user?.displayName }}
                 </div>
             </div>

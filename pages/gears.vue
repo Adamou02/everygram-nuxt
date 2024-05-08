@@ -1,85 +1,104 @@
 <!-- a page to list all gear the user has -->
 <template>
-    <div class="flex flex-column gap-5">
-        <SectionTitleBar>
-            <div class="text-600">
-                {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
-            </div>
-            <PrimeButton
-                :label="$t('ACTION_CREATE_GEAR')"
-                icon="pi pi-plus"
-                @click="() => onCreateGear()"
-            />
-        </SectionTitleBar>
-        <div
-            v-for="category in displayGearCatergories"
-            :key="category"
-            class="flex flex-column gap-2"
-        >
-            <CategoryHeader :category="category" type="gear">
-                <template #actions>
-                    <ActionButtonsGroup
-                        type="icon"
-                        :actions="[
-                            {
-                                icon: 'pi pi-plus',
-                                label: $t('ACTION_CREATE_GEAR'),
-                                onClick: () => onCreateGear({ category }),
-                            },
-                        ]"
+    <div class="grid">
+        <div class="col-12 lg:col-offset-2 lg:col-8">
+            <div class="flex flex-column gap-5">
+                <SectionTitleBar>
+                    <div class="text-600">
+                        {{
+                            $t(
+                                'INFO_GEAR_NUM',
+                                { num: gears.length },
+                                gears.length,
+                            )
+                        }}
+                    </div>
+                    <PrimeButton
+                        :label="$t('ACTION_CREATE_GEAR')"
+                        icon="pi pi-plus"
+                        @click="() => onCreateGear()"
                     />
-                </template>
-            </CategoryHeader>
-            <PrimeDataTable
-                :value="gearsGroupByCategory[category]"
-                edit-mode="cell"
-                @cell-edit-complete="onCellEditComplete"
-                dataKey="id"
-                class="p-datatable-hide-thead"
-            >
-                <PrimeColumn field="name" :header="$t('LABEL_NAME')">
-                    <template #editor="{ data, field }">
-                        <PrimeInputText v-model="data[field]" />
-                    </template>
-                </PrimeColumn>
-                <PrimeColumn
-                    field="weight"
-                    :header="$t('LABEL_WEIGHT')"
-                    class="w-5rem lg:w-9rem text-right"
+                </SectionTitleBar>
+                <div
+                    v-for="category in displayGearCatergories"
+                    :key="category"
+                    class="flex flex-column gap-2"
                 >
-                    <template #body="{ data }">
-                        {{ data.weight ? formatWeight(data.weight) : '-' }}
-                    </template>
-                    <template #editor="{ data, field }">
-                        <PrimeInputGroup>
-                            <PrimeInputNumber v-model="data[field]" />
-                            <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
-                        </PrimeInputGroup>
-                    </template>
-                </PrimeColumn>
-                <PrimeColumn :exportable="false" class="w-3rem">
-                    <template #body="{ data }">
-                        <MoreActionsMenuButton
-                            :items="[
-                                {
-                                    icon: 'pi pi-pencil',
-                                    label: $t('ACTION_EDIT'),
-                                    command: () => {
-                                        onEditGear(data);
+                    <CategoryHeader :category="category" type="gear">
+                        <template #actions>
+                            <ActionButtonsGroup
+                                type="icon"
+                                :actions="[
+                                    {
+                                        icon: 'pi pi-plus',
+                                        label: $t('ACTION_CREATE_GEAR'),
+                                        onClick: () =>
+                                            onCreateGear({ category }),
                                     },
-                                },
-                                {
-                                    icon: 'pi pi-trash',
-                                    label: $t('ACTION_DELETE'),
-                                    command: () => {
-                                        confirmDeleteGear(data);
-                                    },
-                                },
-                            ]"
-                        />
-                    </template>
-                </PrimeColumn>
-            </PrimeDataTable>
+                                ]"
+                            />
+                        </template>
+                    </CategoryHeader>
+                    <PrimeDataTable
+                        :value="gearsGroupByCategory[category]"
+                        edit-mode="cell"
+                        @cell-edit-complete="onCellEditComplete"
+                        dataKey="id"
+                        class="p-datatable-hide-thead"
+                    >
+                        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
+                            <template #editor="{ data, field }">
+                                <PrimeInputText v-model="data[field]" />
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn
+                            field="weight"
+                            :header="$t('LABEL_WEIGHT')"
+                            class="w-5rem lg:w-9rem text-right"
+                        >
+                            <template #body="{ data }">
+                                {{
+                                    data.weight
+                                        ? formatWeight(data.weight)
+                                        : '-'
+                                }}
+                            </template>
+                            <template #editor="{ data, field }">
+                                <PrimeInputGroup>
+                                    <PrimeInputNumber v-model="data[field]" />
+                                    <PrimeInputGroupAddon
+                                        >g</PrimeInputGroupAddon
+                                    >
+                                </PrimeInputGroup>
+                            </template>
+                        </PrimeColumn>
+                        <PrimeColumn :exportable="false" class="w-3rem">
+                            <template #body="{ data }">
+                                <MoreActionsMenuButton
+                                    text
+                                    rounded
+                                    :items="[
+                                        {
+                                            icon: 'pi pi-pencil',
+                                            label: $t('ACTION_EDIT'),
+                                            command: () => {
+                                                onEditGear(data);
+                                            },
+                                        },
+                                        {
+                                            icon: 'pi pi-trash',
+                                            label: $t('ACTION_DELETE'),
+                                            command: () => {
+                                                confirmDeleteGear(data);
+                                            },
+                                        },
+                                    ]"
+                                />
+                            </template>
+                        </PrimeColumn>
+                    </PrimeDataTable>
+                </div>
+            </div>
         </div>
     </div>
     <GearEditorDialog

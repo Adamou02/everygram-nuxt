@@ -54,6 +54,17 @@ const formatDateToString = (date: Date): string => {
     return [year, month, day].join('-');
 };
 
+const formatDateString = (date: string, separator: string): string => {
+    return date.split('-').join(separator);
+};
+
+const getDaysBetweenDates = (startDate: string, endDate: string): number => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -62,4 +73,6 @@ export default {
     getTripWeightTotal,
     getGearsInTrip,
     formatDateToString,
+    formatDateString,
+    getDaysBetweenDates,
 };

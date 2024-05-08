@@ -1,4 +1,5 @@
 {
+    "INFO_DAYS": "{num} day | {num} days",
     "ACTION_ADD_FROM_GEARS": "Add From Gears",
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",
