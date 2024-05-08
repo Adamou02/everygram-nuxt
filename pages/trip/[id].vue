@@ -58,7 +58,7 @@
                     <!-- weigh bars -->
                     <div class="flex flex-column gap-4">
                         <div
-                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
                         >
                             <div class="text-lg">
                                 {{ $t('LABEL_TOTAL_WEIGHT') }}:
@@ -77,7 +77,7 @@
                             />
                         </div>
                         <div
-                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
                         >
                             <div class="text-lg">
                                 {{ $t('LABEL_BASE_WEIGHT') }}:
@@ -96,7 +96,7 @@
                             />
                         </div>
                         <div
-                            class="flex flex-column gap-3 px-2 py-3 border-round-md bg-white"
+                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
                         >
                             <div class="text-lg">
                                 {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
@@ -119,7 +119,9 @@
                 <!-- left -->
                 <div class="col-12 lg:col-8 flex flex-column gap-6">
                     <!-- gears -->
-                    <div class="flex flex-column gap-4">
+                    <div
+                        class="flex flex-column gap-5 bg-white p-3 border-round-md"
+                    >
                         <SectionTitleBar>
                             <h2>{{ $t('LABEL_GEARS') }}</h2>
                             <ActionButtonsGroup
@@ -247,7 +249,9 @@
                     </div>
 
                     <!-- comsumables -->
-                    <div class="flex flex-column gap-4">
+                    <div
+                        class="flex flex-column gap-5 bg-white p-3 border-round-md"
+                    >
                         <SectionTitleBar>
                             <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
                             <ActionButtonsGroup

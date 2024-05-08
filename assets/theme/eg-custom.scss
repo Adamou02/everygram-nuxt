@@ -26,8 +26,13 @@ a {
     text-decoration: none;
 }
 
-.p-datatable-hide-thead thead {
-    display: none;
+.p-datatable-hide-thead {
+    thead {
+        display: none;
+    }
+    tr:last-child td {
+        border-bottom: 0;
+    }
 }
 
 .p-selectbutton--stretch {
