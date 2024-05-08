@@ -18,15 +18,51 @@
                 />
             </div>
             <div class="field">
-                <label for="trip-description">
-                    {{ $t('LABEL_DESCRIPTION') }}
+                <label for="trip-date-calendar">
+                    {{
+                        editingTrip.dateMode === 'multi'
+                            ? $t('LABEL_TRIP_DATES')
+                            : $t('LABEL_TRIP_DATE')
+                    }}
                 </label>
-                <PrimeInputText
-                    id="trip-description"
-                    v-model="editingTrip.description"
+                <PrimeSelectButton
+                    v-model="editingTrip.dateMode"
+                    severity="secondary"
+                    :options="dateModeOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    aria-labelledby="Date Mode"
+                    class="mb-2 p-selectbutton--stretch"
+                />
+                <PrimeCalendar
+                    v-if="editingTrip.dateMode === 'multi'"
+                    id="trip-date-calendar"
+                    v-model="multiDates"
+                    dateFormat="yy-mm-dd"
+                    selectionMode="range"
+                    :manualInput="false"
+                    class="w-full"
+                />
+                <PrimeCalendar
+                    v-else
+                    id="trip-date-calendar"
+                    v-model="singleDate"
+                    dateFormat="yy-mm-dd"
                     class="w-full"
                 />
             </div>
+            <!-- <div class="field">
+                <label for="trip-description">
+                    {{ $t('LABEL_DESCRIPTION') }}
+                </label>
+                <PrimeTextarea
+                    id="trip-description"
+                    v-model="editingTrip.description"
+                    class="w-full"
+                    rows="2"
+                    autoResize
+                />
+            </div> -->
         </template>
         <template #footer>
             <PrimeButton
@@ -57,30 +93,69 @@ const emit = defineEmits<{
     cancel: [];
 }>();
 
+const userTripsStore = useUserTripsStore();
+const i18n = useI18n();
+const dateModeOptions = ref<{ label: string; value: TripDateMode }[]>([
+    { label: i18n.t('LABEL_ONE_DAY'), value: 'single' },
+    { label: i18n.t('LABEL_MULTI_DAY'), value: 'multi' },
+]);
 const emptyTrip: EditingTrip = {
     title: '',
     description: '',
+    dateMode: 'single',
+    startDate: '',
+    endDate: '',
 };
 const editingTrip = ref<EditingTrip>({});
+const singleDate = ref<Date>(new Date());
+const multiDates = ref<Date[]>([]);
+const isSaving = ref<boolean>(false);
+
 watchEffect(() => {
     if (props.isOpen) {
-        editingTrip.value = props.trip ? { ...props.trip } : { ...emptyTrip };
+        editingTrip.value = props.trip
+            ? { ...emptyTrip, ...props.trip }
+            : { ...emptyTrip };
+        singleDate.value = editingTrip.value.startDate
+            ? new Date(editingTrip.value.startDate)
+            : new Date();
+        multiDates.value =
+            editingTrip.value.startDate && editingTrip.value.endDate
+                ? [
+                      new Date(editingTrip.value.startDate),
+                      new Date(editingTrip.value.endDate),
+                  ]
+                : [];
     }
 });
-const isSaving = ref<boolean>(false);
-const userTripsStore = useUserTripsStore();
 
 const onSubmit = async () => {
     try {
+        const tripData = {
+            ...editingTrip.value,
+            ...(editingTrip.value.dateMode === 'multi'
+                ? {
+                      startDate: dataUtils.formatDateToString(
+                          multiDates.value[0],
+                      ),
+                      endDate: dataUtils.formatDateToString(
+                          multiDates.value[1],
+                      ),
+                  }
+                : {
+                      startDate: dataUtils.formatDateToString(singleDate.value),
+                      endDate: dataUtils.formatDateToString(singleDate.value),
+                  }),
+        };
         isSaving.value = true;
         if (props.trip) {
             await userTripsStore.updateTrip({
                 id: props.trip.id,
-                tripData: editingTrip.value,
+                tripData,
             });
             emit('complete-edit', userTripsStore.getTripById(props.trip.id));
         } else {
-            const tripId = await userTripsStore.createTrip(editingTrip.value);
+            const tripId = await userTripsStore.createTrip(tripData);
             if (!tripId) {
                 throw new Error('Failed to create trip');
             }

@@ -45,7 +45,7 @@
                 <PrimeColumn
                     field="weight"
                     :header="$t('LABEL_WEIGHT')"
-                    class="w-10rem"
+                    class="w-5rem lg:w-9rem text-right"
                 >
                     <template #body="{ data }">
                         {{ data.weight ? formatWeight(data.weight) : '-' }}

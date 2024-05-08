@@ -27,7 +27,7 @@
             <PrimeColumn
                 field="weightTotal"
                 :header="$t('LABEL_TOTAL_WEIGHT')"
-                class="w-10rem"
+                class="w-10rem text-right"
             />
             <PrimeColumn :exportable="false" class="w-3rem">
                 <template #body="{ data }">

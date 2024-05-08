@@ -27,10 +27,6 @@ const GEAR_CATEGORIES: Record<GearCategory, { icon: string; color: string }> = {
         icon: 'water_drop',
         color: '#2C67BA',
     },
-    sanitary: {
-        icon: 'soap',
-        color: '#304869',
-    },
     shelter: {
         icon: 'camping',
         color: '#C4A34A',
@@ -58,7 +54,6 @@ const GEAR_CATEGORY_KEYS: GearCategory[] = [
     'photography',
     'cooking',
     'hydration',
-    'sanitary',
     'tools',
     'accessories',
     'others',
@@ -80,6 +75,14 @@ const CONSUMABLE_CATEGORIES: Record<
         icon: 'local_fire_department',
         color: '#FF7043',
     },
+    cosmetics: {
+        icon: 'sanitizer',
+        color: '#FF4081',
+    },
+    sanitary: {
+        icon: 'soap',
+        color: '#304869',
+    },
     medical: {
         icon: 'medication',
         color: '#CC4545',
@@ -94,6 +97,8 @@ const CONSUMABLE_CATEGORY_KEYS: ConsumableCategory[] = [
     'food',
     'drinks',
     'fuel',
+    'cosmetics',
+    'sanitary',
     'medical',
     'others',
 ];

@@ -16,6 +16,11 @@ body {
     display: none;
 }
 
+.p-selectbutton--stretch {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
 :root {
     --app-header-height: 60px;
     @media (max-width: $lg) {

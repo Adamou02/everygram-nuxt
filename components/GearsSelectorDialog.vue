@@ -17,6 +17,7 @@
                 <PrimeColumn
                     field="weight"
                     :header="$t('LABEL_WEIGHT')"
+                    class="text-right"
                     sortable
                 >
                     <template #body="{ data }">

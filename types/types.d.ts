@@ -15,7 +15,6 @@ type GearCategory =
     | 'electronics'
     | 'photography'
     | 'hydration'
-    | 'sanitary'
     | 'shelter'
     | 'sleeping'
     | 'tools'
@@ -45,17 +44,29 @@ type TripGear = {
     id: string;
     quantity: number;
 };
+type TripDateMode = 'single' | 'multi';
 type Trip = {
     id: string;
     title: string;
     description: string;
-    consumables?: Consumable[];
+    dateMode: TripDateMode;
+    startDate: string;
+    endDate: string;
+    // created: string; //  timestamp
+    consumables: Consumable[];
     role: Record<string, TripRole>;
     gears: Record<string, TripGear>;
 };
 type EditingTrip = Partial<Trip>;
 
-type ConsumableCategory = 'food' | 'drinks' | 'fuel' | 'medical' | 'others';
+type ConsumableCategory =
+    | 'food'
+    | 'drinks'
+    | 'fuel'
+    | 'cosmetics'
+    | 'sanitary'
+    | 'medical'
+    | 'others';
 type Consumable = {
     name: string;
     weight: number; // grams

@@ -9,6 +9,7 @@ import {
     query,
     where,
     deleteField,
+    serverTimestamp,
 } from 'firebase/firestore';
 
 export const useUserTripsStore = defineStore('userTripsStore', () => {
@@ -68,6 +69,8 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
                     [user.value.uid]: constants.ROLE_OWNER,
                 },
                 gears: {},
+                consumables: [],
+                created: serverTimestamp(),
             });
             return docRef.id;
         } catch (error) {
