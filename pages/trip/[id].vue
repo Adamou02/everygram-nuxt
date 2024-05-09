@@ -175,6 +175,7 @@
                                 @gear-cell-edit-complete="
                                     onGearCellEditComplete
                                 "
+                                class="lg:ml-6"
                             />
                         </div>
                     </SectionPanel>
@@ -233,6 +234,7 @@
                                 @consumable-cell-edit-complete="
                                     onConsumableCellEditComplete
                                 "
+                                class="lg:ml-6"
                             />
                         </div>
                     </SectionPanel>

@@ -30,7 +30,7 @@
     padding: 0 16px;
     grid-template-columns: 200px 1fr;
     background-color: $eg-c-bright;
-    z-index: 1200; // higher than dropdown menu, lower than modal
+    z-index: 1100; // higher than dropdown menu, lower than modal
 
     &__logo {
         height: 24px;

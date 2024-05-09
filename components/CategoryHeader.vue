@@ -1,11 +1,11 @@
 <template>
     <div
         :class="[
-            'category-header flex justify-content-between align-items-center',
+            'category-header flex align-items-center gap-3',
             { 'sticky z-1': sticky },
         ]"
     >
-        <div class="flex align-items-center gap-2">
+        <div class="flex-1 flex align-items-center gap-3">
             <template v-if="type === 'gear'">
                 <GearCategoryAvatar
                     v-if="type === 'gear'"
@@ -29,7 +29,9 @@
                 </h3>
             </template>
             <template v-if="weight !== undefined">
-                <div>|</div>
+                <div
+                    class="flex-1 border-none border-top-1 border-300 border-dashed"
+                ></div>
                 <div class="text-600">
                     {{ formatWeight(weight) }}
                 </div>

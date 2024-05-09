@@ -1,5 +1,6 @@
 <template>
     <div v-if="totalWeight > 0" class="weight-bar-chart flex flex-column gap-3">
+        <!-- bar -->
         <div class="weight-bar-chart__bar">
             <div
                 v-for="item in barSectionItems"
@@ -13,6 +14,8 @@
                 }"
             />
         </div>
+
+        <!-- labels -->
         <div v-if="showLabel" class="flex flex-column gap-3">
             <div
                 v-for="item in sortedItems"
@@ -23,11 +26,13 @@
                     class="weight-bar-chart__dot"
                     :style="{ backgroundColor: item.color }"
                 />
-                <div>
-                    {{ item.label }} - {{ formatWeight(item.weight) }}
-                    <span v-if="totalWeight > 0" class="ml-1 text-600"
-                        >{{ _round((item.weight / totalWeight) * 100) }}%</span
-                    >
+                <div>{{ item.label }}</div>
+                <div
+                    class="flex-1 border-none border-top-1 border-300 border-dashed"
+                ></div>
+                <div>{{ formatWeight(item.weight) }}</div>
+                <div class="w-2rem text-600 text-right">
+                    {{ _round((item.weight / totalWeight) * 100) }}%
                 </div>
             </div>
         </div>
