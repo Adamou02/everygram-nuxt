@@ -1,7 +1,7 @@
 <template>
     <PrimeButton
         type="button"
-        @click="isOpen = true"
+        @click="isOpen = !isOpen"
         icon="pi pi-bars"
         aria-haspopup="true"
         aria-controls="user-mobile-menu"

@@ -88,7 +88,7 @@ $tableHeaderPadding: 1rem 1rem;
 
 /// Padding of a table header cell, must be defined with a shorthand for vertical and horizontal values e.g. ".5rem .5rem"
 /// @group data
-$tableHeaderCellPadding: 0.5rem 1rem;
+$tableHeaderCellPadding: 0.5rem 0.5rem;
 
 /// Background of a table header cell
 /// @group data
@@ -176,11 +176,11 @@ $tableBodyCellBorderWidth: 0 0 1px 0;
 
 /// Padding for a cell of a table toby row, must be defined with a shorthand for vertical and horizontal values e.g. ".5rem .5rem"
 /// @group data
-$tableBodyCellPadding: 0.5rem 1rem;
+$tableBodyCellPadding: 0.5rem 0.5rem;
 
 /// Padding of a table footer cell, must be defined with a shorthand for vertical and horizontal values e.g. ".5rem .5rem"
 /// @group data
-$tableFooterCellPadding: 0.5rem 1rem;
+$tableFooterCellPadding: 0.5rem 0.5rem;
 
 /// Background of a table footer cell
 /// @group data

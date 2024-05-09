@@ -45,16 +45,13 @@ a {
     }
 }
 
-.p-datatable-no-pr {
-    td:last-child,
-    th:last-child {
-        padding-right: 0;
-    }
-}
-
 .p-selectbutton--stretch {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
+.p-inputnumber.text-right .p-inputtext {
+    text-align: right !important;
 }
 
 /* utility class */
@@ -62,4 +59,10 @@ a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.hide-in-mobile {
+    @media (max-width: 991px) {
+        display: none;
+    }
 }

@@ -18,7 +18,7 @@
                 />
             </div>
             <div class="field">
-                <label for="trip-date-calendar">
+                <label>
                     {{
                         editingTrip.dateMode === 'multi'
                             ? $t('LABEL_TRIP_DATES')
@@ -34,19 +34,24 @@
                     aria-labelledby="Date Mode"
                     class="mb-2 p-selectbutton--stretch"
                 />
-                <PrimeCalendar
-                    v-if="editingTrip.dateMode === 'multi'"
-                    id="trip-date-calendar"
-                    v-model="multiDates"
-                    dateFormat="yy-mm-dd"
-                    selectionMode="range"
-                    :manualInput="false"
-                    class="w-full"
-                />
+                <PrimeInputGroup v-if="editingTrip.dateMode === 'multi'">
+                    <PrimeCalendar
+                        v-model="startDate"
+                        dateFormat="yy-mm-dd"
+                        class="w-7rem"
+                    />
+                    <PrimeInputGroupAddon class="min-w-0 p-1"
+                        >~</PrimeInputGroupAddon
+                    >
+                    <PrimeCalendar
+                        v-model="endDate"
+                        dateFormat="yy-mm-dd"
+                        class="w-7rem"
+                    />
+                </PrimeInputGroup>
                 <PrimeCalendar
                     v-else
-                    id="trip-date-calendar"
-                    v-model="singleDate"
+                    v-model="startDate"
                     dateFormat="yy-mm-dd"
                     class="w-full"
                 />
@@ -107,25 +112,22 @@ const emptyTrip: EditingTrip = {
     endDate: '',
 };
 const editingTrip = ref<EditingTrip>({});
-const singleDate = ref<Date>(new Date());
-const multiDates = ref<Date[]>([]);
+const startDate = ref<Date>(new Date());
+const endDate = ref<Date>(new Date());
 const isSaving = ref<boolean>(false);
 
 watchEffect(() => {
     if (props.isOpen) {
+        console.log('editingTrip.value', editingTrip.value);
         editingTrip.value = props.trip
             ? { ...emptyTrip, ...props.trip }
             : { ...emptyTrip };
-        singleDate.value = editingTrip.value.startDate
+        startDate.value = editingTrip.value.startDate
             ? new Date(editingTrip.value.startDate)
             : new Date();
-        multiDates.value =
-            editingTrip.value.startDate && editingTrip.value.endDate
-                ? [
-                      new Date(editingTrip.value.startDate),
-                      new Date(editingTrip.value.endDate),
-                  ]
-                : [];
+        endDate.value = editingTrip.value.endDate
+            ? new Date(editingTrip.value.endDate)
+            : new Date();
     }
 });
 
@@ -135,16 +137,12 @@ const onSubmit = async () => {
             ...editingTrip.value,
             ...(editingTrip.value.dateMode === 'multi'
                 ? {
-                      startDate: dataUtils.formatDateToString(
-                          multiDates.value[0],
-                      ),
-                      endDate: dataUtils.formatDateToString(
-                          multiDates.value[1],
-                      ),
+                      startDate: dataUtils.formatDateToString(startDate.value),
+                      endDate: dataUtils.formatDateToString(endDate.value),
                   }
                 : {
-                      startDate: dataUtils.formatDateToString(singleDate.value),
-                      endDate: dataUtils.formatDateToString(singleDate.value),
+                      startDate: dataUtils.formatDateToString(startDate.value),
+                      endDate: dataUtils.formatDateToString(startDate.value),
                   }),
         };
         isSaving.value = true;

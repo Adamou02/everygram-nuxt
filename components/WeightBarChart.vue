@@ -2,7 +2,7 @@
     <div v-if="totalWeight > 0" class="weight-bar-chart flex flex-column gap-3">
         <div class="weight-bar-chart__bar">
             <div
-                v-for="item in sortedItems"
+                v-for="item in barSectionItems"
                 v-tooltip.top="
                     `${item.label} ${formatWeight(item.weight)} (${_round((item.weight / totalWeight) * 100)}%)`
                 "
@@ -47,6 +47,9 @@ const totalWeight = computed(() =>
 );
 const sortedItems = computed(() =>
     props.items.sort((a, b) => b.weight - a.weight),
+);
+const barSectionItems = computed(() =>
+    sortedItems.value.filter((item) => item.weight > 0),
 );
 </script>
 

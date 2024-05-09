@@ -39,69 +39,14 @@
                                 />
                             </template>
                         </CategoryHeader>
-                        <PrimeDataTable
-                            :value="gearsGroupByCategory[category]"
-                            edit-mode="cell"
-                            @cell-edit-complete="onCellEditComplete"
-                            dataKey="id"
-                            class="p-datatable-hide-thead p-datatable-no-pr"
-                        >
-                            <PrimeColumn
-                                field="name"
-                                :header="$t('LABEL_NAME')"
-                            >
-                                <template #editor="{ data, field }">
-                                    <PrimeInputText v-model="data[field]" />
-                                </template>
-                            </PrimeColumn>
-                            <PrimeColumn
-                                field="weight"
-                                :header="$t('LABEL_WEIGHT')"
-                                class="w-5rem lg:w-9rem text-right"
-                            >
-                                <template #body="{ data }">
-                                    {{
-                                        data.weight
-                                            ? formatWeight(data.weight)
-                                            : '-'
-                                    }}
-                                </template>
-                                <template #editor="{ data, field }">
-                                    <PrimeInputGroup>
-                                        <PrimeInputNumber
-                                            v-model="data[field]"
-                                        />
-                                        <PrimeInputGroupAddon
-                                            >g</PrimeInputGroupAddon
-                                        >
-                                    </PrimeInputGroup>
-                                </template>
-                            </PrimeColumn>
-                            <PrimeColumn :exportable="false" class="w-3rem">
-                                <template #body="{ data }">
-                                    <MoreActionsMenuButton
-                                        text
-                                        rounded
-                                        :items="[
-                                            {
-                                                icon: 'pi pi-pencil',
-                                                label: $t('ACTION_EDIT'),
-                                                command: () => {
-                                                    onEditGear(data);
-                                                },
-                                            },
-                                            {
-                                                icon: 'pi pi-trash',
-                                                label: $t('ACTION_DELETE'),
-                                                command: () => {
-                                                    confirmDeleteGear(data);
-                                                },
-                                            },
-                                        ]"
-                                    />
-                                </template>
-                            </PrimeColumn>
-                        </PrimeDataTable>
+                        <GearDataTable
+                            :gears="gearsGroupByCategory[category]"
+                            :hasQuantity="false"
+                            :actions="['edit', 'delete']"
+                            @gear-edit="onEditGear"
+                            @gear-delete="confirmDeleteGear"
+                            @gear-cell-edit-complete="onCellEditComplete"
+                        />
                     </div>
                 </SectionPanel>
             </div>
@@ -178,7 +123,7 @@ const onArchiveGear = async (gear: Gear) => {
 
 // for edit gear in table
 const onCellEditComplete = async (e: {
-    data: Gear & { quantity: number };
+    data: Gear;
     newValue: any;
     field: string;
 }) => {

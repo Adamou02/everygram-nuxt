@@ -161,88 +161,16 @@
                                     />
                                 </template>
                             </CategoryHeader>
-                            <PrimeDataTable
-                                :value="gearsInTripByCategory[category]"
-                                dataKey="id"
-                                edit-mode="cell"
-                                @cell-edit-complete="onGearCellEditComplete"
-                                class="p-datatable-hide-thead p-datatable-no-pr"
-                            >
-                                <PrimeColumn
-                                    field="name"
-                                    :header="$t('LABEL_NAME')"
-                                >
-                                    <template #editor="{ data, field }">
-                                        <PrimeInputText
-                                            v-model="data[field]"
-                                            class="w-10rem"
-                                        />
-                                    </template>
-                                </PrimeColumn>
-                                <PrimeColumn
-                                    field="weight"
-                                    :header="$t('LABEL_WEIGHT')"
-                                    class="w-5rem lg:w-9rem text-right"
-                                >
-                                    <template #body="{ data }">
-                                        {{
-                                            data.weight
-                                                ? formatWeight(data.weight)
-                                                : '-'
-                                        }}
-                                    </template>
-                                    <template #editor="{ data, field }">
-                                        <PrimeInputGroup>
-                                            <PrimeInputNumber
-                                                v-model="data[field]"
-                                            />
-                                            <PrimeInputGroupAddon
-                                                >g</PrimeInputGroupAddon
-                                            >
-                                        </PrimeInputGroup>
-                                    </template>
-                                </PrimeColumn>
-                                <PrimeColumn
-                                    field="quantity"
-                                    :header="$t('LABEL_QUANTITY')"
-                                    class="w-4rem lg:w-5rem"
-                                >
-                                    <template #body="{ data }">
-                                        x {{ data.quantity }}
-                                    </template>
-                                    <template #editor="{ data, field }">
-                                        <PrimeInputNumber
-                                            v-model="data[field]"
-                                            :min="1"
-                                            class="w-3rem"
-                                        />
-                                    </template>
-                                </PrimeColumn>
-                                <PrimeColumn :exportable="false" class="w-3rem">
-                                    <template #body="{ data }">
-                                        <MoreActionsMenuButton
-                                            text
-                                            rounded
-                                            :items="[
-                                                {
-                                                    icon: 'pi pi-pencil',
-                                                    label: $t('ACTION_EDIT'),
-                                                    command: () => {
-                                                        onEditGear(data);
-                                                    },
-                                                },
-                                                {
-                                                    icon: 'pi pi-times',
-                                                    label: $t('ACTION_REMOVE'),
-                                                    command: () => {
-                                                        onRemoveGear(data.id);
-                                                    },
-                                                },
-                                            ]"
-                                        />
-                                    </template>
-                                </PrimeColumn>
-                            </PrimeDataTable>
+                            <GearDataTable
+                                :gears="gearsInTripByCategory[category]"
+                                :hasQuantity="true"
+                                :actions="['edit', 'remove']"
+                                @gear-edit="onEditGear"
+                                @gear-remove="onRemoveGear"
+                                @gear-cell-edit-complete="
+                                    onGearCellEditComplete
+                                "
+                            />
                         </div>
                     </SectionPanel>
 
@@ -288,78 +216,14 @@
                                     />
                                 </template>
                             </CategoryHeader>
-                            <PrimeDataTable
-                                :value="consumablesByCategory[category]"
-                                dataKey="id"
-                                edit-mode="cell"
-                                @cell-edit-complete="
+                            <ConsumableDataTable
+                                :consumables="consumablesByCategory[category]"
+                                @consumable-edit="onEditConsumable"
+                                @consumable-delete="confirmDeleteConsumable"
+                                @consumable-cell-edit-complete="
                                     onConsumableCellEditComplete
                                 "
-                                class="p-datatable-hide-thead p-datatable-no-pr"
-                            >
-                                <PrimeColumn
-                                    field="name"
-                                    :header="$t('LABEL_NAME')"
-                                >
-                                    <template #editor="{ data, field }">
-                                        <PrimeInputText
-                                            v-model="data[field]"
-                                            class="w-10rem"
-                                        />
-                                    </template>
-                                </PrimeColumn>
-                                <PrimeColumn
-                                    field="weight"
-                                    :header="$t('LABEL_WEIGHT')"
-                                    class="w-5rem lg:w-9rem text-right"
-                                >
-                                    <template #body="{ data }">
-                                        {{
-                                            data.weight
-                                                ? formatWeight(data.weight)
-                                                : '-'
-                                        }}
-                                    </template>
-                                    <template #editor="{ data, field }">
-                                        <PrimeInputGroup>
-                                            <PrimeInputNumber
-                                                v-model="data[field]"
-                                            />
-                                            <PrimeInputGroupAddon
-                                                >g</PrimeInputGroupAddon
-                                            >
-                                        </PrimeInputGroup>
-                                    </template>
-                                </PrimeColumn>
-                                <PrimeColumn :exportable="false" class="w-3rem">
-                                    <template #body="{ data }">
-                                        <MoreActionsMenuButton
-                                            text
-                                            rounded
-                                            :items="[
-                                                {
-                                                    icon: 'pi pi-pencil',
-                                                    label: $t('ACTION_EDIT'),
-                                                    command: () => {
-                                                        onEditConsumable(
-                                                            data.index,
-                                                        );
-                                                    },
-                                                },
-                                                {
-                                                    icon: 'pi pi-times',
-                                                    label: $t('ACTION_DELETE'),
-                                                    command: () => {
-                                                        confirmDeleteConsumable(
-                                                            data.index,
-                                                        );
-                                                    },
-                                                },
-                                            ]"
-                                        />
-                                    </template>
-                                </PrimeColumn>
-                            </PrimeDataTable>
+                            />
                         </div>
                     </SectionPanel>
                 </div>
@@ -466,16 +330,6 @@ const consumableWeightByCategory = computed(() =>
     ),
 );
 
-const tripWeightTotal = computed<number>(() =>
-    trip.value ? dataUtils.getTripWeightTotal(trip.value, gearMap.value) : 0,
-);
-const tripGearsWeight = computed<number>(() =>
-    trip.value ? dataUtils.getTripGearsWeight(trip.value, gearMap.value) : 0,
-);
-const tripConsumablesWeight = computed<number>(() =>
-    trip.value ? dataUtils.getTripConsumablessWeight(trip.value) : 0,
-);
-
 const totalWeightItems = computed<WeightBarChartItem[]>(() => [
     {
         label: i18n.t('LABEL_BASE_WEIGHT'),
@@ -544,8 +398,8 @@ const onCompleteCreateGearInTrip = (gear: Gear) => {
     onCompleteCreateGear();
 };
 
-const onRemoveGear = (gearId: string) => {
-    userTripsStore.removeGearsFromTrip(tripId, [gearId]);
+const onRemoveGear = (gear: Gear) => {
+    userTripsStore.removeGearsFromTrip(tripId, [gear.id]);
 };
 
 // for TripInfoEditorDialog
@@ -559,7 +413,7 @@ const {
 
 // for edit gear in table
 const onGearCellEditComplete = async (e: {
-    data: GearWithQuantity;
+    data: Gear;
     newValue: any;
     field: string;
 }) => {

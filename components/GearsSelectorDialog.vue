@@ -10,6 +10,7 @@
                 v-model:selection="selectedGears"
                 selectionMode="multiple"
                 :value="notSelectedGears"
+                size="large"
                 dataKey="id"
             >
                 <PrimeColumn selectionMode="multiple" />
