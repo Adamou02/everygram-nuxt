@@ -117,11 +117,9 @@
                 </div>
 
                 <!-- left -->
-                <div class="col-12 lg:col-8 flex flex-column gap-6">
+                <div class="col-12 lg:col-8 flex flex-column gap-4">
                     <!-- gears -->
-                    <div
-                        class="flex flex-column gap-5 bg-white p-3 border-round-md"
-                    >
+                    <SectionPanel>
                         <SectionTitleBar>
                             <h2>{{ $t('LABEL_GEARS') }}</h2>
                             <ActionButtonsGroup
@@ -168,7 +166,7 @@
                                 dataKey="id"
                                 edit-mode="cell"
                                 @cell-edit-complete="onGearCellEditComplete"
-                                class="p-datatable-hide-thead"
+                                class="p-datatable-hide-thead p-datatable-no-pr"
                             >
                                 <PrimeColumn
                                     field="name"
@@ -246,12 +244,10 @@
                                 </PrimeColumn>
                             </PrimeDataTable>
                         </div>
-                    </div>
+                    </SectionPanel>
 
                     <!-- comsumables -->
-                    <div
-                        class="flex flex-column gap-5 bg-white p-3 border-round-md"
-                    >
+                    <SectionPanel>
                         <SectionTitleBar>
                             <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
                             <ActionButtonsGroup
@@ -299,7 +295,7 @@
                                 @cell-edit-complete="
                                     onConsumableCellEditComplete
                                 "
-                                class="p-datatable-hide-thead"
+                                class="p-datatable-hide-thead p-datatable-no-pr"
                             >
                                 <PrimeColumn
                                     field="name"
@@ -365,7 +361,7 @@
                                 </PrimeColumn>
                             </PrimeDataTable>
                         </div>
-                    </div>
+                    </SectionPanel>
                 </div>
             </div>
         </template>

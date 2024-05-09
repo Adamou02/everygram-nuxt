@@ -18,7 +18,7 @@ const props = defineProps<{
 <style lang="scss">
 .section-title-bar {
     top: var(--app-header-height);
-    min-height: var(--app-header-height);
+    // min-height: var(--app-header-height);
     &--sticky {
         position: sticky;
         z-index: 1;

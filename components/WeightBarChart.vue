@@ -1,8 +1,5 @@
 <template>
-    <div
-        v-if="totalWeight > 0 && items.length"
-        class="weight-bar-chart flex flex-column gap-3"
-    >
+    <div v-if="totalWeight > 0" class="weight-bar-chart flex flex-column gap-3">
         <div class="weight-bar-chart__bar">
             <div
                 v-for="item in sortedItems"
@@ -59,7 +56,6 @@ const sortedItems = computed(() =>
         display: flex;
         gap: 2px;
         height: 16px;
-        // overflow: hidden;
     }
     &__section {
         flex: 1 1 auto;

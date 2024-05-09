@@ -36,10 +36,10 @@ onUnmounted(() => {
     max-width: 1200px;
     min-height: 100vh;
     margin: auto;
-    padding: 40px 20px;
+    padding: 16px;
 
-    @media (max-width: $lg) {
-        padding: 20px;
+    @media (min-width: $lg) {
+        padding: 24px;
     }
 }
 </style>

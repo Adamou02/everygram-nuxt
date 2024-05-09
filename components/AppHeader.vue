@@ -1,5 +1,5 @@
 <template>
-    <header class="app-header sticky top-0 z-1">
+    <header class="app-header sticky top-0">
         <NuxtLink to="/">
             <img
                 class="app-header__logo"
@@ -25,38 +25,41 @@
 
 .app-header {
     height: var(--app-header-height);
-    padding: 0 40px;
     display: grid;
-    grid-template-columns: 200px 1fr 200px;
     align-items: center;
-    gap: 16px;
+    padding: 0 16px;
+    grid-template-columns: 200px 1fr;
     background-color: $eg-c-bright;
+    z-index: 1200; // higher than dropdown menu, lower than modal
 
     &__logo {
         height: 24px;
     }
+    &__navigation,
+    &__actions {
+        display: none;
+    }
     &__navigation {
-        display: flex;
         justify-content: center;
     }
     &__actions {
-        display: flex;
         justify-content: flex-end;
     }
     &__menu {
-        display: none;
+        display: flex;
+        justify-content: flex-end;
     }
 
-    @media (max-width: $lg) {
-        padding: 0 20px;
-        grid-template-columns: 200px 1fr;
+    @media (min-width: $lg) {
+        padding: 0 40px;
+        grid-template-columns: 200px 1fr 200px;
+        gap: 16px;
         &__menu {
-            display: flex;
-            justify-content: flex-end;
+            display: none;
         }
         &__navigation,
         &__actions {
-            display: none;
+            display: flex;
         }
     }
 }

@@ -48,16 +48,18 @@
     }
     &__content {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 20px 40px;
+        flex-direction: column-reverse;
+        gap: 12px;
+        padding: 12px 20px 20px;
     }
 
-    @media (max-width: $lg) {
+    @media (min-width: $lg) {
         &__content {
-            flex-direction: column-reverse;
-            gap: 12px;
-            padding: 12px 20px 20px;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 0;
+            padding: 20px 40px;
         }
     }
 }
