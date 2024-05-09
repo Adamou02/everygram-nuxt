@@ -1,5 +1,5 @@
 <template>
-    <header class="app-header sticky top-0">
+    <header class="app-header sticky top-0 border-bottom-1 border-200">
         <NuxtLink to="/">
             <img
                 class="app-header__logo"

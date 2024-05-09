@@ -23,8 +23,13 @@
                     v-for="category in displayGearCatergories"
                     :key="category"
                 >
-                    <div class="flex flex-column gap-3">
-                        <CategoryHeader :category="category" type="gear">
+                    <template #header>
+                        <CategoryHeader
+                            :category="category"
+                            type="gear"
+                            class="p-3 bg-white border-round-top-md"
+                            sticky
+                        >
                             <template #actions>
                                 <ActionButtonsGroup
                                     type="icon"
@@ -39,15 +44,15 @@
                                 />
                             </template>
                         </CategoryHeader>
-                        <GearDataTable
-                            :gears="gearsGroupByCategory[category]"
-                            :hasQuantity="false"
-                            :actions="['edit', 'delete']"
-                            @gear-edit="onEditGear"
-                            @gear-delete="confirmDeleteGear"
-                            @gear-cell-edit-complete="onCellEditComplete"
-                        />
-                    </div>
+                    </template>
+                    <GearDataTable
+                        :gears="gearsGroupByCategory[category]"
+                        :hasQuantity="false"
+                        :actions="['edit', 'delete']"
+                        @gear-edit="onEditGear"
+                        @gear-delete="confirmDeleteGear"
+                        @gear-cell-edit-complete="onCellEditComplete"
+                    />
                 </SectionPanel>
             </div>
         </div>

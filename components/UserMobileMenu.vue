@@ -33,30 +33,6 @@
                             'user-mobile-menu__button',
                             {
                                 'user-mobile-menu__button--active':
-                                    $route.name === 'gears',
-                            },
-                        ]"
-                        :label="$t('PAGE_GEARS')"
-                        text
-                        @click="
-                            () => {
-                                navigateTo('/gears');
-                                isOpen = false;
-                            }
-                        "
-                    >
-                        <template #icon>
-                            <span class="material-symbols-outlined mr-2"
-                                >category</span
-                            >
-                        </template>
-                    </PrimeButton>
-                    <PrimeButton
-                        :class="[
-                            'text-left',
-                            'user-mobile-menu__button',
-                            {
-                                'user-mobile-menu__button--active':
                                     $route.name === 'trips' ||
                                     $route.name === 'trip-id',
                             },
@@ -73,6 +49,30 @@
                         <template #icon>
                             <span class="material-symbols-outlined mr-2"
                                 >landscape</span
+                            >
+                        </template>
+                    </PrimeButton>
+                    <PrimeButton
+                        :class="[
+                            'text-left',
+                            'user-mobile-menu__button',
+                            {
+                                'user-mobile-menu__button--active':
+                                    $route.name === 'gears',
+                            },
+                        ]"
+                        :label="$t('PAGE_GEARS')"
+                        text
+                        @click="
+                            () => {
+                                navigateTo('/gears');
+                                isOpen = false;
+                            }
+                        "
+                    >
+                        <template #icon>
+                            <span class="material-symbols-outlined mr-2"
+                                >category</span
                             >
                         </template>
                     </PrimeButton>

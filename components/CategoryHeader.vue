@@ -1,5 +1,10 @@
 <template>
-    <div class="flex justify-content-between align-items-center">
+    <div
+        :class="[
+            'category-header flex justify-content-between align-items-center',
+            { 'sticky z-1': sticky },
+        ]"
+    >
         <div class="flex align-items-center gap-2">
             <template v-if="type === 'gear'">
                 <GearCategoryAvatar
@@ -41,8 +46,15 @@ const props = defineProps<{
     type: 'consumable' | 'gear';
     category: GearCategory | ConsumableCategory;
     weight?: number;
+    sticky?: boolean;
 }>();
 
 const { gearCategoryToLabel, consumableCategoryToLabel, formatWeight } =
     useLangUtils();
 </script>
+
+<style lang="scss">
+.category-header {
+    top: var(--app-header-height);
+}
+</style>

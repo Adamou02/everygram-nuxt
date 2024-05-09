@@ -3,19 +3,6 @@
         <PrimeButton
             :class="[
                 'user-nav-buttons__button',
-                { 'user-nav-buttons__button--active': $route.name === 'gears' },
-            ]"
-            :label="$t('PAGE_GEARS')"
-            text
-            @click="navigateTo('/gears')"
-        >
-            <template #icon>
-                <span class="material-symbols-outlined mr-2">category</span>
-            </template>
-        </PrimeButton>
-        <PrimeButton
-            :class="[
-                'user-nav-buttons__button',
                 {
                     'user-nav-buttons__button--active':
                         $route.name === 'trips' || $route.name === 'trip-id',
@@ -27,6 +14,19 @@
         >
             <template #icon>
                 <span class="material-symbols-outlined mr-2">landscape</span>
+            </template>
+        </PrimeButton>
+        <PrimeButton
+            :class="[
+                'user-nav-buttons__button',
+                { 'user-nav-buttons__button--active': $route.name === 'gears' },
+            ]"
+            :label="$t('PAGE_GEARS')"
+            text
+            @click="navigateTo('/gears')"
+        >
+            <template #icon>
+                <span class="material-symbols-outlined mr-2">category</span>
             </template>
         </PrimeButton>
     </div>

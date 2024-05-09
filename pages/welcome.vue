@@ -13,7 +13,7 @@
             <PrimeButton
                 :label="$t('ACTION_START_USING_EVERYGRAM')"
                 class="w-full"
-                @click="navigateTo('/gears')"
+                @click="navigateTo('/trips')"
             />
         </template>
     </div>
@@ -29,6 +29,6 @@ const { user } = storeToRefs(userStore);
 const { signInWithGoogle, isSigningIn } = useSignInActions();
 const onSignInWithGoogle = async () => {
     await signInWithGoogle();
-    navigateTo('/gears');
+    navigateTo('/trips');
 };
 </script>

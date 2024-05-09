@@ -2,7 +2,7 @@
     <div
         :class="[
             'section-title-bar flex justify-content-between align-items-center',
-            { 'section-title-bar--sticky': sticky },
+            { 'sticky z-1': sticky },
         ]"
     >
         <slot />
@@ -18,11 +18,5 @@ const props = defineProps<{
 <style lang="scss">
 .section-title-bar {
     top: var(--app-header-height);
-    // min-height: var(--app-header-height);
-    &--sticky {
-        position: sticky;
-        z-index: 1;
-        background-color: var(--app-background-color);
-    }
 }
 </style>

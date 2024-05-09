@@ -59,7 +59,7 @@ const signUp = async () => {
             email: email.value,
             password: password.value,
         });
-        navigateTo('/gears');
+        navigateTo('/trips');
     } catch (error) {
         console.error(errorMessageLang((error as AuthError).code));
         isLoading.value = false;

@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (to.name === 'index') {
         if (user) {
-            return navigateTo('/gears');
+            return navigateTo('/trips');
         } else {
             return navigateTo('/welcome');
         }
@@ -31,6 +31,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             to.name === 'signup' ||
             to.name === 'reset-password')
     ) {
-        return navigateTo('/gears');
+        return navigateTo('/trips');
     }
 });

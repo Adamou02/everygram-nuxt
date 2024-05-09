@@ -120,23 +120,28 @@
                 <div class="col-12 lg:col-8 flex flex-column gap-4">
                     <!-- gears -->
                     <SectionPanel>
-                        <SectionTitleBar>
-                            <h2>{{ $t('LABEL_GEARS') }}</h2>
-                            <ActionButtonsGroup
-                                type="text"
-                                :actions="[
-                                    {
-                                        label: $t('ACTION_ADD_FROM_GEARS'),
-                                        onClick: () =>
-                                            (isSelectingGears = true),
-                                    },
-                                    {
-                                        label: $t('ACTION_CREATE_GEAR'),
-                                        onClick: () => onCreateGear(),
-                                    },
-                                ]"
-                            />
-                        </SectionTitleBar>
+                        <template #header>
+                            <SectionTitleBar
+                                class="p-3 bg-white border-round-top-md"
+                                sticky
+                            >
+                                <h2>{{ $t('LABEL_GEARS') }}</h2>
+                                <ActionButtonsGroup
+                                    type="text"
+                                    :actions="[
+                                        {
+                                            label: $t('ACTION_ADD_FROM_GEARS'),
+                                            onClick: () =>
+                                                (isSelectingGears = true),
+                                        },
+                                        {
+                                            label: $t('ACTION_CREATE'),
+                                            onClick: () => onCreateGear(),
+                                        },
+                                    ]"
+                                />
+                            </SectionTitleBar>
+                        </template>
                         <div
                             v-for="category in displayGearCatergories"
                             :key="category"
@@ -176,18 +181,23 @@
 
                     <!-- comsumables -->
                     <SectionPanel>
-                        <SectionTitleBar>
-                            <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
-                            <ActionButtonsGroup
-                                type="text"
-                                :actions="[
-                                    {
-                                        label: $t('ACTION_CREATE_CONSUMABLE'),
-                                        onClick: () => onCreateConsumable(),
-                                    },
-                                ]"
-                            />
-                        </SectionTitleBar>
+                        <template #header>
+                            <SectionTitleBar
+                                class="p-3 bg-white border-round-top-md"
+                                sticky
+                            >
+                                <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
+                                <ActionButtonsGroup
+                                    type="text"
+                                    :actions="[
+                                        {
+                                            label: $t('ACTION_CREATE'),
+                                            onClick: () => onCreateConsumable(),
+                                        },
+                                    ]"
+                                />
+                            </SectionTitleBar>
+                        </template>
                         <div
                             v-for="category in displayConsumableCategories"
                             :key="category"
