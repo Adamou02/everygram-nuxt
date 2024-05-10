@@ -1,7 +1,7 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="props.trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')"
+        :header="trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')"
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
@@ -14,7 +14,7 @@
                     id="trip-title"
                     v-model="editingTrip.title"
                     class="w-full"
-                    autofocus
+                    :autofocus="!trip"
                 />
             </div>
             <div class="field">
@@ -78,7 +78,7 @@
                 @click="$emit('cancel')"
             />
             <PrimeButton
-                :label="props.trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :label="trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
                 @click="onSubmit()"
             />

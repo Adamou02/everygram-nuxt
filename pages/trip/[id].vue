@@ -144,11 +144,12 @@
                                 class="p-3 bg-white border-round-top-md"
                                 sticky
                             >
-                                <h2>{{ $t('LABEL_BASE_GEARS') }}</h2>
+                                <h2>{{ $t('LABEL_BASE') }}</h2>
                                 <ActionButtonsGroup
                                     type="text"
                                     :actions="[
                                         {
+                                            icon: 'pi pi-plus',
                                             label: $t('ACTION_ADD_FROM_GEARS'),
                                             onClick: () => {
                                                 selectingGearType = 'gears';
@@ -156,6 +157,7 @@
                                             },
                                         },
                                         {
+                                            icon: 'pi pi-plus',
                                             label: $t('ACTION_CREATE'),
                                             onClick: () => {
                                                 creatingGearType = 'gears';
@@ -163,6 +165,31 @@
                                             },
                                         },
                                     ]"
+                                    class="hide-in-mobile"
+                                />
+                                <MoreActionsMenuButton
+                                    text
+                                    rounded
+                                    icon="pi-plus"
+                                    :items="[
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_ADD_FROM_GEARS'),
+                                            command: () => {
+                                                selectingGearType = 'gears';
+                                                isSelectingGears = true;
+                                            },
+                                        },
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_CREATE_GEAR'),
+                                            command: () => {
+                                                creatingGearType = 'gears';
+                                                onCreateGear();
+                                            },
+                                        },
+                                    ]"
+                                    class="lg:hidden"
                                 />
                             </SectionTitleBar>
                         </template>
@@ -179,6 +206,7 @@
                                 <template #actions>
                                     <ActionButtonsGroup
                                         type="icon"
+                                        class="hide-in-mobile"
                                         :actions="[
                                             {
                                                 icon: 'pi pi-plus',
@@ -219,11 +247,12 @@
                                 class="p-3 bg-white border-round-top-md"
                                 sticky
                             >
-                                <h2>{{ $t('LABEL_WORN_GEARS') }}</h2>
+                                <h2>{{ $t('LABEL_WORN') }}</h2>
                                 <ActionButtonsGroup
                                     type="text"
                                     :actions="[
                                         {
+                                            icon: 'pi pi-plus',
                                             label: $t('ACTION_ADD_FROM_GEARS'),
                                             onClick: () => {
                                                 selectingGearType = 'wornGears';
@@ -231,6 +260,7 @@
                                             },
                                         },
                                         {
+                                            icon: 'pi pi-plus',
                                             label: $t('ACTION_CREATE'),
                                             onClick: () => {
                                                 creatingGearType = 'wornGears';
@@ -238,6 +268,31 @@
                                             },
                                         },
                                     ]"
+                                    class="hide-in-mobile"
+                                />
+                                <MoreActionsMenuButton
+                                    text
+                                    rounded
+                                    icon="pi-plus"
+                                    :items="[
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_ADD_FROM_GEARS'),
+                                            command: () => {
+                                                selectingGearType = 'wornGears';
+                                                isSelectingGears = true;
+                                            },
+                                        },
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_CREATE_GEAR'),
+                                            command: () => {
+                                                creatingGearType = 'wornGears';
+                                                onCreateGear();
+                                            },
+                                        },
+                                    ]"
+                                    class="lg:hidden"
                                 />
                             </SectionTitleBar>
                         </template>
@@ -254,6 +309,7 @@
                                 <template #actions>
                                     <ActionButtonsGroup
                                         type="icon"
+                                        class="hide-in-mobile"
                                         :actions="[
                                             {
                                                 icon: 'pi pi-plus',
@@ -300,10 +356,23 @@
                                     type="text"
                                     :actions="[
                                         {
+                                            icon: 'pi pi-plus',
                                             label: $t('ACTION_CREATE'),
                                             onClick: () => onCreateConsumable(),
                                         },
                                     ]"
+                                    class="hide-in-mobile"
+                                />
+                                <ActionButtonsGroup
+                                    type="icon"
+                                    :actions="[
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_CREATE'),
+                                            onClick: () => onCreateConsumable(),
+                                        },
+                                    ]"
+                                    class="lg:hidden"
                                 />
                             </SectionTitleBar>
                         </template>
@@ -320,6 +389,7 @@
                                 <template #actions>
                                     <ActionButtonsGroup
                                         type="icon"
+                                        class="hide-in-mobile"
                                         :actions="[
                                             {
                                                 icon: 'pi pi-plus',

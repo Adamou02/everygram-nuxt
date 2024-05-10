@@ -27,9 +27,7 @@
                     :style="{ backgroundColor: item.color }"
                 />
                 <div>{{ item.label }}</div>
-                <div
-                    class="flex-1 border-none border-top-1 border-300 border-dashed"
-                ></div>
+                <DashedLine />
                 <div>{{ formatWeight(item.weight) }}</div>
                 <div class="w-2rem text-600 text-right">
                     {{ _round((item.weight / totalWeight) * 100) }}%

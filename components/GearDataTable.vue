@@ -1,6 +1,6 @@
 <template>
     <PrimeDataTable
-        :value="gears"
+        :value="sortedGears"
         dataKey="id"
         edit-mode="cell"
         @cell-edit-complete="(e) => emit('gear-cell-edit-complete', e)"
@@ -108,6 +108,10 @@ const props = defineProps<{
     hasQuantity?: boolean;
     actions: ('edit' | 'delete' | 'remove')[];
 }>();
+
+const sortedGears = computed(() => {
+    return props.gears?.sort((a, b) => b.weight - a.weight) ?? [];
+});
 
 const emit = defineEmits<{
     'gear-cell-edit-complete': [

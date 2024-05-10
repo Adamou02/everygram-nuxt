@@ -1,6 +1,6 @@
 <template>
     <PrimeDataTable
-        :value="consumables"
+        :value="sortedConsumables"
         dataKey="id"
         edit-mode="cell"
         @cell-edit-complete="(e) => emit('consumable-cell-edit-complete', e)"
@@ -82,6 +82,10 @@
 const props = defineProps<{
     consumables?: ConsumableWithIndex[];
 }>();
+
+const sortedConsumables = computed(() => {
+    return props.consumables?.sort((a, b) => b.weight - a.weight) ?? [];
+});
 
 const emit = defineEmits<{
     'consumable-edit': [index: number];

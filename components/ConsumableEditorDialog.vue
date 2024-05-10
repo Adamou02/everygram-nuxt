@@ -18,7 +18,7 @@
                     id="consumable-name"
                     v-model="editingConsumable.name"
                     class="w-full"
-                    autofocus
+                    :autofocus="!existingConsumable"
                 />
             </div>
             <div class="field">

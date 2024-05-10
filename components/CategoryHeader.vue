@@ -29,9 +29,7 @@
                 </h3>
             </template>
             <template v-if="weight !== undefined">
-                <div
-                    class="flex-1 border-none border-top-1 border-300 border-dashed"
-                ></div>
+                <DashedLine />
                 <div class="text-600">
                     {{ formatWeight(weight) }}
                 </div>

@@ -1,7 +1,7 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="props.gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
+        :header="gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
         modal
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
@@ -14,7 +14,7 @@
                     id="gear-name"
                     v-model="editingGear.name"
                     class="w-full"
-                    autofocus
+                    :autofocus="!gear"
                 />
             </div>
             <div class="field">
@@ -93,7 +93,7 @@
                 @click="$emit('cancel')"
             />
             <PrimeButton
-                :label="props.gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :label="gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
                 @click="onSubmit()"
             />
