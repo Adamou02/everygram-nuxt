@@ -31,12 +31,13 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         unsubscribe.value = onSnapshot(
             query(
                 gearCollectionRef,
-                where(`role.${user.value.uid}`, '==', constants.ROLE_OWNER),
+                where(`role.${user.value.uid}`, '==', constants.ROLES.OWNER),
             ),
             (querySnapshot) => {
                 gears.value = querySnapshot.docs.map((doc) => {
                     const docData = doc.data();
                     return {
+                        ...constants.EMPTY_GEAR,
                         id: doc.id,
                         ...docData,
                     } as Gear;
@@ -64,7 +65,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             const docRef = await addDoc(gearCollectionRef, {
                 ...gear,
                 role: {
-                    [user.value.uid]: constants.ROLE_OWNER,
+                    [user.value.uid]: constants.ROLES.OWNER,
                 },
             });
             return docRef.id;

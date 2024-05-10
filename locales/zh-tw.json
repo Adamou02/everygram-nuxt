@@ -1,4 +1,6 @@
 {
+    "LABEL_WORN_WEIGHT": "身著重量",
+    "LABEL_WORN_GEARS": "身著物品",
     "ACTION_ADD_FROM_GEARS": "從裝備庫加入",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",
@@ -60,8 +62,8 @@
     "INFO_TRIP_NUM": "{num} 個行程",
     "INFO_WEIGHT_GRAM": "{weight} 公克",
     "INFO_WEIGHT_KILOGRAM": "{weight} 公斤",
-    "LABEL_BASE_GEARS": "基本裝備",
-    "LABEL_BASE_WEIGHT": "基本重量",
+    "LABEL_BASE_GEARS": "背負裝備",
+    "LABEL_BASE_WEIGHT": "背負重量",
     "LABEL_BRAND": "品牌",
     "LABEL_CATEGORY": "分類",
     "LABEL_CONSUMABLES_WEIGHT": "消耗品重量",

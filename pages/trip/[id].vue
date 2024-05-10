@@ -99,6 +99,25 @@
                             class="flex flex-column gap-3 p-3 border-round-md bg-white"
                         >
                             <div class="text-lg">
+                                {{ $t('LABEL_WORN_WEIGHT') }}:
+                                {{
+                                    formatWeight(
+                                        dataUtils.getTripWornGearsWeight(
+                                            trip,
+                                            gearMap,
+                                        ),
+                                    )
+                                }}
+                            </div>
+                            <WeightBarChart
+                                :items="wornWeightItems"
+                                :showLabel="true"
+                            />
+                        </div>
+                        <div
+                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
+                        >
+                            <div class="text-lg">
                                 {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
                                 {{
                                     formatWeight(
@@ -118,25 +137,30 @@
 
                 <!-- left -->
                 <div class="col-12 lg:col-8 flex flex-column gap-4">
-                    <!-- gears -->
+                    <!-- base gears -->
                     <SectionPanel>
                         <template #header>
                             <SectionTitleBar
                                 class="p-3 bg-white border-round-top-md"
                                 sticky
                             >
-                                <h2>{{ $t('LABEL_GEARS') }}</h2>
+                                <h2>{{ $t('LABEL_BASE_GEARS') }}</h2>
                                 <ActionButtonsGroup
                                     type="text"
                                     :actions="[
                                         {
                                             label: $t('ACTION_ADD_FROM_GEARS'),
-                                            onClick: () =>
-                                                (isSelectingGears = true),
+                                            onClick: () => {
+                                                selectingGearType = 'gears';
+                                                isSelectingGears = true;
+                                            },
                                         },
                                         {
                                             label: $t('ACTION_CREATE'),
-                                            onClick: () => onCreateGear(),
+                                            onClick: () => {
+                                                creatingGearType = 'gears';
+                                                onCreateGear();
+                                            },
                                         },
                                     ]"
                                 />
@@ -159,8 +183,10 @@
                                             {
                                                 icon: 'pi pi-plus',
                                                 label: $t('ACTION_CREATE_GEAR'),
-                                                onClick: () =>
-                                                    onCreateGear({ category }),
+                                                onClick: () => {
+                                                    creatingGearType = 'gears';
+                                                    onCreateGear({ category });
+                                                },
                                             },
                                         ]"
                                     />
@@ -171,9 +197,91 @@
                                 :hasQuantity="true"
                                 :actions="['edit', 'remove']"
                                 @gear-edit="onEditGear"
-                                @gear-remove="onRemoveGear"
+                                @gear-remove="
+                                    (gear) => onRemoveGear(gear, 'gears')
+                                "
                                 @gear-cell-edit-complete="
-                                    onGearCellEditComplete
+                                    (e) =>
+                                        onGearCellEditComplete({
+                                            ...e,
+                                            type: 'gears',
+                                        })
+                                "
+                                class="lg:ml-6"
+                            />
+                        </div>
+                    </SectionPanel>
+
+                    <!-- worn gears -->
+                    <SectionPanel>
+                        <template #header>
+                            <SectionTitleBar
+                                class="p-3 bg-white border-round-top-md"
+                                sticky
+                            >
+                                <h2>{{ $t('LABEL_WORN_GEARS') }}</h2>
+                                <ActionButtonsGroup
+                                    type="text"
+                                    :actions="[
+                                        {
+                                            label: $t('ACTION_ADD_FROM_GEARS'),
+                                            onClick: () => {
+                                                selectingGearType = 'wornGears';
+                                                isSelectingGears = true;
+                                            },
+                                        },
+                                        {
+                                            label: $t('ACTION_CREATE'),
+                                            onClick: () => {
+                                                creatingGearType = 'wornGears';
+                                                onCreateGear();
+                                            },
+                                        },
+                                    ]"
+                                />
+                            </SectionTitleBar>
+                        </template>
+                        <div
+                            v-for="category in displayWornGearCatergories"
+                            :key="category"
+                            class="flex flex-column gap-3"
+                        >
+                            <CategoryHeader
+                                :category="category"
+                                type="gear"
+                                :weight="wornGearWeightByCategory[category]"
+                            >
+                                <template #actions>
+                                    <ActionButtonsGroup
+                                        type="icon"
+                                        :actions="[
+                                            {
+                                                icon: 'pi pi-plus',
+                                                label: $t('ACTION_CREATE_GEAR'),
+                                                onClick: () => {
+                                                    creatingGearType =
+                                                        'wornGears';
+                                                    onCreateGear({ category });
+                                                },
+                                            },
+                                        ]"
+                                    />
+                                </template>
+                            </CategoryHeader>
+                            <GearDataTable
+                                :gears="wornGearsInTripByCategory[category]"
+                                :hasQuantity="true"
+                                :actions="['edit', 'remove']"
+                                @gear-edit="onEditGear"
+                                @gear-remove="
+                                    (gear) => onRemoveGear(gear, 'wornGears')
+                                "
+                                @gear-cell-edit-complete="
+                                    (e) =>
+                                        onGearCellEditComplete({
+                                            ...e,
+                                            type: 'wornGears',
+                                        })
                                 "
                                 class="lg:ml-6"
                             />
@@ -250,7 +358,16 @@
     </div>
     <GearsSelectorDialog
         :is-open="isSelectingGears"
-        :selected-gear-ids="selectedGearIds"
+        :selected-gear-ids="
+            selectingGearType === 'gears'
+                ? selectedGearIds
+                : selectedWornGearIds
+        "
+        :categories="
+            selectingGearType === 'wornGears'
+                ? constants.WEARABLE_GEAR_CATEGORIES
+                : undefined
+        "
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />
@@ -295,6 +412,8 @@ const tripId = route.params.id as string;
 const trip = computed(() =>
     trips.value.find((trip: Trip) => trip.id === tripId),
 );
+
+//  gears
 const gearsInTrip = computed<GearWithQuantity[]>(() =>
     trip.value
         ? _map(dataUtils.getGearsInTrip(trip.value, gearMap.value), (gear) => ({
@@ -317,6 +436,33 @@ const gearWeightByCategory = computed(() =>
     ),
 );
 
+// worn gears
+const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
+    trip.value
+        ? _map(
+              dataUtils.getWornGearsInTrip(trip.value, gearMap.value),
+              (gear) => ({
+                  ...gear,
+                  quantity: trip.value?.wornGears[gear.id]?.quantity || 0,
+              }),
+          )
+        : [],
+);
+const wornGearsInTripByCategory = computed(() =>
+    dataUtils.groupGearsByCategory(wornGearsInTrip.value),
+);
+const displayWornGearCatergories = computed(() =>
+    constants.GEAR_CATEGORY_KEYS.filter(
+        (category) => wornGearsInTripByCategory.value[category],
+    ),
+);
+const wornGearWeightByCategory = computed(() =>
+    _mapValues(wornGearsInTripByCategory.value, (gears) =>
+        _sumBy(gears, (gear) => (+gear.weight || 0) * gear.quantity),
+    ),
+);
+
+// consumables
 const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
     trip.value
         ? _map(trip.value.consumables || [], (consumable, index) => ({
@@ -342,6 +488,7 @@ const consumableWeightByCategory = computed(() =>
     ),
 );
 
+// weight bars
 const totalWeightItems = computed<WeightBarChartItem[]>(() => [
     {
         label: i18n.t('LABEL_BASE_WEIGHT'),
@@ -349,6 +496,13 @@ const totalWeightItems = computed<WeightBarChartItem[]>(() => [
             ? dataUtils.getTripGearsWeight(trip.value, gearMap.value)
             : 0,
         color: constants.COLORS.BASE_WEIGHT,
+    },
+    {
+        label: i18n.t('LABEL_WORN_WEIGHT'),
+        weight: trip.value
+            ? dataUtils.getTripWornGearsWeight(trip.value, gearMap.value)
+            : 0,
+        color: constants.COLORS.WORN_WEIGHT,
     },
     {
         label: i18n.t('LABEL_CONSUMABLES_WEIGHT'),
@@ -365,6 +519,16 @@ const baseWeightItems = computed<WeightBarChartItem[]>(() =>
         weight,
         color: constants.GEAR_CATEGORIES[category as GearCategory].color,
     })),
+);
+
+const wornWeightItems = computed<WeightBarChartItem[]>(() =>
+    Object.entries(wornGearWeightByCategory.value).map(
+        ([category, weight]) => ({
+            label: gearCategoryToLabel(category as GearCategory),
+            weight,
+            color: constants.GEAR_CATEGORIES[category as GearCategory].color,
+        }),
+    ),
 );
 
 const consumablesWeightItems = computed<WeightBarChartItem[]>(() =>
@@ -384,11 +548,19 @@ const { formatWeight, gearCategoryToLabel, consumableCategoryToLabel } =
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);
+const selectingGearType = ref<TripGearType>('gears');
 const selectedGearIds = computed(() =>
     trip.value ? Object.keys(trip.value.gears) : [],
 );
+const selectedWornGearIds = computed(() =>
+    trip.value ? Object.keys(trip.value.wornGears) : [],
+);
 const onCompletSelectGears = (selectedGears: TripGear[]) => {
-    userTripsStore.setGearsToTrip(tripId, selectedGears);
+    userTripsStore.setGearsToTrip(
+        tripId,
+        selectedGears,
+        selectingGearType.value,
+    );
     isSelectingGears.value = false;
 };
 
@@ -404,14 +576,18 @@ const {
     onCompleteEditGear,
     onCancelEditGear,
 } = useEditGear();
-
+const creatingGearType = ref<TripGearType>('gears');
 const onCompleteCreateGearInTrip = (gear: Gear) => {
-    userTripsStore.setGearsToTrip(tripId, [{ id: gear.id, quantity: 1 }]);
+    userTripsStore.setGearsToTrip(
+        tripId,
+        [{ id: gear.id, quantity: 1 }],
+        creatingGearType.value,
+    );
     onCompleteCreateGear();
 };
 
-const onRemoveGear = (gear: Gear) => {
-    userTripsStore.removeGearsFromTrip(tripId, [gear.id]);
+const onRemoveGear = (gear: Gear, type: TripGearType) => {
+    userTripsStore.removeGearsFromTrip(tripId, [gear.id], type);
 };
 
 // for TripInfoEditorDialog
@@ -424,17 +600,24 @@ const {
 } = useEditTrip();
 
 // for edit gear in table
-const onGearCellEditComplete = async (e: {
+const onGearCellEditComplete = async ({
+    data,
+    newValue,
+    field,
+    type,
+}: {
     data: Gear;
     newValue: any;
     field: string;
+    type: TripGearType;
 }) => {
-    const { data, newValue, field } = e;
     switch (field) {
         case 'quantity':
-            await userTripsStore.setGearsToTrip(tripId, [
-                { id: data.id, quantity: newValue },
-            ]);
+            await userTripsStore.setGearsToTrip(
+                tripId,
+                [{ id: data.id, quantity: newValue }],
+                type,
+            );
             break;
         case 'name':
             await userGearsStore.updateGear({

@@ -9,7 +9,7 @@
             <PrimeDataTable
                 v-model:selection="selectedGears"
                 selectionMode="multiple"
-                :value="notSelectedGears"
+                :value="selectableGears"
                 size="large"
                 dataKey="id"
             >
@@ -80,6 +80,7 @@
 const props = defineProps<{
     isOpen: boolean;
     selectedGearIds: string[];
+    categories?: GearCategory[];
 }>();
 const emit = defineEmits<{
     complete: [selectedGears: TripGear[]];
@@ -89,8 +90,12 @@ const emit = defineEmits<{
 const { gearCategoryToLabel, formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
-const notSelectedGears = computed(() =>
-    gears.value.filter((gear) => !props.selectedGearIds.includes(gear.id)),
+const selectableGears = computed(() =>
+    gears.value.filter(
+        (gear) =>
+            !props.selectedGearIds.includes(gear.id) &&
+            (!props.categories || props.categories.includes(gear.category)),
+    ),
 );
 const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>

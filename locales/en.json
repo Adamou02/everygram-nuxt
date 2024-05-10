@@ -1,4 +1,6 @@
 {
+    "LABEL_WORN_WEIGHT": "Worn Weight",
+    "LABEL_WORN_GEARS": "Worn Gears",
     "ACTION_ADD_FROM_GEARS": "Add From Gears",
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",

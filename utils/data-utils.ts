@@ -28,6 +28,18 @@ const getTripGearsWeight = (
         ),
     );
 
+const getTripWornGearsWeight = (
+    trip: Trip,
+    gearMap: Record<string, Gear>,
+): number =>
+    _sum(
+        _map(trip.wornGears, (wornGear, gearId) =>
+            gearMap[gearId]
+                ? (gearMap[gearId].weight || 0) * wornGear.quantity
+                : 0,
+        ),
+    );
+
 const getTripConsumablessWeight = (trip: Trip): number =>
     _sum(_map(trip.consumables || [], (consumable) => +consumable.weight || 0));
 
@@ -36,10 +48,15 @@ const getTripWeightTotal = (
     gearMap: Record<string, Gear>,
 ): number =>
     (getTripGearsWeight(trip, gearMap) || 0) +
+    (getTripWornGearsWeight(trip, gearMap) || 0) +
     (getTripConsumablessWeight(trip) || 0);
 
 const getGearsInTrip = (trip: Trip, gearMap: Record<string, Gear>) => {
     return _filter(_map(trip.gears, (gear) => gearMap[gear.id]));
+};
+
+const getWornGearsInTrip = (trip: Trip, gearMap: Record<string, Gear>) => {
+    return _filter(_map(trip.wornGears, (gear) => gearMap[gear.id]));
 };
 
 const formatDateToString = (date: Date): string => {
@@ -69,9 +86,11 @@ export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
     getTripGearsWeight,
+    getTripWornGearsWeight,
     getTripConsumablessWeight,
     getTripWeightTotal,
     getGearsInTrip,
+    getWornGearsInTrip,
     formatDateToString,
     formatDateString,
     getDaysBetweenDates,

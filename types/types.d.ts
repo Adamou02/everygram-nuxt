@@ -6,6 +6,8 @@ type Member = {
     photoUrl: string;
 };
 
+type CategoryData = { icon: string; color: string };
+
 type GearRole = 'owner' | 'co-owner';
 type GearCategory =
     | 'accessories'
@@ -44,18 +46,20 @@ type TripGear = {
     id: string;
     quantity: number;
 };
+type TripGearType = 'gears' | 'wornGears';
 type TripDateMode = 'single' | 'multi';
 type Trip = {
     id: string;
     title: string;
-    description?: string;
+    description: string;
     dateMode: TripDateMode;
     startDate: string;
     endDate: string;
     // created: string; //  timestamp
-    consumables: Consumable[];
     role: Record<string, TripRole>;
     gears: Record<string, TripGear>;
+    wornGears: Record<string, TripGear>;
+    consumables: Consumable[];
 };
 type EditingTrip = Partial<Trip>;
 
@@ -80,3 +84,5 @@ type WeightBarChartItem = {
     label: string;
     color: string;
 };
+
+type BrandData = { name: string; originalName?: string };

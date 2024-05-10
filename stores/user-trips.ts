@@ -33,12 +33,13 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         unsubscribe.value = onSnapshot(
             query(
                 tripCollectionRef,
-                where(`role.${user.value.uid}`, '==', constants.ROLE_OWNER),
+                where(`role.${user.value.uid}`, '==', constants.ROLES.OWNER),
             ),
             (querySnapshot) => {
                 trips.value = querySnapshot.docs.map(
                     (doc) =>
                         ({
+                            ...constants.EMPTY_TRIP,
                             id: doc.id,
                             ...doc.data(),
                         }) as Trip,
@@ -66,7 +67,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             const docRef = await addDoc(tripCollectionRef, {
                 ...trip,
                 role: {
-                    [user.value.uid]: constants.ROLE_OWNER,
+                    [user.value.uid]: constants.ROLES.OWNER,
                 },
                 gears: {},
                 consumables: [],
@@ -112,8 +113,12 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         }
     };
 
-    const setGearsToTrip = async (tripId: string, tripGears: TripGear[]) => {
-        const newGearsData = _keyBy(tripGears, (gear) => `gears.${gear.id}`);
+    const setGearsToTrip = async (
+        tripId: string,
+        tripGears: TripGear[],
+        type: TripGearType,
+    ) => {
+        const newGearsData = _keyBy(tripGears, (gear) => `${type}.${gear.id}`);
         try {
             await updateTrip({ id: tripId, tripData: newGearsData });
         } catch (error) {
@@ -122,10 +127,14 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         }
     };
 
-    const removeGearsFromTrip = async (tripId: string, gearIds: string[]) => {
+    const removeGearsFromTrip = async (
+        tripId: string,
+        gearIds: string[],
+        type: TripGearType,
+    ) => {
         const removeGearsData = gearIds.reduce(
             (acc, gearId) => {
-                acc[`gears.${gearId}`] = deleteField();
+                acc[`${type}.${gearId}`] = deleteField();
                 return acc;
             },
             {} as Record<string, any>,
