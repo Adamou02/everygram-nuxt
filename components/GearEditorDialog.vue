@@ -3,40 +3,50 @@
         :visible="isOpen"
         :header="gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
         modal
+        class="w-full mx-2 max-w-20rem"
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
         <template v-if="isOpen" #default>
-            <div class="field">
-                <label for="gear-name">
-                    {{ $t('LABEL_NAME') }}
-                </label>
+            <FormField
+                :label="$t('LABEL_NAME')"
+                :errors="vuelidate.name.$errors"
+                required
+            >
                 <PrimeInputText
-                    id="gear-name"
-                    v-model="editingGear.name"
+                    v-model="formState.name"
                     class="w-full"
+                    :minlength="constants.LIMIT.minNameLength"
+                    :maxlength="constants.LIMIT.maxNameLength"
                     :autofocus="!gear"
+                    :invalid="vuelidate.name.$error"
+                    @keypress.enter="onSubmit"
                 />
-            </div>
-            <div class="field">
-                <label for="gear-weight">
-                    {{ $t('LABEL_WEIGHT') }}
-                </label>
+            </FormField>
+            <FormField
+                :label="$t('LABEL_WEIGHT')"
+                :errors="vuelidate.weight.$errors"
+            >
                 <PrimeInputGroup>
                     <PrimeInputNumber
-                        id="gear-weight"
-                        v-model="editingGear.weight"
-                        class="w-full"
+                        v-model="formState.weight"
+                        class="w-full text-right"
+                        integer
+                        :min="constants.LIMIT.minWeight"
+                        :max="constants.LIMIT.maxWeight"
+                        :invalid="vuelidate.weight.$error"
+                        @keypress.enter="onSubmit"
                     />
                     <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
                 </PrimeInputGroup>
-            </div>
-            <div class="field">
-                <label for="gear-category">
-                    {{ $t('LABEL_CATEGORY') }}
-                </label>
+            </FormField>
+            <FormField :label="$t('LABEL_CATEGORY')">
                 <PrimeDropdown
-                    v-model="editingGear.category"
-                    :options="categoryOptions"
+                    v-model="formState.category"
+                    :options="
+                        constants.GEAR_CATEGORY_KEYS.map((category) => ({
+                            value: category,
+                        }))
+                    "
                     optionValue="value"
                     :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
                     class="w-full"
@@ -72,17 +82,7 @@
                         </div>
                     </template>
                 </PrimeDropdown>
-            </div>
-            <!-- <div class="field">
-                <label for="gear-brand">
-                    {{ $t('LABEL_BRAND') }}
-                </label>
-                <PrimeInputText
-                    id="gear-brand"
-                    v-model="editingGear.brand"
-                    class="w-full"
-                />
-            </div> -->
+            </FormField>
         </template>
         <template #footer>
             <PrimeButton
@@ -95,13 +95,16 @@
             <PrimeButton
                 :label="gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
-                @click="onSubmit()"
+                @click="onSubmit"
             />
         </template>
     </PrimeDialog>
 </template>
 
 <script setup lang="ts">
+import useVuelidate from '@vuelidate/core';
+import { minLength } from '@vuelidate/validators';
+
 const props = defineProps<{
     isOpen: boolean;
     gear: Gear | null;
@@ -116,35 +119,69 @@ const emit = defineEmits<{
 
 const { gearCategoryToLabel } = useLangUtils();
 
-const emptyGear: EditingGear = {
+// form state and validation rules
+const initialFormState = {
     name: '',
+    weight: undefined,
+    category: undefined,
 };
+const formState = reactive<{
+    name: string;
+    weight: number | undefined;
+    category: GearCategory | undefined;
+}>({ ...initialFormState });
+const formValidators = useFormValidators();
+const formRules = {
+    name: {
+        required: formValidators.required,
+        minLength: formValidators.minLength(constants.LIMIT.minNameLength),
+        maxLength: formValidators.maxLength(constants.LIMIT.maxNameLength),
+    },
+    weight: {
+        integer: formValidators.integer,
+        minValue: formValidators.minValue(constants.LIMIT.minWeight),
+        maxValue: formValidators.maxValue(constants.LIMIT.maxWeight),
+    },
+};
+const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-const editingGear = ref<EditingGear>({});
-watchEffect(() => {
-    if (props.isOpen) {
-        editingGear.value = props.gear
-            ? { ...props.gear }
-            : { ...emptyGear, category: props.defaultCategory };
-    }
-});
+watch(
+    () => props.isOpen,
+    () => {
+        if (props.isOpen) {
+            formState.name = props.gear?.name || initialFormState.name;
+            formState.weight = props.gear?.weight || initialFormState.weight;
+            formState.category =
+                props.gear?.category || initialFormState.category;
+            vuelidate.value.$reset();
+        }
+    },
+);
+
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
-const categoryOptions = constants.GEAR_CATEGORY_KEYS.map((category) => ({
-    value: category,
-}));
-
 const onSubmit = async () => {
+    const valid = await vuelidate.value.$validate();
+    if (!valid) {
+        return;
+    }
+
+    const gearData: EditingGear = {
+        name: formState.name,
+        weight: formState.weight || 0,
+        category: formState.category || 'others',
+    };
+
     try {
         isSaving.value = true;
         if (props.gear) {
             await userGearsStore.updateGear({
                 id: props.gear.id,
-                gearData: editingGear.value,
+                gearData,
             });
             emit('complete-edit', userGearsStore.getGearById(props.gear.id));
         } else {
-            const docId = await userGearsStore.createGear(editingGear.value);
+            const docId = await userGearsStore.createGear(gearData);
             if (!docId) {
                 throw new Error('Failed to add gear');
             }

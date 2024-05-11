@@ -58,8 +58,8 @@
     "INFO_GEAR_NUM": "{num} 件裝備",
     "INFO_SELECTED_GEAR_NUM": "已選取 {num} 件",
     "INFO_TRIP_NUM": "{num} 個行程",
-    "INFO_WEIGHT_GRAM": "{weight} 公克",
-    "INFO_WEIGHT_KILOGRAM": "{weight} 公斤",
+    "INFO_WEIGHT_GRAM": "{weight} g",
+    "INFO_WEIGHT_KILOGRAM": "{weight} kg",
     "LABEL_BASE_GEARS": "背負裝備",
     "LABEL_BASE_WEIGHT": "背負重量",
     "LABEL_BASE": "背負",
@@ -81,7 +81,7 @@
     "LABEL_PASSWORD": "密碼",
     "LABEL_QUANTITY": "數量",
     "LABEL_START_DATE": "開始日期",
-    "LABEL_TITLE": "Title",
+    "LABEL_TITLE": "名稱",
     "LABEL_TOTAL_WEIGHT": "總重",
     "LABEL_TRIP_DATE": "行程日期",
     "LABEL_TRIP_DATES": "行程日期",
@@ -97,5 +97,13 @@
     "PAGE_SETTINGS": "設定",
     "PAGE_SIGN_UP": "註冊",
     "PAGE_TRIPS": "行程裝備",
-    "WELCOME_TO_EVERYGRAM": "歡迎來到 @:APP_NAME"
+    "WELCOME_TO_EVERYGRAM": "歡迎來到 @:APP_NAME",
+    "VALIDATION": {
+        "required": "{label}為必填",
+        "minLength": "{label}需至少 {min} 個字",
+        "maxLength": "{label}最多 {max} 個字",
+        "minValue": "{label}最小值為 {min}",
+        "maxValue": "{label}最大值為 {max}",
+        "integer": "{label}必須為整數"
+    }
 }

@@ -97,5 +97,13 @@
     "PAGE_SETTINGS": "Settings",
     "PAGE_SIGN_UP": "Sign Up",
     "PAGE_TRIPS": "Trips",
-    "WELCOME_TO_EVERYGRAM": "Welcom to @:APP_NAME"
+    "WELCOME_TO_EVERYGRAM": "Welcom to @:APP_NAME",
+    "VALIDATION": {
+        "required": "{label} is a required field",
+        "minLength": "{label} must have a min length of {min}",
+        "maxLength": "{label} shouldn't be longer than {max} charaters",
+        "minValue": "{label} must be at least {min}",
+        "maxValue": "{label} shouldn't be more than {max}",
+        "integer": "{label} must be an integer"
+    }
 }

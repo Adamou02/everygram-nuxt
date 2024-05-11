@@ -3,30 +3,34 @@
         :visible="isOpen"
         :header="trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')"
         modal
+        class="w-full mx-2 max-w-20rem"
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
         <template v-if="isOpen" #default>
-            <div class="field">
-                <label for="trip-title">
-                    {{ $t('LABEL_NAME') }}
-                </label>
+            <FormField
+                :label="$t('LABEL_NAME')"
+                :errors="vuelidate.title.$errors"
+                required
+            >
                 <PrimeInputText
-                    id="trip-title"
-                    v-model="editingTrip.title"
+                    v-model="formState.title"
                     class="w-full"
+                    :minlength="constants.LIMIT.minNameLength"
+                    :maxlength="constants.LIMIT.maxNameLength"
                     :autofocus="!trip"
+                    :invalid="vuelidate.title.$error"
+                    @keypress.enter="onSubmit"
                 />
-            </div>
-            <div class="field">
-                <label>
-                    {{
-                        editingTrip.dateMode === 'multi'
-                            ? $t('LABEL_TRIP_DATES')
-                            : $t('LABEL_TRIP_DATE')
-                    }}
-                </label>
+            </FormField>
+            <FormField
+                :label="
+                    formState.dateMode === 'multi'
+                        ? $t('LABEL_TRIP_DATES')
+                        : $t('LABEL_TRIP_DATE')
+                "
+            >
                 <PrimeSelectButton
-                    v-model="editingTrip.dateMode"
+                    v-model="formState.dateMode"
                     severity="secondary"
                     :options="dateModeOptions"
                     optionLabel="label"
@@ -34,40 +38,32 @@
                     aria-labelledby="Date Mode"
                     class="mb-2 p-selectbutton--stretch"
                 />
-                <PrimeInputGroup v-if="editingTrip.dateMode === 'multi'">
+                <PrimeInputGroup v-if="formState.dateMode === 'multi'">
                     <PrimeCalendar
-                        v-model="startDate"
+                        v-model="formState.startDate"
                         dateFormat="yy-mm-dd"
+                        placeholder="yyyy-mm-dd"
                         class="w-7rem"
                     />
                     <PrimeInputGroupAddon class="min-w-0 p-1"
                         >~</PrimeInputGroupAddon
                     >
                     <PrimeCalendar
-                        v-model="endDate"
+                        v-model="formState.endDate"
                         dateFormat="yy-mm-dd"
+                        placeholder="yyyy-mm-dd"
                         class="w-7rem"
                     />
                 </PrimeInputGroup>
                 <PrimeCalendar
-                    v-else
-                    v-model="startDate"
+                    v-else-if="formState.dateMode === 'single'"
+                    v-model="formState.startDate"
                     dateFormat="yy-mm-dd"
+                    placeholder="yyyy-mm-dd"
                     class="w-full"
-                />
-            </div>
-            <!-- <div class="field">
-                <label for="trip-description">
-                    {{ $t('LABEL_DESCRIPTION') }}
-                </label>
-                <PrimeTextarea
-                    id="trip-description"
-                    v-model="editingTrip.description"
-                    class="w-full"
-                    rows="2"
-                    autoResize
-                />
-            </div> -->
+                >
+                </PrimeCalendar>
+            </FormField>
         </template>
         <template #footer>
             <PrimeButton
@@ -87,6 +83,8 @@
 </template>
 
 <script setup lang="ts">
+import useVuelidate from '@vuelidate/core';
+
 const props = defineProps<{
     isOpen: boolean;
     trip: Trip | null;
@@ -101,50 +99,76 @@ const emit = defineEmits<{
 const userTripsStore = useUserTripsStore();
 const i18n = useI18n();
 const dateModeOptions = ref<{ label: string; value: TripDateMode }[]>([
-    { label: i18n.t('LABEL_ONE_DAY'), value: 'single' },
-    { label: i18n.t('LABEL_MULTI_DAY'), value: 'multi' },
+    { label: i18n.t('LABEL_ONE_DAY'), value: constants.TRIP_DATE_MODE.single },
+    { label: i18n.t('LABEL_MULTI_DAY'), value: constants.TRIP_DATE_MODE.multi },
 ]);
-const emptyTrip: EditingTrip = {
+
+// form state and validation rules
+const initialFormState = {
     title: '',
-    description: '',
-    dateMode: 'single',
-    startDate: '',
-    endDate: '',
+    dateMode: undefined,
+    startDate: undefined,
+    endDate: undefined,
 };
-const editingTrip = ref<EditingTrip>({});
-const startDate = ref<Date>(new Date());
-const endDate = ref<Date>(new Date());
+const formState = reactive<{
+    title: string;
+    dateMode: TripDateMode | undefined;
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+}>({ ...initialFormState });
+const formValidators = useFormValidators();
+const formRules = {
+    title: {
+        required: formValidators.required,
+        minLength: formValidators.minLength(constants.LIMIT.minNameLength),
+        maxLength: formValidators.maxLength(constants.LIMIT.maxNameLength),
+    },
+};
+const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
+
+watch(
+    () => props.isOpen,
+    () => {
+        if (props.isOpen) {
+            formState.title = props.trip?.title || initialFormState.title;
+            formState.dateMode =
+                props.trip?.dateMode || initialFormState.dateMode;
+            formState.startDate =
+                (props.trip?.startDate && new Date(props.trip?.startDate)) ||
+                initialFormState.startDate;
+            formState.endDate =
+                (props.trip?.endDate && new Date(props.trip?.endDate)) ||
+                initialFormState.endDate;
+            vuelidate.value.$reset();
+        }
+    },
+);
+
 const isSaving = ref<boolean>(false);
-
-watchEffect(() => {
-    if (props.isOpen) {
-        console.log('editingTrip.value', editingTrip.value);
-        editingTrip.value = props.trip
-            ? { ...emptyTrip, ...props.trip }
-            : { ...emptyTrip };
-        startDate.value = editingTrip.value.startDate
-            ? new Date(editingTrip.value.startDate)
-            : new Date();
-        endDate.value = editingTrip.value.endDate
-            ? new Date(editingTrip.value.endDate)
-            : new Date();
-    }
-});
-
 const onSubmit = async () => {
+    const valid = await vuelidate.value.$validate();
+    if (!valid) {
+        return;
+    }
+
+    const tripData = {
+        title: formState.title,
+        ...(formState.dateMode && { dateMode: formState.dateMode }),
+        ...(formState.dateMode === 'multi' &&
+            formState.startDate &&
+            formState.endDate &&
+            formState.startDate.getTime() < formState.endDate.getTime() && {
+                startDate: dataUtils.formatDateToString(formState.startDate),
+                endDate: dataUtils.formatDateToString(formState.endDate),
+            }),
+        ...(formState.dateMode === 'single' &&
+            formState.startDate && {
+                startDate: dataUtils.formatDateToString(formState.startDate),
+                endDate: dataUtils.formatDateToString(formState.startDate),
+            }),
+    };
+
     try {
-        const tripData = {
-            ...editingTrip.value,
-            ...(editingTrip.value.dateMode === 'multi'
-                ? {
-                      startDate: dataUtils.formatDateToString(startDate.value),
-                      endDate: dataUtils.formatDateToString(endDate.value),
-                  }
-                : {
-                      startDate: dataUtils.formatDateToString(startDate.value),
-                      endDate: dataUtils.formatDateToString(startDate.value),
-                  }),
-        };
         isSaving.value = true;
         if (props.trip) {
             await userTripsStore.updateTrip({

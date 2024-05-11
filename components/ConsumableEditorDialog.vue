@@ -7,40 +7,50 @@
                 : $t('ACTION_CREATE_CONSUMABLE')
         "
         modal
+        class="w-full mx-2 max-w-20rem"
         @update:visible="(value: boolean) => !value && $emit('cancel')"
     >
         <template v-if="isOpen" #default>
-            <div class="field">
-                <label for="consumable-name">
-                    {{ $t('LABEL_NAME') }}
-                </label>
+            <FormField
+                :label="$t('LABEL_NAME')"
+                :errors="vuelidate.name.$errors"
+                required
+            >
                 <PrimeInputText
-                    id="consumable-name"
-                    v-model="editingConsumable.name"
+                    v-model="formState.name"
                     class="w-full"
+                    :minlength="constants.LIMIT.minNameLength"
+                    :maxlength="constants.LIMIT.maxNameLength"
                     :autofocus="!existingConsumable"
+                    :invalid="vuelidate.name.$error"
+                    @keypress.enter="onSubmit"
                 />
-            </div>
-            <div class="field">
-                <label for="consumable-weight">
-                    {{ $t('LABEL_WEIGHT') }}
-                </label>
+            </FormField>
+            <FormField
+                :label="$t('LABEL_WEIGHT')"
+                :errors="vuelidate.weight.$errors"
+            >
                 <PrimeInputGroup>
                     <PrimeInputNumber
-                        id="consumable-weight"
-                        v-model="editingConsumable.weight"
-                        class="w-full"
+                        v-model="formState.weight"
+                        class="w-full text-right"
+                        integer
+                        :min="constants.LIMIT.minWeight"
+                        :max="constants.LIMIT.maxWeight"
+                        :invalid="vuelidate.weight.$error"
+                        @keypress.enter="onSubmit"
                     />
                     <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
                 </PrimeInputGroup>
-            </div>
-            <div class="field">
-                <label for="consumable-category">
-                    {{ $t('LABEL_CATEGORY') }}
-                </label>
+            </FormField>
+            <FormField :label="$t('LABEL_CATEGORY')">
                 <PrimeDropdown
-                    v-model="editingConsumable.category"
-                    :options="categoryOptions"
+                    v-model="formState.category"
+                    :options="
+                        constants.CONSUMABLE_CATEGORY_KEYS.map((category) => ({
+                            value: category,
+                        }))
+                    "
                     optionValue="value"
                     :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
                     class="w-full"
@@ -78,7 +88,7 @@
                         </div>
                     </template>
                 </PrimeDropdown>
-            </div>
+            </FormField>
         </template>
         <template #footer>
             <PrimeButton
@@ -100,6 +110,8 @@
 </template>
 
 <script setup lang="ts">
+import useVuelidate from '@vuelidate/core';
+
 const props = defineProps<{
     isOpen: boolean;
     tripId: string;
@@ -129,43 +141,76 @@ const existingConsumable = computed<Consumable | null>(() => {
         null
     );
 });
-const editingConsumable = ref<EditingConsumable>({
-    name: '',
-    weight: 0,
-});
-watchEffect(() => {
-    if (props.isOpen) {
-        editingConsumable.value = existingConsumable.value
-            ? { ...existingConsumable.value }
-            : { ...emptyConsumable, category: props.defaultCategory };
-    }
-});
-const isSaving = ref<boolean>(false);
-const categoryOptions = constants.CONSUMABLE_CATEGORY_KEYS.map((category) => ({
-    value: category,
-}));
 
+// form state and validation rules
+const initialFormState = {
+    name: '',
+    weight: undefined,
+    category: undefined,
+};
+const formState = reactive<{
+    name: string;
+    weight: number | undefined;
+    category: ConsumableCategory | undefined;
+}>({ ...initialFormState });
+const formValidators = useFormValidators();
+const formRules = {
+    name: {
+        required: formValidators.required,
+        minLength: formValidators.minLength(constants.LIMIT.minNameLength),
+        maxLength: formValidators.maxLength(constants.LIMIT.maxNameLength),
+    },
+    weight: {
+        integer: formValidators.integer,
+        minValue: formValidators.minValue(constants.LIMIT.minWeight),
+        maxValue: formValidators.maxValue(constants.LIMIT.maxWeight),
+    },
+};
+const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
+
+watch(
+    () => props.isOpen,
+    () => {
+        if (props.isOpen) {
+            formState.name =
+                existingConsumable.value?.name || initialFormState.name;
+            formState.weight =
+                existingConsumable.value?.weight || initialFormState.weight;
+            formState.category =
+                existingConsumable.value?.category || initialFormState.category;
+            vuelidate.value.$reset();
+        }
+    },
+);
+
+const isSaving = ref<boolean>(false);
 const onSubmit = async () => {
+    const valid = await vuelidate.value.$validate();
+    if (!valid) {
+        return;
+    }
+
+    const consumableData = {
+        name: formState.name,
+        weight: formState.weight || 0,
+        category: formState.category || 'others',
+    };
+
     try {
         isSaving.value = true;
-        const newConsumable: Consumable = {
-            name: editingConsumable.value.name || '',
-            weight: editingConsumable.value.weight || 0,
-            category: editingConsumable.value.category || 'others',
-        };
         if (isNumber(props.consumableIndex) && existingConsumable) {
             await userTripsStore.updateConsumableInTrip({
                 tripId: props.tripId,
                 consumableIndex: props.consumableIndex,
-                consumable: newConsumable,
+                consumable: consumableData,
             });
-            emit('complete-edit', newConsumable);
+            emit('complete-edit', consumableData);
         } else {
             await userTripsStore.addConsumableToTrip({
                 tripId: props.tripId,
-                consumable: newConsumable,
+                consumable: consumableData,
             });
-            emit('complete-create', newConsumable);
+            emit('complete-create', consumableData);
         }
     } catch (error) {
         console.error(error);

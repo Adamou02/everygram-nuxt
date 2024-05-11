@@ -52,9 +52,9 @@ type Trip = {
     id: string;
     title: string;
     description: string;
-    dateMode: TripDateMode;
-    startDate: string;
-    endDate: string;
+    dateMode?: TripDateMode;
+    startDate?: string;
+    endDate?: string;
     // created: string; //  timestamp
     role: Record<string, TripRole>;
     gears: Record<string, TripGear>;

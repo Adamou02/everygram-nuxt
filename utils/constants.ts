@@ -30,9 +30,6 @@ const EMPTY_TRIP: Trip = {
     id: '',
     title: '',
     description: '',
-    dateMode: 'single',
-    startDate: '',
-    endDate: '',
     role: {},
     gears: {},
     wornGears: {},
@@ -44,6 +41,20 @@ const WEARABLE_GEAR_CATEGORIES: GearCategory[] = [
     'accessories',
     'electronics',
 ];
+
+const LOCALES = ['en', 'zh-tw'];
+
+const LIMIT = {
+    minWeight: 0,
+    maxWeight: 100000,
+    minNameLength: 1,
+    maxNameLength: 50,
+};
+
+const TRIP_DATE_MODE: Record<string, TripDateMode> = {
+    single: 'single',
+    multi: 'multi',
+};
 
 export default {
     ROLES,
@@ -57,4 +68,7 @@ export default {
     EMPTY_GEAR,
     EMPTY_TRIP,
     WEARABLE_GEAR_CATEGORIES,
+    LOCALES,
+    LIMIT,
+    TRIP_DATE_MODE,
 };

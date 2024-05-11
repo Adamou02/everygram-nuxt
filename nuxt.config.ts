@@ -59,7 +59,7 @@ export default defineNuxtConfig({
                 file: 'en.json',
             },
             {
-                code: 'zh',
+                code: 'zh-tw',
                 name: '繁體中文',
                 iso: 'zh-TW',
                 file: 'zh-tw.json',

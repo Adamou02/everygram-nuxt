@@ -13,7 +13,12 @@
             class="hover:surface-50 hide-in-mobile"
         >
             <template #editor="{ data, field }">
-                <PrimeInputText v-model="data[field]" class="w-full" />
+                <PrimeInputText
+                    v-model="data[field]"
+                    :minlength="constants.LIMIT.minNameLength"
+                    :maxlength="constants.LIMIT.maxNameLength"
+                    class="w-full"
+                />
             </template>
         </PrimeColumn>
         <PrimeColumn
@@ -28,6 +33,9 @@
                 <PrimeInputGroup class="w-7rem">
                     <PrimeInputNumber
                         v-model="data[field]"
+                        integer
+                        :min="constants.LIMIT.minWeight"
+                        :max="constants.LIMIT.maxWeight"
                         class="text-right"
                     />
                     <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
