@@ -28,24 +28,11 @@
                 aria-haspopup="true"
                 @click="isOpenBottomMenu = true"
             />
-            <PrimeSidebar
-                v-model:visible="isOpenBottomMenu"
-                position="bottom"
-                class="more-actions-bottom-sheet p-3 h-auto border-round-top-lg"
-            >
-                <template #container>
-                    <PrimeMenu
-                        :model="props.items"
-                        class="border-none"
-                        @click="isOpenBottomMenu = false"
-                        :pt="{
-                            menu: { class: 'flex flex-column gap-2' },
-                            content: { class: 'surface-100 border-round-lg' },
-                            action: { class: 'py-3' },
-                        }"
-                    />
-                </template>
-            </PrimeSidebar>
+            <BottomSheetMenu
+                :menuItems="items"
+                :isOpen="isOpenBottomMenu"
+                @close="isOpenBottomMenu = false"
+            />
         </div>
     </div>
 </template>

@@ -2,6 +2,15 @@ export default function () {
     const i18n = useI18n();
 
     return {
+        getCurrentLocale: () => {
+            return i18n.locale.value;
+        },
+        localeToLabel: (locale: string) => {
+            return i18n.t(`LABEL_LOCALE_${_snakeCase(locale).toUpperCase()}`);
+        },
+        setLocale: (locale: string) => {
+            i18n.setLocale(locale);
+        },
         formatWeight: (weight: number) => {
             return weight < 1000
                 ? i18n.t('INFO_WEIGHT_GRAM', { weight }, weight)
