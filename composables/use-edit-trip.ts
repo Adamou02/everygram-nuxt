@@ -1,8 +1,8 @@
-export default function () {
-    const isAddingTrip = ref<boolean>(false);
-    const isEditingTrip = ref<boolean>(false);
-    const editingTrip = ref<Trip | null>(null);
+const isAddingTrip = ref<boolean>(false);
+const isEditingTrip = ref<boolean>(false);
+const editingTrip = ref<Trip | null>(null);
 
+export default function () {
     return {
         isAddingTrip,
         isEditingTrip,

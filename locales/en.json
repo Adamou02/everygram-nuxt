@@ -1,4 +1,7 @@
 {
+    "INFO_TRIP_NOT_FOUND": "Trip Not Found",
+    "INFO_TRIP_NOT_FOUND_DESC": "The trip does not exist or has been deleted",
+    "ACTION_BACK_TO_TRIPS": "Back to Trips",
     "ACTION_ADD_FROM_GEARS": "Add From Gears",
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",

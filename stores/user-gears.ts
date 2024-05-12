@@ -54,6 +54,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         if (unsubscribe.value) {
             unsubscribe.value();
         }
+        gears.value = [];
         isInitialized.value = false;
     };
 

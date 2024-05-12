@@ -45,13 +45,7 @@
             </template>
         </EmptyState>
     </div>
-    <TripInfoEditorDialog
-        :is-open="isAddingTrip"
-        :trip="null"
-        @complete-create="onCompleteCreateTrip"
-        @complete-edit="onCompleteEditTrip"
-        @cancel="onCancelEditTrip"
-    />
+    <TripInfoEditor />
 </template>
 
 <script setup lang="ts">
@@ -60,15 +54,7 @@ definePageMeta({
     layout: 'user-page',
 });
 
-const i18n = useI18n();
-const { confirmDeleteDialog } = useUiUitls();
 const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
-const {
-    isAddingTrip,
-    onCreateTrip,
-    onCompleteCreateTrip,
-    onCompleteEditTrip,
-    onCancelEditTrip,
-} = useEditTrip();
+const { onCreateTrip } = useEditTrip();
 </script>

@@ -1,9 +1,9 @@
-export default function () {
-    const isAddingConsumable = ref<boolean>(false);
-    const isEditingConsumable = ref<boolean>(false);
-    const editingConsumableIndex = ref<number | null>(null);
-    const defaultConsumableCategory = ref<ConsumableCategory | undefined>();
+const isAddingConsumable = ref<boolean>(false);
+const isEditingConsumable = ref<boolean>(false);
+const editingConsumableIndex = ref<number | null>(null);
+const defaultConsumableCategory = ref<ConsumableCategory | undefined>();
 
+export default function () {
     return {
         isAddingConsumable,
         isEditingConsumable,

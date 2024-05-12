@@ -56,6 +56,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         if (unsubscribe.value) {
             unsubscribe.value();
         }
+        trips.value = [];
         isInitialized.value = false;
     };
 

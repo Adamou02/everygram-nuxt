@@ -20,6 +20,7 @@ export default function useDeleteTrip() {
             toastSummary: i18n.t('FEEDBACK_TRIP_DELETED'),
             onAccept: async () => {
                 await onDeleteTrip(trip);
+                navigateTo('/trips');
             },
         });
     };

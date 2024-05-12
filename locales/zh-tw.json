@@ -1,4 +1,7 @@
 {
+    "INFO_TRIP_NOT_FOUND": "找不到行程",
+    "INFO_TRIP_NOT_FOUND_DESC": "行程資料不存在或已經被刪除",
+    "ACTION_BACK_TO_TRIPS": "返回行程列表",
     "ACTION_ADD_FROM_GEARS": "從裝備庫加入",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",

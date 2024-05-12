@@ -57,15 +57,8 @@
             </div>
         </div>
     </div>
-    <GearEditorDialog
-        :is-open="isAddingGear || isEditingGear"
-        :gear="editingGear"
-        :default-category="defaultGearCategory"
-        @complete-create="onCompleteCreateGear"
-        @complete-edit="onCompleteEditGear"
-        @cancel="onCancelEditGear"
-    />
-    <p v-if="isFetchingGears">Loading...</p>
+    <GearEditor />
+    <PageLoading v-if="isFetchingGears" />
 </template>
 
 <script setup lang="ts">
@@ -84,22 +77,11 @@ const displayGearCatergories = computed(() =>
         (category) => gearsGroupByCategory.value[category],
     ),
 );
-const { formatWeight } = useLangUtils();
 const { confirmDeleteDialog } = useUiUitls();
 const i18n = useI18n();
 
 // for GearEditor
-const {
-    onCreateGear,
-    onEditGear,
-    onCompleteCreateGear,
-    onCompleteEditGear,
-    onCancelEditGear,
-    isAddingGear,
-    isEditingGear,
-    editingGear,
-    defaultGearCategory,
-} = useEditGear();
+const { onCreateGear, onEditGear } = useEditGear();
 
 const onDeleteGear = async (gear: Gear) => {
     // TODO: check if the gear has been used in any trips

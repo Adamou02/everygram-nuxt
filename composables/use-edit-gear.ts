@@ -1,9 +1,10 @@
-export default function () {
-    const isAddingGear = ref<boolean>(false);
-    const isEditingGear = ref<boolean>(false);
-    const editingGear = ref<Gear | null>(null);
-    const defaultGearCategory = ref<GearCategory | undefined>();
+// gloabl state for adding/editing gear
+const isAddingGear = ref<boolean>(false);
+const isEditingGear = ref<boolean>(false);
+const editingGear = ref<Gear | null>(null);
+const defaultGearCategory = ref<GearCategory | undefined>();
 
+export default function () {
     return {
         isAddingGear,
         isEditingGear,

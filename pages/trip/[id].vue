@@ -419,11 +419,20 @@
                 </div>
             </div>
         </template>
-        <template v-else-if="isFetchingTrips">
-            <p>Loading...</p>
-        </template>
+        <PageLoading v-else-if="isFetchingTrips" />
         <template v-else>
-            <p>Trip not found</p>
+            <EmptyState
+                :title="$t('INFO_TRIP_NOT_FOUND')"
+                :description="$t('INFO_TRIP_NOT_FOUND_DESC')"
+                image-src="/image/illustration/illu-camping.svg"
+            >
+                <template #actions>
+                    <PrimeButton
+                        :label="$t('ACTION_BACK_TO_TRIPS')"
+                        @click="$router.push('/trips')"
+                    />
+                </template>
+            </EmptyState>
         </template>
     </div>
     <GearsSelectorDialog
@@ -441,29 +450,9 @@
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />
-    <GearEditorDialog
-        :is-open="isAddingGear || isEditingGear"
-        :gear="editingGear"
-        :default-category="defaultGearCategory"
-        @complete-create="onCompleteCreateGearInTrip"
-        @complete-edit="onCompleteEditGear"
-        @cancel="onCancelEditGear"
-    />
-    <TripInfoEditorDialog
-        :is-open="isEditingTrip"
-        :trip="editingTrip"
-        @complete-edit="onCompleteEditTrip"
-        @cancel="onCancelEditTrip"
-    />
-    <ConsumableEditorDialog
-        :is-open="isAddingConsumable || isEditingConsumable"
-        :trip-id="tripId"
-        :consumable-index="editingConsumableIndex"
-        :default-category="defaultConsumableCategory"
-        @complete-create="onCompleteCreateConsumable"
-        @complete-edit="onCompleteEditConsumable"
-        @cancel="onCancelEditConsumable"
-    />
+    <GearEditor @complete-create-gear="onCompleteCreateGearInTrip" />
+    <TripInfoEditor />
+    <ConsumableEditor :tripId="tripId" />
 </template>
 
 <script setup lang="ts">
@@ -634,18 +623,8 @@ const onCompletSelectGears = (selectedGears: TripGear[]) => {
     isSelectingGears.value = false;
 };
 
-// for GearEditorDialog
-const {
-    isAddingGear,
-    isEditingGear,
-    editingGear,
-    defaultGearCategory,
-    onCreateGear,
-    onEditGear,
-    onCompleteCreateGear,
-    onCompleteEditGear,
-    onCancelEditGear,
-} = useEditGear();
+// for GearEditor
+const { onCreateGear, onEditGear } = useEditGear();
 const creatingGearType = ref<TripGearType>('gears');
 const onCompleteCreateGearInTrip = (gear: Gear) => {
     userTripsStore.setGearsToTrip(
@@ -653,21 +632,14 @@ const onCompleteCreateGearInTrip = (gear: Gear) => {
         [{ id: gear.id, quantity: 1 }],
         creatingGearType.value,
     );
-    onCompleteCreateGear();
 };
 
 const onRemoveGear = (gear: Gear, type: TripGearType) => {
     userTripsStore.removeGearsFromTrip(tripId, [gear.id], type);
 };
 
-// for TripInfoEditorDialog
-const {
-    isEditingTrip,
-    editingTrip,
-    onEditTrip,
-    onCompleteEditTrip,
-    onCancelEditTrip,
-} = useEditTrip();
+// for TripInfoEditor
+const { onEditTrip } = useEditTrip();
 
 // for edit gear in table
 const onGearCellEditComplete = async ({
@@ -731,17 +703,7 @@ const onConsumableCellEditComplete = async (e: {
 };
 
 // consumables
-const {
-    isAddingConsumable,
-    isEditingConsumable,
-    editingConsumableIndex,
-    defaultConsumableCategory,
-    onCreateConsumable,
-    onEditConsumable,
-    onCompleteCreateConsumable,
-    onCompleteEditConsumable,
-    onCancelEditConsumable,
-} = useEditConsumable();
+const { onCreateConsumable, onEditConsumable } = useEditConsumable();
 
 const onDeleteConsumable = async (consumableIndex: number) => {
     await userTripsStore.deleteConsumableFromTrip({

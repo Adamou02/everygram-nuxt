@@ -128,9 +128,6 @@ const emit = defineEmits<{
 const { consumableCategoryToLabel } = useLangUtils();
 const userTripsStore = useUserTripsStore();
 const trip = computed(() => userTripsStore.getTripById(props.tripId));
-const emptyConsumable: EditingConsumable = {
-    name: '',
-};
 
 const existingConsumable = computed<Consumable | null>(() => {
     return (
