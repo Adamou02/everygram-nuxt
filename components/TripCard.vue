@@ -38,7 +38,11 @@ const { gearMap } = storeToRefs(userGearsStore);
 const { formatWeight } = useLangUtils();
 
 const days = computed(() => {
-    if (props.trip.dateMode === 'multi') {
+    if (
+        props.trip.dateMode === 'multi' &&
+        props.trip.startDate &&
+        props.trip.endDate
+    ) {
         return dataUtils.getDaysBetweenDates(
             props.trip.startDate,
             props.trip.endDate,

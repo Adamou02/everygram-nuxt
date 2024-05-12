@@ -8,7 +8,21 @@
             class="w-full mx-2 lg:w-auto"
             :pt="{ content: { class: 'p-0 lg:px-4 lg:py-3' } }"
         >
+            <EmptyState
+                v-if="!selectableGears.length"
+                :title="$t('INFO_NO_GEARS_TO_SELECT')"
+                :description="
+                    gears.length
+                        ? gears.length === selectedGearIds.length
+                            ? $t('INFO_ALL_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
+                            : ''
+                        : $t('INFO_NO_USER_GEARS')
+                "
+                image-src="/image/illustration/illu-adventure.svg"
+            >
+            </EmptyState>
             <PrimeDataTable
+                v-else
                 v-model:selection="selectedGears"
                 selectionMode="multiple"
                 :value="selectableGears"
@@ -56,7 +70,7 @@
             </PrimeDataTable>
             <template #footer>
                 <div
-                    class="flex justify-content-between align-items-center w-full"
+                    class="flex justify-content-between align-items-center gap-3 w-full"
                 >
                     <div>
                         {{
@@ -118,6 +132,16 @@ const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>
     _sum(selectedGears.value.map((gear) => +gear.weight || 0)),
 );
+
+watch(
+    () => props.isOpen,
+    (isOpen) => {
+        if (isOpen) {
+            selectedGears.value = [];
+        }
+    },
+);
+
 const onSubmit = () => {
     emit(
         'complete',
