@@ -30,6 +30,8 @@
         "@vuelidate/core": "^2.0.3",
         "@vuelidate/validators": "^2.0.4",
         "firebase": "^10.11.0",
+        "firebase-admin": "^12.1.0",
+        "firebase-functions": "^5.0.1",
         "pinia": "^2.1.7",
         "primeicons": "^7.0.0",
         "primevue": "^3.52.0"

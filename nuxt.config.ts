@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     ],
     routeRules: {
         '/welcome': { prerender: true },
+        '/trip-share/**': { ssr: true },
 
         // pages that require authentication
         '/': { ssr: false },

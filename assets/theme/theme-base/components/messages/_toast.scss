@@ -90,6 +90,7 @@
         margin: $toastMargin;
         box-shadow: $toastShadow;
         border-radius: $borderRadius;
+        background-color: #ffffff;
 
         .p-toast-message-content {
             padding: $toastPadding;

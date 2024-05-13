@@ -13,23 +13,37 @@
                         class="flex justify-content-between align-items-center"
                     >
                         <h1>{{ trip.title }}</h1>
-                        <MoreActionsMenuButton
-                            outlined
-                            :items="[
-                                {
-                                    icon: 'pi pi-pencil',
-                                    label: $t('ACTION_EDIT_TRIP'),
-                                    command: () => trip && onEditTrip(trip),
-                                },
-                                {
-                                    icon: 'pi pi-trash',
-                                    label: $t('ACTION_DELETE_TRIP'),
-                                    severity: 'danger',
-                                    command: () =>
-                                        trip && confirmDeleteTrip(trip),
-                                },
-                            ]"
-                        />
+                        <div class="flex gap-2">
+                            <div
+                                v-if="trip.isPublished"
+                                class="flex align-items-center gap-1 text-600"
+                            >
+                                <i class="material-symbols-outlined"
+                                    >language</i
+                                >
+                                <div>
+                                    {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
+                                </div>
+                            </div>
+                            <ShareTripButton :trip="trip" />
+                            <MoreActionsMenuButton
+                                outlined
+                                :items="[
+                                    {
+                                        icon: 'pi pi-pencil',
+                                        label: $t('ACTION_EDIT_TRIP'),
+                                        command: () => trip && onEditTrip(trip),
+                                    },
+                                    {
+                                        icon: 'pi pi-trash',
+                                        label: $t('ACTION_DELETE_TRIP'),
+                                        severity: 'danger',
+                                        command: () =>
+                                            trip && confirmDeleteTrip(trip),
+                                    },
+                                ]"
+                            />
+                        </div>
                     </div>
 
                     <!-- trip date -->

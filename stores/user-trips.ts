@@ -10,10 +10,12 @@ import {
     where,
     deleteField,
     serverTimestamp,
+    connectFirestoreEmulator,
 } from 'firebase/firestore';
 
 export const useUserTripsStore = defineStore('userTripsStore', () => {
     const db = getFirestore();
+    connectFirestoreEmulator(db, '127.0.0.1', 8080);
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
     const tripCollectionRef = collection(db, 'trip');
