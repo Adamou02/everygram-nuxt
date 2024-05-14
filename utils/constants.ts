@@ -15,7 +15,7 @@ const ROLES = {
 const COLORS = {
     BASE_WEIGHT: '#444444',
     WORN_WEIGHT: '#888888',
-    CONSUMABLES_WEIGHT: '#CCCCCC',
+    CONSUMABLES_WEIGHT: '#ffffff',
 };
 
 const EMPTY_GEAR: Gear = {

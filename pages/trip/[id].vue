@@ -1,454 +1,292 @@
 <!-- A page to show data of a trip -->
 <template>
-    <div class="flex flex-column">
-        <template v-if="trip">
-            <div>
-                <img
-                    src="/image/illustration/illu-mountains.jpg"
-                    alt=""
-                    class="w-full border-round-md"
-                />
-                <div class="flex flex-column py-6">
-                    <div
-                        class="flex justify-content-between align-items-center"
-                    >
-                        <h1>{{ trip.title }}</h1>
-                        <div class="flex gap-2">
-                            <div
-                                v-if="trip.isPublished"
-                                class="flex align-items-center gap-1 text-600"
-                            >
-                                <i class="material-symbols-outlined"
-                                    >language</i
-                                >
-                                <div>
-                                    {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
-                                </div>
-                            </div>
-                            <ShareTripButton :trip="trip" />
-                            <MoreActionsMenuButton
-                                outlined
-                                :items="[
-                                    {
-                                        icon: 'pi pi-pencil',
-                                        label: $t('ACTION_EDIT_TRIP'),
-                                        command: () => trip && onEditTrip(trip),
-                                    },
-                                    {
-                                        icon: 'pi pi-trash',
-                                        label: $t('ACTION_DELETE_TRIP'),
-                                        severity: 'danger',
-                                        command: () =>
-                                            trip && confirmDeleteTrip(trip),
-                                    },
-                                ]"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- trip date -->
-                    <div
-                        v-if="
-                            trip.dateMode === 'multi' &&
-                            trip.startDate &&
-                            trip.endDate
-                        "
-                        class="py-3"
-                    >
-                        {{ dataUtils.formatDateString(trip.startDate, '/') }} ~
-                        {{ dataUtils.formatDateString(trip.endDate, '/') }}
-                    </div>
-                    <div
-                        v-else-if="trip.dateMode === 'single' && trip.startDate"
-                        class="py-3"
-                    >
-                        {{ dataUtils.formatDateString(trip.startDate, '/') }}
-                    </div>
-                </div>
-            </div>
-            <div class="grid row-gap-5 lg:flex-row-reverse">
-                <!-- right -->
-                <div class="col-12 lg:block lg:col-4">
-                    <!-- weigh bars -->
-                    <div class="flex flex-column gap-4">
-                        <div
-                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
-                        >
-                            <div class="text-lg">
-                                {{ $t('LABEL_TOTAL_WEIGHT') }}:
-                                {{
-                                    formatWeight(
-                                        dataUtils.getTripWeightTotal(
-                                            trip,
-                                            gearMap,
-                                        ),
-                                    )
-                                }}
-                            </div>
-                            <WeightBarChart
-                                :items="totalWeightItems"
-                                :showLabel="true"
-                            />
-                        </div>
-                        <div
-                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
-                        >
-                            <div class="text-lg">
-                                {{ $t('LABEL_BASE_WEIGHT') }}:
-                                {{
-                                    formatWeight(
-                                        dataUtils.getTripGearsWeight(
-                                            trip,
-                                            gearMap,
-                                        ),
-                                    )
-                                }}
-                            </div>
-                            <WeightBarChart
-                                :items="baseWeightItems"
-                                :showLabel="true"
-                            />
-                        </div>
-                        <div
-                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
-                        >
-                            <div class="text-lg">
-                                {{ $t('LABEL_WORN_WEIGHT') }}:
-                                {{
-                                    formatWeight(
-                                        dataUtils.getTripWornGearsWeight(
-                                            trip,
-                                            gearMap,
-                                        ),
-                                    )
-                                }}
-                            </div>
-                            <WeightBarChart
-                                :items="wornWeightItems"
-                                :showLabel="true"
-                            />
-                        </div>
-                        <div
-                            class="flex flex-column gap-3 p-3 border-round-md bg-white"
-                        >
-                            <div class="text-lg">
-                                {{ $t('LABEL_CONSUMABLES_WEIGHT') }}:
-                                {{
-                                    formatWeight(
-                                        dataUtils.getTripConsumablessWeight(
-                                            trip,
-                                        ),
-                                    )
-                                }}
-                            </div>
-                            <WeightBarChart
-                                :items="consumablesWeightItems"
-                                :showLabel="true"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- left -->
-                <div class="col-12 lg:col-8 flex flex-column gap-4">
-                    <!-- base gears -->
-                    <SectionPanel>
-                        <template #header>
-                            <SectionTitleBar
-                                class="p-3 bg-white border-round-top-md"
-                                sticky
-                            >
-                                <h2>{{ $t('LABEL_BASE') }}</h2>
-                                <ActionButtonsGroup
-                                    type="text"
-                                    :actions="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_ADD_FROM_GEARS'),
-                                            onClick: () => {
-                                                selectingGearType = 'gears';
-                                                isSelectingGears = true;
-                                            },
-                                        },
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE'),
-                                            onClick: () => {
-                                                creatingGearType = 'gears';
-                                                onCreateGear();
-                                            },
-                                        },
-                                    ]"
-                                    class="hide-in-mobile"
-                                />
-                                <MoreActionsMenuButton
-                                    text
-                                    rounded
-                                    icon="pi-plus"
-                                    :items="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_ADD_FROM_GEARS'),
-                                            command: () => {
-                                                selectingGearType = 'gears';
-                                                isSelectingGears = true;
-                                            },
-                                        },
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE_GEAR'),
-                                            command: () => {
-                                                creatingGearType = 'gears';
-                                                onCreateGear();
-                                            },
-                                        },
-                                    ]"
-                                    class="lg:hidden"
-                                />
-                            </SectionTitleBar>
-                        </template>
-                        <div
-                            v-for="category in displayGearCatergories"
-                            :key="category"
-                            class="flex flex-column gap-3"
-                        >
-                            <CategoryHeader
-                                :category="category"
-                                type="gear"
-                                :weight="gearWeightByCategory[category]"
-                            >
-                                <template #actions>
-                                    <ActionButtonsGroup
-                                        type="icon"
-                                        class="hide-in-mobile"
-                                        :actions="[
-                                            {
-                                                icon: 'pi pi-plus',
-                                                label: $t('ACTION_CREATE_GEAR'),
-                                                onClick: () => {
-                                                    creatingGearType = 'gears';
-                                                    onCreateGear({ category });
-                                                },
-                                            },
-                                        ]"
-                                    />
-                                </template>
-                            </CategoryHeader>
-                            <GearDataTable
-                                :gears="gearsInTripByCategory[category]"
-                                :hasQuantity="true"
-                                :actions="['edit', 'remove']"
-                                @gear-edit="onEditGear"
-                                @gear-remove="
-                                    (gear) => onRemoveGear(gear, 'gears')
-                                "
-                                @gear-cell-edit-complete="
-                                    (e) =>
-                                        onGearCellEditComplete({
-                                            ...e,
-                                            type: 'gears',
-                                        })
-                                "
-                                class="lg:ml-6"
-                            />
-                        </div>
-                    </SectionPanel>
-
-                    <!-- worn gears -->
-                    <SectionPanel>
-                        <template #header>
-                            <SectionTitleBar
-                                class="p-3 bg-white border-round-top-md"
-                                sticky
-                            >
-                                <h2>{{ $t('LABEL_WORN') }}</h2>
-                                <ActionButtonsGroup
-                                    type="text"
-                                    :actions="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_ADD_FROM_GEARS'),
-                                            onClick: () => {
-                                                selectingGearType = 'wornGears';
-                                                isSelectingGears = true;
-                                            },
-                                        },
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE'),
-                                            onClick: () => {
-                                                creatingGearType = 'wornGears';
-                                                onCreateGear();
-                                            },
-                                        },
-                                    ]"
-                                    class="hide-in-mobile"
-                                />
-                                <MoreActionsMenuButton
-                                    text
-                                    rounded
-                                    icon="pi-plus"
-                                    :items="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_ADD_FROM_GEARS'),
-                                            command: () => {
-                                                selectingGearType = 'wornGears';
-                                                isSelectingGears = true;
-                                            },
-                                        },
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE_GEAR'),
-                                            command: () => {
-                                                creatingGearType = 'wornGears';
-                                                onCreateGear();
-                                            },
-                                        },
-                                    ]"
-                                    class="lg:hidden"
-                                />
-                            </SectionTitleBar>
-                        </template>
-                        <div
-                            v-for="category in displayWornGearCatergories"
-                            :key="category"
-                            class="flex flex-column gap-3"
-                        >
-                            <CategoryHeader
-                                :category="category"
-                                type="gear"
-                                :weight="wornGearWeightByCategory[category]"
-                            >
-                                <template #actions>
-                                    <ActionButtonsGroup
-                                        type="icon"
-                                        class="hide-in-mobile"
-                                        :actions="[
-                                            {
-                                                icon: 'pi pi-plus',
-                                                label: $t('ACTION_CREATE_GEAR'),
-                                                onClick: () => {
-                                                    creatingGearType =
-                                                        'wornGears';
-                                                    onCreateGear({ category });
-                                                },
-                                            },
-                                        ]"
-                                    />
-                                </template>
-                            </CategoryHeader>
-                            <GearDataTable
-                                :gears="wornGearsInTripByCategory[category]"
-                                :hasQuantity="true"
-                                :actions="['edit', 'remove']"
-                                @gear-edit="onEditGear"
-                                @gear-remove="
-                                    (gear) => onRemoveGear(gear, 'wornGears')
-                                "
-                                @gear-cell-edit-complete="
-                                    (e) =>
-                                        onGearCellEditComplete({
-                                            ...e,
-                                            type: 'wornGears',
-                                        })
-                                "
-                                class="lg:ml-6"
-                            />
-                        </div>
-                    </SectionPanel>
-
-                    <!-- comsumables -->
-                    <SectionPanel>
-                        <template #header>
-                            <SectionTitleBar
-                                class="p-3 bg-white border-round-top-md"
-                                sticky
-                            >
-                                <h2>{{ $t('LABEL_CONSUMABLES') }}</h2>
-                                <ActionButtonsGroup
-                                    type="text"
-                                    :actions="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE'),
-                                            onClick: () => onCreateConsumable(),
-                                        },
-                                    ]"
-                                    class="hide-in-mobile"
-                                />
-                                <ActionButtonsGroup
-                                    type="icon"
-                                    :actions="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE'),
-                                            onClick: () => onCreateConsumable(),
-                                        },
-                                    ]"
-                                    class="lg:hidden"
-                                />
-                            </SectionTitleBar>
-                        </template>
-                        <div
-                            v-for="category in displayConsumableCategories"
-                            :key="category"
-                            class="flex flex-column gap-3"
-                        >
-                            <CategoryHeader
-                                :category="category"
-                                type="consumable"
-                                :weight="consumableWeightByCategory[category]"
-                            >
-                                <template #actions>
-                                    <ActionButtonsGroup
-                                        type="icon"
-                                        class="hide-in-mobile"
-                                        :actions="[
-                                            {
-                                                icon: 'pi pi-plus',
-                                                label: $t(
-                                                    'ACTION_CREATE_CONSUMABLE',
-                                                ),
-                                                onClick: () =>
-                                                    onCreateConsumable({
-                                                        category,
-                                                    }),
-                                            },
-                                        ]"
-                                    />
-                                </template>
-                            </CategoryHeader>
-                            <ConsumableDataTable
-                                :consumables="consumablesByCategory[category]"
-                                @consumable-edit="onEditConsumable"
-                                @consumable-delete="confirmDeleteConsumable"
-                                @consumable-cell-edit-complete="
-                                    onConsumableCellEditComplete
-                                "
-                                class="lg:ml-6"
-                            />
-                        </div>
-                    </SectionPanel>
-                </div>
-            </div>
-        </template>
-        <PageLoading v-else-if="isFetchingTrips" />
-        <template v-else>
-            <EmptyState
-                :title="$t('INFO_TRIP_NOT_FOUND')"
-                :description="$t('INFO_TRIP_NOT_FOUND_DESC')"
-                image-src="/image/illustration/illu-camping.svg"
-            >
+    <TripPageLayout v-if="trip">
+        <template #header>
+            <TripHeader :trip="trip">
                 <template #actions>
-                    <PrimeButton
-                        :label="$t('ACTION_BACK_TO_TRIPS')"
-                        @click="$router.push('/trips')"
+                    <div class="flex gap-2">
+                        <div
+                            v-if="trip.isPublished"
+                            class="flex align-items-center gap-1 text-600"
+                        >
+                            <i class="material-symbols-outlined">language</i>
+                            <div>
+                                {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
+                            </div>
+                        </div>
+                        <ShareTripButton :trip="trip" />
+                        <MoreActionsMenuButton
+                            outlined
+                            :items="[
+                                {
+                                    icon: 'pi pi-pencil',
+                                    label: $t('ACTION_EDIT_TRIP'),
+                                    command: () => trip && onEditTrip(trip),
+                                },
+                                {
+                                    icon: 'pi pi-trash',
+                                    label: $t('ACTION_DELETE_TRIP'),
+                                    severity: 'danger',
+                                    command: () =>
+                                        trip && confirmDeleteTrip(trip),
+                                },
+                            ]"
+                        />
+                    </div>
+                </template>
+            </TripHeader>
+        </template>
+        <template #side>
+            <TripWeightInfo
+                :gears="gearsInTrip"
+                :wornGears="wornGearsInTrip"
+                :consumables="consumablesInTrip"
+            />
+        </template>
+        <template #main>
+            <!-- base gears -->
+            <TripGearSection :title="$t('LABEL_BASE')" :gears="gearsInTrip">
+                <template #header-actions>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_ADD_FROM_GEARS'),
+                                onClick: () => {
+                                    selectingGearType = 'gears';
+                                    isSelectingGears = true;
+                                },
+                            },
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE'),
+                                onClick: () => {
+                                    creatingGearType = 'gears';
+                                    onCreateGear();
+                                },
+                            },
+                        ]"
+                        class="hide-in-mobile"
+                    />
+                    <MoreActionsMenuButton
+                        text
+                        rounded
+                        icon="pi-plus"
+                        :items="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_ADD_FROM_GEARS'),
+                                command: () => {
+                                    selectingGearType = 'gears';
+                                    isSelectingGears = true;
+                                },
+                            },
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE_GEAR'),
+                                command: () => {
+                                    creatingGearType = 'gears';
+                                    onCreateGear();
+                                },
+                            },
+                        ]"
+                        class="lg:hidden"
                     />
                 </template>
-            </EmptyState>
+                <template #category-actions="{ category }">
+                    <ActionButtonsGroup
+                        type="icon"
+                        class="hide-in-mobile"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE_GEAR'),
+                                onClick: () => {
+                                    creatingGearType = 'gears';
+                                    onCreateGear({ category });
+                                },
+                            },
+                        ]"
+                    />
+                </template>
+                <template #category-body="{ gears }">
+                    <GearDataTable
+                        :gears="gears"
+                        :hasQuantity="true"
+                        :actions="['edit', 'remove']"
+                        @gear-edit="onEditGear"
+                        @gear-remove="(gear) => onRemoveGear(gear, 'gears')"
+                        @gear-cell-edit-complete="
+                            (e) =>
+                                onGearCellEditComplete({
+                                    ...e,
+                                    type: 'gears',
+                                })
+                        "
+                        class="lg:ml-6"
+                    />
+                </template>
+            </TripGearSection>
+
+            <!-- comsumables -->
+            <TripConsumableSection
+                :title="$t('LABEL_CONSUMABLES')"
+                :consumables="consumablesInTrip"
+            >
+                <template #header-actions>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE'),
+                                onClick: () => onCreateConsumable(),
+                            },
+                        ]"
+                        class="hide-in-mobile"
+                    />
+                    <ActionButtonsGroup
+                        type="icon"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE'),
+                                onClick: () => onCreateConsumable(),
+                            },
+                        ]"
+                        class="lg:hidden"
+                    />
+                </template>
+                <template #category-actions="{ category }">
+                    <ActionButtonsGroup
+                        type="icon"
+                        class="hide-in-mobile"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE_CONSUMABLE'),
+                                onClick: () =>
+                                    onCreateConsumable({
+                                        category,
+                                    }),
+                            },
+                        ]"
+                    />
+                </template>
+                <template #category-body="{ consumables }">
+                    <ConsumableDataTable
+                        :consumables="consumables"
+                        @consumable-edit="onEditConsumable"
+                        @consumable-delete="confirmDeleteConsumable"
+                        @consumable-cell-edit-complete="
+                            onConsumableCellEditComplete
+                        "
+                        class="lg:ml-6"
+                    />
+                </template>
+            </TripConsumableSection>
+
+            <!-- worn gears -->
+            <TripGearSection :title="$t('LABEL_WORN')" :gears="wornGearsInTrip">
+                <template #header-actions>
+                    <ActionButtonsGroup
+                        type="text"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_ADD_FROM_GEARS'),
+                                onClick: () => {
+                                    selectingGearType = 'wornGears';
+                                    isSelectingGears = true;
+                                },
+                            },
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE'),
+                                onClick: () => {
+                                    creatingGearType = 'wornGears';
+                                    onCreateGear();
+                                },
+                            },
+                        ]"
+                        class="hide-in-mobile"
+                    />
+                    <MoreActionsMenuButton
+                        text
+                        rounded
+                        icon="pi-plus"
+                        :items="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_ADD_FROM_GEARS'),
+                                command: () => {
+                                    selectingGearType = 'wornGears';
+                                    isSelectingGears = true;
+                                },
+                            },
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE_GEAR'),
+                                command: () => {
+                                    creatingGearType = 'wornGears';
+                                    onCreateGear();
+                                },
+                            },
+                        ]"
+                        class="lg:hidden"
+                    />
+                </template>
+                <template #category-actions="{ category }">
+                    <ActionButtonsGroup
+                        type="icon"
+                        class="hide-in-mobile"
+                        :actions="[
+                            {
+                                icon: 'pi pi-plus',
+                                label: $t('ACTION_CREATE_GEAR'),
+                                onClick: () => {
+                                    creatingGearType = 'wornGears';
+                                    onCreateGear({ category });
+                                },
+                            },
+                        ]"
+                    />
+                </template>
+                <template #category-body="{ gears }">
+                    <GearDataTable
+                        :gears="gears"
+                        :hasQuantity="true"
+                        :actions="['edit', 'remove']"
+                        @gear-edit="onEditGear"
+                        @gear-remove="(gear) => onRemoveGear(gear, 'wornGears')"
+                        @gear-cell-edit-complete="
+                            (e) =>
+                                onGearCellEditComplete({
+                                    ...e,
+                                    type: 'wornGears',
+                                })
+                        "
+                        class="lg:ml-6"
+                    />
+                </template>
+            </TripGearSection>
         </template>
-    </div>
+    </TripPageLayout>
+    <PageLoading v-else-if="isFetchingTrips" />
+    <EmptyState
+        :title="$t('INFO_TRIP_NOT_FOUND')"
+        :description="$t('INFO_TRIP_NOT_FOUND_DESC')"
+        image-src="/image/illustration/illu-camping.svg"
+        v-else
+    >
+        <template #actions>
+            <PrimeButton
+                :label="$t('ACTION_BACK_TO_TRIPS')"
+                @click="$router.push('/trips')"
+            />
+        </template>
+    </EmptyState>
     <GearsSelectorDialog
         :is-open="isSelectingGears"
         :selected-gear-ids="
@@ -495,19 +333,6 @@ const gearsInTrip = computed<GearWithQuantity[]>(() =>
           }))
         : [],
 );
-const gearsInTripByCategory = computed(() =>
-    dataUtils.groupGearsByCategory(gearsInTrip.value),
-);
-const displayGearCatergories = computed(() =>
-    constants.GEAR_CATEGORY_KEYS.filter(
-        (category) => gearsInTripByCategory.value[category],
-    ),
-);
-const gearWeightByCategory = computed(() =>
-    _mapValues(gearsInTripByCategory.value, (gears) =>
-        _sumBy(gears, (gear) => (+gear.weight || 0) * gear.quantity),
-    ),
-);
 
 // worn gears
 const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
@@ -521,19 +346,6 @@ const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
           )
         : [],
 );
-const wornGearsInTripByCategory = computed(() =>
-    dataUtils.groupGearsByCategory(wornGearsInTrip.value),
-);
-const displayWornGearCatergories = computed(() =>
-    constants.GEAR_CATEGORY_KEYS.filter(
-        (category) => wornGearsInTripByCategory.value[category],
-    ),
-);
-const wornGearWeightByCategory = computed(() =>
-    _mapValues(wornGearsInTripByCategory.value, (gears) =>
-        _sumBy(gears, (gear) => (+gear.weight || 0) * gear.quantity),
-    ),
-);
 
 // consumables
 const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
@@ -543,77 +355,6 @@ const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
               index,
           }))
         : [],
-);
-
-const consumablesByCategory = computed(() =>
-    dataUtils.groupConsumablesByCategory(consumablesInTrip.value),
-);
-
-const displayConsumableCategories = computed(() =>
-    constants.CONSUMABLE_CATEGORY_KEYS.filter(
-        (category) => consumablesByCategory.value[category],
-    ),
-);
-
-const consumableWeightByCategory = computed(() =>
-    _mapValues(consumablesByCategory.value, (consumables) =>
-        _sumBy(consumables, (consumable) => +consumable.weight || 0),
-    ),
-);
-
-// weight bars
-const totalWeightItems = computed<WeightBarChartItem[]>(() => [
-    {
-        label: i18n.t('LABEL_BASE_WEIGHT'),
-        weight: trip.value
-            ? dataUtils.getTripGearsWeight(trip.value, gearMap.value)
-            : 0,
-        color: constants.COLORS.BASE_WEIGHT,
-    },
-    {
-        label: i18n.t('LABEL_WORN_WEIGHT'),
-        weight: trip.value
-            ? dataUtils.getTripWornGearsWeight(trip.value, gearMap.value)
-            : 0,
-        color: constants.COLORS.WORN_WEIGHT,
-    },
-    {
-        label: i18n.t('LABEL_CONSUMABLES_WEIGHT'),
-        weight: trip.value
-            ? dataUtils.getTripConsumablessWeight(trip.value)
-            : 0,
-        color: constants.COLORS.CONSUMABLES_WEIGHT,
-    },
-]);
-
-const baseWeightItems = computed<WeightBarChartItem[]>(() =>
-    Object.entries(gearWeightByCategory.value).map(([category, weight]) => ({
-        label: gearCategoryToLabel(category as GearCategory),
-        weight,
-        color: constants.GEAR_CATEGORIES[category as GearCategory].color,
-    })),
-);
-
-const wornWeightItems = computed<WeightBarChartItem[]>(() =>
-    Object.entries(wornGearWeightByCategory.value).map(
-        ([category, weight]) => ({
-            label: gearCategoryToLabel(category as GearCategory),
-            weight,
-            color: constants.GEAR_CATEGORIES[category as GearCategory].color,
-        }),
-    ),
-);
-
-const consumablesWeightItems = computed<WeightBarChartItem[]>(() =>
-    Object.entries(consumableWeightByCategory.value).map(
-        ([category, weight]) => ({
-            label: consumableCategoryToLabel(category as ConsumableCategory),
-            weight,
-            color: constants.CONSUMABLE_CATEGORIES[
-                category as ConsumableCategory
-            ].color,
-        }),
-    ),
 );
 
 const { formatWeight, gearCategoryToLabel, consumableCategoryToLabel } =

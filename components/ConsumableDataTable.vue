@@ -2,7 +2,7 @@
     <PrimeDataTable
         :value="sortedConsumables"
         dataKey="id"
-        edit-mode="cell"
+        :edit-mode="props.readonly ? undefined : 'cell'"
         @cell-edit-complete="(e) => emit('consumable-cell-edit-complete', e)"
         class="p-datatable-hide-thead"
     >
@@ -10,7 +10,7 @@
         <PrimeColumn
             field="name"
             :header="$t('LABEL_NAME')"
-            class="hover:surface-50 hide-in-mobile"
+            :class="['hide-in-mobile', { 'hover:surface-50': !props.readonly }]"
         >
             <template #editor="{ data, field }">
                 <PrimeInputText
@@ -24,7 +24,10 @@
         <PrimeColumn
             field="weight"
             :header="$t('LABEL_WEIGHT')"
-            class="text-right w-8rem hover:surface-50 hide-in-mobile"
+            :class="[
+                'text-right w-8rem hide-in-mobile',
+                { 'hover:surface-50': !props.readonly },
+            ]"
         >
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
@@ -59,7 +62,11 @@
             </template>
         </PrimeColumn>
 
-        <PrimeColumn :exportable="false" class="w-1rem px-0 lg:pl-2">
+        <PrimeColumn
+            v-if="!props.readonly"
+            :exportable="false"
+            class="w-1rem px-0 lg:pl-2"
+        >
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
@@ -89,6 +96,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     consumables?: ConsumableWithIndex[];
+    readonly?: boolean;
 }>();
 
 const sortedConsumables = computed(() => {

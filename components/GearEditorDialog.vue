@@ -103,7 +103,6 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
-import { minLength } from '@vuelidate/validators';
 
 const props = defineProps<{
     isOpen: boolean;
@@ -152,7 +151,9 @@ watch(
             formState.name = props.gear?.name || initialFormState.name;
             formState.weight = props.gear?.weight || initialFormState.weight;
             formState.category =
-                props.gear?.category || initialFormState.category;
+                props.gear?.category ||
+                props.defaultCategory ||
+                initialFormState.category;
             vuelidate.value.$reset();
         }
     },

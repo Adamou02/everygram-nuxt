@@ -2,7 +2,7 @@
     <PrimeDataTable
         :value="sortedGears"
         dataKey="id"
-        edit-mode="cell"
+        :edit-mode="props.readonly ? undefined : 'cell'"
         @cell-edit-complete="(e) => emit('gear-cell-edit-complete', e)"
         class="p-datatable-hide-thead"
     >
@@ -10,7 +10,7 @@
         <PrimeColumn
             field="name"
             :header="$t('LABEL_NAME')"
-            class="hover:surface-50 hide-in-mobile"
+            :class="['hide-in-mobile', { 'hover:surface-50': !props.readonly }]"
         >
             <template #editor="{ data, field }">
                 <PrimeInputText
@@ -24,7 +24,10 @@
         <PrimeColumn
             field="weight"
             :header="$t('LABEL_WEIGHT')"
-            class="text-right w-8rem hover:surface-50 hide-in-mobile"
+            :class="[
+                'text-right w-8rem hide-in-mobile',
+                { 'hover:surface-50': !props.readonly },
+            ]"
         >
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
@@ -46,7 +49,10 @@
             v-if="hasQuantity"
             field="quantity"
             :header="$t('LABEL_QUANTITY')"
-            class="text-right w-4rem hover:surface-50 hide-in-mobile"
+            :class="[
+                'text-right w-4rem hide-in-mobile',
+                { 'hover:surface-50': !props.readonly },
+            ]"
         >
             <template #body="{ data }"> x {{ data.quantity }} </template>
             <template #editor="{ data, field }">
@@ -72,7 +78,11 @@
         </PrimeColumn>
 
         <!-- actions -->
-        <PrimeColumn :exportable="false" class="w-1rem px-0 lg:pl-2">
+        <PrimeColumn
+            v-if="!props.readonly && actions"
+            :exportable="false"
+            class="w-1rem px-0 lg:pl-2"
+        >
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
@@ -114,7 +124,8 @@ import type { MenuItem } from 'primevue/menuitem';
 const props = defineProps<{
     gears?: (Gear & { quantity?: number })[];
     hasQuantity?: boolean;
-    actions: ('edit' | 'delete' | 'remove')[];
+    actions?: ('edit' | 'delete' | 'remove')[];
+    readonly?: boolean;
 }>();
 
 const sortedGears = computed(() => {

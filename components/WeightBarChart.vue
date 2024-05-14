@@ -7,7 +7,10 @@
                 v-tooltip.top="
                     `${item.label} ${formatWeight(item.weight)} (${_round((item.weight / totalWeight) * 100)}%)`
                 "
-                class="weight-bar-chart__section"
+                :class="[
+                    'weight-bar-chart__section',
+                    { 'border-1 border-solid border-500': item.addBorder },
+                ]"
                 :style="{
                     backgroundColor: item.color,
                     width: `${(item.weight / totalWeight) * 100}%`,
@@ -16,21 +19,69 @@
         </div>
 
         <!-- labels -->
-        <div v-if="showLabel" class="flex flex-column gap-3">
-            <div
-                v-for="item in sortedItems"
-                :key="item.label"
-                class="flex gap-2 text-sm align-items-center"
-            >
+        <div v-if="showLabel" class="flex flex-column gap-0">
+            <div v-for="(item, index) in sortedItems" :key="item.label">
                 <div
-                    class="weight-bar-chart__dot"
-                    :style="{ backgroundColor: item.color }"
-                />
-                <div>{{ item.label }}</div>
-                <DashedLine />
-                <div>{{ formatWeight(item.weight) }}</div>
-                <div class="w-2rem text-600 text-right">
-                    {{ _round((item.weight / totalWeight) * 100) }}%
+                    :class="[
+                        'flex gap-2 align-items-center py-2',
+                        { 'cursor-pointer': item.subItems },
+                    ]"
+                    @click="itemsToggle[index] = !itemsToggle[index]"
+                >
+                    <div
+                        :class="[
+                            'weight-bar-chart__dot',
+                            {
+                                'border-1 border-solid border-500':
+                                    item.addBorder,
+                            },
+                        ]"
+                        :style="{ backgroundColor: item.color }"
+                    ></div>
+                    <div>
+                        {{ item.label }}
+                        <span
+                            v-if="item.subItems"
+                            :class="[
+                                'pi text-xs text-600',
+                                {
+                                    'pi-chevron-up': itemsToggle[index],
+                                    'pi-chevron-down': !itemsToggle[index],
+                                },
+                            ]"
+                        ></span>
+                        <!-- <span
+                            v-if="item.subItems"
+                            class="material-symbols-outlined text-sm text-600"
+                            >{{
+                                itemsToggle[index]
+                                    ? 'expand_less'
+                                    : 'expand_more'
+                            }}</span
+                        > -->
+                    </div>
+                    <DashedLine />
+                    <div>{{ formatWeight(item.weight) }}</div>
+                    <div class="w-2rem text-600 text-right">
+                        {{ _round((item.weight / totalWeight) * 100) }}%
+                    </div>
+                </div>
+                <div
+                    v-if="item.subItems && itemsToggle[index]"
+                    class="flex flex-column gap-2 mt-1 mb-2 ml-3 text-600"
+                >
+                    <div
+                        v-for="subItem in item.subItems"
+                        class="flex gap-2 align-items-center"
+                        :key="subItem.label"
+                    >
+                        <div>{{ subItem.label }}</div>
+                        <DashedLine />
+                        <div>{{ formatWeight(subItem.weight) }}</div>
+                        <div class="w-2rem text-600 text-right">
+                            {{ _round((subItem.weight / totalWeight) * 100) }}%
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,6 +104,15 @@ const sortedItems = computed(() =>
 );
 const barSectionItems = computed(() =>
     sortedItems.value.filter((item) => item.weight > 0),
+);
+const itemsToggle = ref<Record<number, boolean>>(
+    props.items.reduce(
+        (acc, item, index) => {
+            acc[index] = false;
+            return acc;
+        },
+        {} as Record<number, boolean>,
+    ),
 );
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <AppHeader />
+    <div class="page-container">
         <slot />
     </div>
+    <AppFooter />
 </template>
-
-<script setup lang="ts"></script>

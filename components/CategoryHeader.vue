@@ -35,9 +35,7 @@
                 </div>
             </template>
         </div>
-        <div>
-            <slot name="actions" />
-        </div>
+        <slot name="actions" />
     </div>
 </template>
 

@@ -10,7 +10,7 @@
             <UserMobileMenu />
         </template>
     </AppHeader>
-    <div class="user-page">
+    <div class="page-container">
         <slot />
     </div>
     <AppFooter />
@@ -28,18 +28,3 @@ onUnmounted(() => {
     userTripsStore.destroy();
 });
 </script>
-
-<style lang="scss">
-@import '~/assets/theme/primeflex/core/_variables.scss';
-
-.user-page {
-    max-width: 1200px;
-    min-height: 100vh;
-    margin: auto;
-    padding: 16px;
-
-    @media (min-width: $lg) {
-        padding: 24px;
-    }
-}
-</style>
