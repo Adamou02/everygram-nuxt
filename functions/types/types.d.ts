@@ -67,8 +67,9 @@ export type Trip = {
 };
 export type EditingTrip = Partial<Trip>;
 
-export type TripShare = Trip & {
+export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
     gears: Record<string, GearWithQuantity>;
+    wornGears: Record<string, GearWithQuantity>;
     owner: UserInfo;
 };
 

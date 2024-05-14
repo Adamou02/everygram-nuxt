@@ -68,8 +68,9 @@ declare global {
     };
     type EditingTrip = Partial<Trip>;
 
-    type TripShare = Trip & {
+    type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
         gears: Record<string, GearWithQuantity>;
+        wornGears: Record<string, GearWithQuantity>;
         owner: UserInfo;
     };
 
@@ -94,10 +95,16 @@ declare global {
     type EditingConsumable = Partial<Consumable>;
     type ConsumableWithIndex = Consumable & { index: number };
 
+    type WeightBarChartSubItem = {
+        weight: number;
+        label: string;
+    };
     type WeightBarChartItem = {
         weight: number;
         label: string;
         color: string;
+        addBorder?: boolean;
+        subItems?: WeightBarChartSubItem[];
     };
 
     type GearBrand = 'mont-bell' | 'patagonia' | 'arcteryx';

@@ -15,6 +15,7 @@ import {
 } from 'firebase-functions/v2/firestore';
 import type { Gear, GearWithQuantity, Trip, TripShare } from '../types/types';
 import { setGlobalOptions } from 'firebase-functions/v2';
+import * as _ from 'lodash';
 
 // Set the maximum instances to 10 for all functions
 // To fix Error: Error generating the service identity for eventarc.googleapis.com.
@@ -64,23 +65,52 @@ export const onGearWrittenUpdateTripShare = onDocumentWritten(
             return null;
         }
 
-        const tripSharesSnapshot = await admin
+        // get trip shares that have the gear
+        const tripSharesWithGearSnapshot = await admin
             .firestore()
             .collection('tripShare')
             .where(`gears.${gearId}`, '!=', false)
             .get();
 
-        const allUpdates = tripSharesSnapshot.docs.map(async (doc) => {
+        // get trip shares that have the worn gear
+        const tripSharesWithWornGearSnapshot = await admin
+            .firestore()
+            .collection('tripShare')
+            .where(`wornGears.${gearId}`, '!=', false)
+            .get();
+
+        // merge trip shares with gear and worn gear
+        const tripShareDocs = _.uniqBy(
+            [
+                ...tripSharesWithGearSnapshot.docs,
+                ...tripSharesWithWornGearSnapshot.docs,
+            ],
+            'id',
+        );
+
+        const allUpdates = tripShareDocs.map(async (doc) => {
             const tripShare = doc.data() as TripShare;
+
+            // update gear in trip share
             const gearWithQuantity = tripShare.gears[gearId];
-            if (!gearWithQuantity) {
-                return;
+            if (gearWithQuantity) {
+                const newGearWithQuantity: GearWithQuantity = {
+                    ...gearWithQuantity,
+                    ...gear,
+                };
+                tripShare.gears[gearId] = newGearWithQuantity;
             }
-            const newGearWithQuantity: GearWithQuantity = {
-                ...gearWithQuantity,
-                ...gear,
-            };
-            tripShare.gears[gearId] = newGearWithQuantity;
+
+            // update worn gear in trip share
+            const wornGearWithQuantity = tripShare.wornGears[gearId];
+            if (wornGearWithQuantity) {
+                const newWornGearWithQuantity: GearWithQuantity = {
+                    ...wornGearWithQuantity,
+                    ...gear,
+                };
+                tripShare.wornGears[gearId] = newWornGearWithQuantity;
+            }
+
             return await doc.ref.set(tripShare);
         });
 
@@ -88,21 +118,41 @@ export const onGearWrittenUpdateTripShare = onDocumentWritten(
     },
 );
 
-// update trip when gear is deleted
+// update trip when gear is deleted (and then trip share will be updated)
 export const onGearDeletedUpdateTrip = onDocumentDeleted(
     'gear/{gearId}',
     async (event) => {
         const gearId = event.params.gearId;
 
-        const tripsSnapshot = await admin
+        // get trips that have the gear
+        const tripsWithGearSnapshot = await admin
             .firestore()
             .collection('trip')
             .where(`gears.${gearId}`, '!=', false)
             .get();
 
-        const allUpdates = tripsSnapshot.docs.map(async (doc) => {
+        // get trips that have the worn gear
+        const tripsWithWornGearSnapshot = await admin
+            .firestore()
+            .collection('trip')
+            .where(`wornGears.${gearId}`, '!=', false)
+            .get();
+
+        // merge trips with gear and worn gear
+        const tripsSnapshot = _.uniqBy(
+            [...tripsWithGearSnapshot.docs, ...tripsWithWornGearSnapshot.docs],
+            'id',
+        );
+
+        const allUpdates = tripsSnapshot.map(async (doc) => {
             const trip = doc.data() as Trip;
+
+            // delete gear from trip
             delete trip.gears[gearId];
+
+            // delete worn gear from trip
+            delete trip.wornGears[gearId];
+
             return await doc.ref.set(trip);
         });
 
@@ -137,8 +187,11 @@ const publishTrip = async (tripId: string) => {
     }
 
     // get all gear Id from trip
-    const gearIds = Object.keys(trip.gears);
-    const gears: Gear[] = [];
+    const gearIds = _.uniq([
+        ...Object.keys(trip.gears),
+        ...Object.keys(trip.wornGears),
+    ]);
+    const gearMap: Record<string, Gear> = {};
 
     if (gearIds.length) {
         // read gears data by gearIds from firestore
@@ -148,26 +201,50 @@ const publishTrip = async (tripId: string) => {
             .where(FieldPath.documentId(), 'in', gearIds)
             .get();
         gearsSnapshot.docs.forEach((doc) => {
-            gears.push({
+            gearMap[doc.id] = {
                 id: doc.id,
                 ...doc.data(),
-            } as Gear);
+            } as Gear;
         });
     }
 
-    // map gears into array of GearWithQuantity
-    const gearsWithQuantity: GearWithQuantity[] = gears.map((gear) => ({
-        ...gear,
-        quantity: trip.gears[gear.id].quantity,
-    }));
+    const tripShareGears: Record<string, GearWithQuantity> = Object.entries(
+        trip.gears,
+    ).reduce(
+        (acc, [gearId, tripGear]) => {
+            if (!gearMap[gearId]) {
+                return acc;
+            }
+            acc[gearId] = {
+                ...gearMap[gearId],
+                quantity: tripGear.quantity,
+            };
+            return acc;
+        },
+        {} as Record<string, GearWithQuantity>,
+    );
+
+    const tripShareWornGears: Record<string, GearWithQuantity> = Object.entries(
+        trip.wornGears,
+    ).reduce(
+        (acc, [gearId, tripGear]) => {
+            if (!gearMap[gearId]) {
+                return acc;
+            }
+            acc[gearId] = {
+                ...gearMap[gearId],
+                quantity: tripGear.quantity,
+            };
+            return acc;
+        },
+        {} as Record<string, GearWithQuantity>,
+    );
 
     // build trip share data
     const tripShare: TripShare = {
         ...trip,
-        gears: gearsWithQuantity.reduce(
-            (acc, gear) => ({ ...acc, [gear.id]: gear }),
-            {},
-        ),
+        gears: tripShareGears,
+        wornGears: tripShareWornGears,
         owner: {
             displayName: owner.displayName || '',
             photoURL: owner.photoURL || '',
