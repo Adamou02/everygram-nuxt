@@ -8,12 +8,12 @@ import {
     getFirestore,
     query,
     where,
-    connectFirestoreEmulator,
+    // connectFirestoreEmulator,
 } from 'firebase/firestore';
 
 export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = getFirestore();
-    connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    // connectFirestoreEmulator(db, '127.0.0.1', 8080);
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
     const gearCollectionRef = collection(db, 'gear');

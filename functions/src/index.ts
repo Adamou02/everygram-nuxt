@@ -9,7 +9,10 @@
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { FieldPath } from 'firebase-admin/firestore';
-import { onDocumentWritten } from 'firebase-functions/v2/firestore';
+import {
+    onDocumentDeleted,
+    onDocumentWritten,
+} from 'firebase-functions/v2/firestore';
 import type { Gear, GearWithQuantity, Trip, TripShare } from '../types/types';
 import { setGlobalOptions } from 'firebase-functions/v2';
 
@@ -23,6 +26,7 @@ setGlobalOptions({
 
 admin.initializeApp();
 
+// update trip share when trip is written
 export const onTripWrittenUpdateTripShare = onDocumentWritten(
     'trip/{tripId}',
     (event) => {
@@ -40,6 +44,16 @@ export const onTripWrittenUpdateTripShare = onDocumentWritten(
     },
 );
 
+// unpublish trip share when trip is deleted
+export const onTripDeletedUnpublishTrip = onDocumentDeleted(
+    'trip/{tripId}',
+    (event) => {
+        const tripId = event.params.tripId;
+        return unpublishTrip(tripId);
+    },
+);
+
+// update trip share when gear is written
 export const onGearWrittenUpdateTripShare = onDocumentWritten(
     'gear/{gearId}',
     async (event) => {
@@ -68,6 +82,28 @@ export const onGearWrittenUpdateTripShare = onDocumentWritten(
             };
             tripShare.gears[gearId] = newGearWithQuantity;
             return await doc.ref.set(tripShare);
+        });
+
+        return Promise.all(allUpdates);
+    },
+);
+
+// update trip when gear is deleted
+export const onGearDeletedUpdateTrip = onDocumentDeleted(
+    'gear/{gearId}',
+    async (event) => {
+        const gearId = event.params.gearId;
+
+        const tripsSnapshot = await admin
+            .firestore()
+            .collection('trip')
+            .where(`gears.${gearId}`, '!=', false)
+            .get();
+
+        const allUpdates = tripsSnapshot.docs.map(async (doc) => {
+            const trip = doc.data() as Trip;
+            delete trip.gears[gearId];
+            return await doc.ref.set(trip);
         });
 
         return Promise.all(allUpdates);
