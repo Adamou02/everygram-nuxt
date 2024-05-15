@@ -42,8 +42,10 @@ const consumablesByCategory = computed(() =>
     dataUtils.groupConsumablesByCategory(props.consumables),
 );
 
-const displayConsumableCatergories = constants.CONSUMABLE_CATEGORY_KEYS.filter(
-    (category) => consumablesByCategory.value[category]?.length,
+const displayConsumableCatergories = computed(() =>
+    constants.CONSUMABLE_CATEGORY_KEYS.filter(
+        (category) => consumablesByCategory.value[category]?.length,
+    ),
 );
 
 const consumableWeightByCategory = computed(() =>

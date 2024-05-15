@@ -1,37 +1,34 @@
 <!-- A page to show data of a trip -->
 <template>
+    <SubPageAppHeader v-if="trip">
+        <template #mobile-actions>
+            <div class="flex">
+                <TripShareButton text :trip="trip" />
+                <MoreActionsMenuButton text :items="moreActionsMenuItems" />
+            </div>
+        </template>
+    </SubPageAppHeader>
     <TripPageLayout v-if="trip">
         <template #header>
             <TripHeader :trip="trip">
                 <template #actions>
-                    <div class="flex gap-2">
+                    <div class="flex gap-3">
                         <div
                             v-if="trip.isPublished"
                             class="flex align-items-center gap-1 text-600"
                         >
                             <i class="material-symbols-outlined">language</i>
-                            <div>
+                            <div class="hide-in-mobile">
                                 {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
                             </div>
                         </div>
-                        <ShareTripButton :trip="trip" />
-                        <MoreActionsMenuButton
-                            outlined
-                            :items="[
-                                {
-                                    icon: 'pi pi-pencil',
-                                    label: $t('ACTION_EDIT_TRIP'),
-                                    command: () => trip && onEditTrip(trip),
-                                },
-                                {
-                                    icon: 'pi pi-trash',
-                                    label: $t('ACTION_DELETE_TRIP'),
-                                    severity: 'danger',
-                                    command: () =>
-                                        trip && confirmDeleteTrip(trip),
-                                },
-                            ]"
-                        />
+                        <div class="flex gap-2 hide-in-mobile">
+                            <TripShareButton :trip="trip" />
+                            <MoreActionsMenuButton
+                                outlined
+                                :items="moreActionsMenuItems"
+                            />
+                        </div>
                     </div>
                 </template>
             </TripHeader>
@@ -310,7 +307,7 @@
 <script setup lang="ts">
 definePageMeta({
     middleware: ['auth-guard'],
-    layout: 'user-page',
+    layout: 'sub-page',
 });
 const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
@@ -356,9 +353,6 @@ const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
           }))
         : [],
 );
-
-const { formatWeight, gearCategoryToLabel, consumableCategoryToLabel } =
-    useLangUtils();
 
 // for gear selector
 const isSelectingGears = ref<boolean>(false);
@@ -482,4 +476,18 @@ const confirmDeleteConsumable = (consumableIndex: number) => {
 };
 
 const { confirmDeleteTrip } = useDeleteTrip();
+
+const moreActionsMenuItems = [
+    {
+        icon: 'pi pi-pencil',
+        label: i18n.t('ACTION_EDIT_TRIP'),
+        command: () => trip.value && onEditTrip(trip.value),
+    },
+    {
+        icon: 'pi pi-trash',
+        label: i18n.t('ACTION_DELETE_TRIP'),
+        severity: 'danger',
+        command: () => trip.value && confirmDeleteTrip(trip.value),
+    },
+];
 </script>

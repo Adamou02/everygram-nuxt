@@ -42,8 +42,10 @@ const gearsByCategory = computed(() =>
     dataUtils.groupGearsByCategory(props.gears),
 );
 
-const displayGearCatergories = constants.GEAR_CATEGORY_KEYS.filter(
-    (category) => gearsByCategory.value[category]?.length,
+const displayGearCatergories = computed(() =>
+    constants.GEAR_CATEGORY_KEYS.filter(
+        (category) => gearsByCategory.value[category]?.length,
+    ),
 );
 
 const gearWeightByCategory = computed(() =>

@@ -3,6 +3,7 @@
     "ACTION_ADD": "Add",
     "ACTION_ARCHIVE": "Archive",
     "ACTION_BACK_TO_TRIPS": "Back to Trips",
+    "ACTION_BACK": "Back",
     "ACTION_CANCEL": "Cancel",
     "ACTION_CONFIRM": "Confirm",
     "ACTION_CREATE_CONSUMABLE": "@:ACTION_CREATE @:ENTITY_CONSUMABLE",

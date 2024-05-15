@@ -1,38 +1,36 @@
 <template>
-    <PrimeButton
-        type="button"
-        icon="pi pi-share-alt"
-        :label="$t('ACTION_SHARE')"
-        @click="toggle"
-    />
-
-    <PrimeOverlayPanel ref="overlayPanel" class="border-round-lg p-2 w-25rem">
-        <div v-if="trip.isPublished" class="flex flex-column gap-3">
-            <h3 class="">{{ $t('INFO_SHARE_THIS_TRIP_BY_THIS_LINK') }}</h3>
+    <div class="flex flex-column gap-3">
+        <h3 class="py-2">
+            {{
+                trip.isPublished
+                    ? $t('INFO_SHARE_THIS_TRIP_BY_THIS_LINK')
+                    : $t('INFO_PUBLISH_TO_WEB')
+            }}
+        </h3>
+        <template v-if="trip.isPublished">
             <PrimeInputGroup>
                 <PrimeInputText
                     :value="tripShareLink"
                     readonly
-                    class="w-25rem"
+                    class="w-full"
                 ></PrimeInputText>
                 <PrimeButton :icon="copyIcon" @click="onCopyLink" />
             </PrimeInputGroup>
-            <div class="flex gap-3">
+            <div class="flex flex-column lg:flex-row-reverse gap-2">
+                <PrimeButton
+                    :label="$t('ACTION_VIEW_SHARED_TRIP_PAGE')"
+                    class="w-full"
+                    @click="() => onViewSharedTrip()"
+                />
                 <PrimeButton
                     :label="$t('ACTION_UNPUBLISH')"
                     class="w-full"
                     outlined
                     @click="() => unpublishTrip(trip)"
                 />
-                <PrimeButton
-                    :label="$t('ACTION_VIEW_SHARED_TRIP_PAGE')"
-                    class="w-full"
-                    @click="() => onViewSharedTrip()"
-                />
             </div>
-        </div>
-        <div v-else class="flex flex-column gap-3">
-            <h3>{{ $t('INFO_PUBLISH_TO_WEB') }}</h3>
+        </template>
+        <template v-else>
             <p>
                 {{ $t('INFO_PUBLISH_TO_WEB_DESC') }}
             </p>
@@ -41,19 +39,17 @@
                 class="w-full"
                 @click="() => publishTrip(trip)"
             />
-        </div>
-    </PrimeOverlayPanel>
+        </template>
+    </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
     trip: Trip;
 }>();
+
 const copyIcon = ref('pi pi-copy');
-const overlayPanel = ref();
-const toggle = (event: MouseEvent) => {
-    overlayPanel.value.toggle(event);
-};
+
 const tripShareLink = computed(() => {
     return `${window.location.origin}/trip-share/${props.trip.id}`;
 });

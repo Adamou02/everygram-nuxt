@@ -1,20 +1,26 @@
 <template>
     <header class="app-header sticky top-0 border-bottom-1 border-200">
-        <NuxtLink to="/">
-            <img
-                class="app-header__logo"
-                src="/image/logo-horizontal.svg"
-                alt="App Logo"
-            />
-        </NuxtLink>
+        <div class="app-header__left">
+            <slot name="left">
+                <!-- default show logo -->
+                <NuxtLink to="/">
+                    <img
+                        class="app-header__logo"
+                        src="/image/logo-horizontal.svg"
+                        alt="App Logo"
+                        height="24px"
+                    />
+                </NuxtLink>
+            </slot>
+        </div>
         <div class="app-header__navigation">
             <slot name="navigation" />
         </div>
         <div class="app-header__actions">
             <slot name="actions" />
         </div>
-        <div class="app-header__menu">
-            <slot name="menu" />
+        <div class="app-header__mobile-actions">
+            <slot name="mobile-actions" />
         </div>
     </header>
 </template>
@@ -32,8 +38,10 @@
     background-color: $eg-c-bright;
     z-index: 1100; // higher than dropdown menu, lower than modal
 
-    &__logo {
-        height: 24px;
+    &__left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
     }
     &__navigation,
     &__actions {
@@ -45,7 +53,7 @@
     &__actions {
         justify-content: flex-end;
     }
-    &__menu {
+    &__mobile-actions {
         display: flex;
         justify-content: flex-end;
     }
@@ -54,7 +62,7 @@
         padding: 0 40px;
         grid-template-columns: 200px 1fr 200px;
         gap: 16px;
-        &__menu {
+        &__mobile-actions {
             display: none;
         }
         &__navigation,

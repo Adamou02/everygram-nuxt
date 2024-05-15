@@ -103,11 +103,6 @@ const confirmDeleteGear = (gear: Gear) => {
     });
 };
 
-const onArchiveGear = async (gear: Gear) => {
-    // TODO
-    console.log('archive gear', gear);
-};
-
 // for edit gear in table
 const onCellEditComplete = async (e: {
     data: Gear;

@@ -44,12 +44,7 @@ export const useUserStore = defineStore('userStore', () => {
             password: string;
         }) => {
             try {
-                const userCredential = await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password,
-                );
-                user.value = userCredential.user;
+                await createUserWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 console.error(error);
                 throw error;
@@ -64,12 +59,7 @@ export const useUserStore = defineStore('userStore', () => {
         }) => {
             // Sign in with email and password
             try {
-                const userCredential = await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password,
-                );
-                user.value = userCredential.user;
+                await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 console.error(error);
                 throw error;
@@ -88,8 +78,7 @@ export const useUserStore = defineStore('userStore', () => {
 
             try {
                 // await signInWithRedirect(auth, provider); TODO: Implement this
-                const userCredential = await signInWithPopup(auth, provider);
-                user.value = userCredential.user || null;
+                await signInWithPopup(auth, provider);
             } catch (error) {
                 console.error(error);
                 throw error;

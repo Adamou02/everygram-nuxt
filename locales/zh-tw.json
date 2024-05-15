@@ -3,6 +3,7 @@
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",
     "ACTION_BACK_TO_TRIPS": "返回行程列表",
+    "ACTION_BACK": "返回",
     "ACTION_CANCEL": "取消",
     "ACTION_CONFIRM": "確認",
     "ACTION_CREATE_CONSUMABLE": "@:ACTION_CREATE@:ENTITY_CONSUMABLE",
