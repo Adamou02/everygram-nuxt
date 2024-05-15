@@ -41,10 +41,16 @@
         height: 32px;
         position: relative;
         bottom: -4px;
-        margin: 0px -2px;
     }
     &__hr-line {
         border-bottom: 1px solid $eg-c-primary;
+        &:first-child {
+            margin-right: -3px;
+        }
+        &:last-child {
+            margin-left: -3px;
+        }
+        transform: translateY(-0.8px);
     }
     &__content {
         display: flex;

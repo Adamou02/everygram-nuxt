@@ -41,9 +41,9 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
                 trips.value = querySnapshot.docs.map(
                     (doc) =>
                         ({
-                            ...constants.EMPTY_TRIP,
-                            id: doc.id,
+                            ...constants.EMPTY_TRIP_DATA,
                             ...doc.data(),
+                            id: doc.id,
                         }) as Trip,
                 );
                 if (isFirstFetching.value) {
@@ -68,12 +68,11 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         }
         try {
             const docRef = await addDoc(tripCollectionRef, {
+                ...constants.EMPTY_TRIP_DATA,
                 ...trip,
                 role: {
                     [user.value.uid]: constants.ROLES.OWNER,
                 },
-                gears: {},
-                consumables: [],
                 created: serverTimestamp(),
             });
             return docRef.id;
@@ -96,7 +95,13 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         }
         try {
             delete tripData.id;
-            await updateDoc(doc(tripCollectionRef, id), tripData);
+            const trip = getTripById.value(id);
+            await updateDoc(doc(tripCollectionRef, id), {
+                ...tripData,
+                ...(!trip.isPublished && tripData.isPublished
+                    ? { published: serverTimestamp() }
+                    : {}),
+            });
         } catch (error) {
             console.error(error);
             throw error;

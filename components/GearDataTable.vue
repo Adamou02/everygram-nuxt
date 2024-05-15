@@ -73,7 +73,9 @@
         <PrimeColumn class="text-right w-7rem lg:hidden">
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
-                <template v-if="hasQuantity"> x {{ data.quantity }} </template>
+                <template v-if="hasQuantity && data.quantity > 1">
+                    x {{ data.quantity }}
+                </template>
             </template>
         </PrimeColumn>
 

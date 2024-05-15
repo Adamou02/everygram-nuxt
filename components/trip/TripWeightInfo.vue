@@ -6,7 +6,7 @@
         <div
             :class="[
                 'flex flex-column gap-3 p-3 bg-white border-round-top-md',
-                { 'border-round-bottom-md': wornGears.length },
+                { 'border-round-bottom-md': !wornGears.length },
             ]"
         >
             <div class="flex justify-content-between text-lg">

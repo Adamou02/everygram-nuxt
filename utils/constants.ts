@@ -18,16 +18,14 @@ const COLORS = {
     CONSUMABLES_WEIGHT: '#ffffff',
 };
 
-const EMPTY_GEAR: Gear = {
-    id: '',
+const EMPTY_GEAR_DATA: Omit<Gear, 'id'> = {
     name: '',
     role: {},
     weight: 0,
     category: 'others',
 };
 
-const EMPTY_TRIP: Trip = {
-    id: '',
+const EMPTY_TRIP_DATA: Omit<Trip, 'id'> = {
     title: '',
     description: '',
     role: {},
@@ -65,8 +63,8 @@ export default {
     CONSUMABLE_CATEGORY_KEYS,
     GEAR_BRANDS,
     GEAR_BRAND_KEYS,
-    EMPTY_GEAR,
-    EMPTY_TRIP,
+    EMPTY_GEAR_DATA,
+    EMPTY_TRIP_DATA,
     WEARABLE_GEAR_CATEGORIES,
     LOCALES,
     LIMIT,

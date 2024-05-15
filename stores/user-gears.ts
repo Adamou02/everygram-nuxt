@@ -8,6 +8,7 @@ import {
     getFirestore,
     query,
     where,
+    serverTimestamp,
     // connectFirestoreEmulator,
 } from 'firebase/firestore';
 
@@ -39,9 +40,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 gears.value = querySnapshot.docs.map((doc) => {
                     const docData = doc.data();
                     return {
-                        ...constants.EMPTY_GEAR,
-                        id: doc.id,
+                        ...constants.EMPTY_GEAR_DATA,
                         ...docData,
+                        id: doc.id,
                     } as Gear;
                 });
                 if (isFirstFetching.value) {
@@ -66,10 +67,12 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         try {
             const docRef = await addDoc(gearCollectionRef, {
+                ...constants.EMPTY_GEAR_DATA,
                 ...gear,
                 role: {
                     [user.value.uid]: constants.ROLES.OWNER,
                 },
+                created: serverTimestamp(),
             });
             return docRef.id;
         } catch (error) {
