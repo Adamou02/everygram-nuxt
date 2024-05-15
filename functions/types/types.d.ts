@@ -39,6 +39,8 @@ export type Gear = {
         | 'lost'
         | 'broken'
         | 'other';
+    created?: Timestamp;
+    updated?: Timestamp;
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };
@@ -58,6 +60,7 @@ export type Trip = {
     startDate?: string;
     endDate?: string;
     created?: Timestamp;
+    updated?: Timestamp;
     published?: Timestamp;
     role: Record<string, TripRole>;
     gears: Record<string, TripGear>;

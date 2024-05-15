@@ -8,7 +8,7 @@
  */
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
-import { FieldPath } from 'firebase-admin/firestore';
+import { FieldPath, FieldValue } from 'firebase-admin/firestore';
 import {
     onDocumentDeleted,
     onDocumentWritten,
@@ -111,14 +111,17 @@ export const onGearWrittenUpdateTripShare = onDocumentWritten(
                 tripShare.wornGears[gearId] = newWornGearWithQuantity;
             }
 
-            return await doc.ref.set(tripShare);
+            return await doc.ref.update({
+                ...tripShare,
+                updated: FieldValue.serverTimestamp(),
+            });
         });
 
         return Promise.all(allUpdates);
     },
 );
 
-// update trip when gear is deleted (and then trip share will be updated)
+// update trip when gear is deleted (and then trip share will be updated automatically)
 export const onGearDeletedUpdateTrip = onDocumentDeleted(
     'gear/{gearId}',
     async (event) => {
@@ -153,7 +156,10 @@ export const onGearDeletedUpdateTrip = onDocumentDeleted(
             // delete worn gear from trip
             delete trip.wornGears[gearId];
 
-            return await doc.ref.set(trip);
+            return await doc.ref.update({
+                ...trip,
+                updated: FieldValue.serverTimestamp(),
+            });
         });
 
         return Promise.all(allUpdates);
@@ -254,7 +260,10 @@ const publishTrip = async (tripId: string) => {
     // write trip share data to firestore in tripShare collection
     const tripShareCollectionRef = admin.firestore().collection('tripShare');
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);
-    await tripShareDocRef.set(tripShare);
+    await tripShareDocRef.set({
+        ...tripShare,
+        created: FieldValue.serverTimestamp(),
+    });
 };
 
 const unpublishTrip = async (tripId: string) => {

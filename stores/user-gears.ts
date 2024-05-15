@@ -91,7 +91,10 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         try {
             const gearRef = doc(db, 'gear', id);
             delete gearData.id;
-            await updateDoc(gearRef, gearData);
+            await updateDoc(gearRef, {
+                ...gearData,
+                updated: serverTimestamp(),
+            });
         } catch (error) {
             console.error(error);
             throw error;

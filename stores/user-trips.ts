@@ -101,6 +101,7 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
                 ...(!trip.isPublished && tripData.isPublished
                     ? { published: serverTimestamp() }
                     : {}),
+                updated: serverTimestamp(),
             });
         } catch (error) {
             console.error(error);

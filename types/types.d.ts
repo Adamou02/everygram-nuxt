@@ -40,6 +40,8 @@ declare global {
             | 'lost'
             | 'broken'
             | 'other';
+        created?: Timestamp;
+        updated?: Timestamp;
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };
@@ -59,6 +61,7 @@ declare global {
         startDate?: string;
         endDate?: string;
         created?: Timestamp;
+        updated?: Timestamp;
         published?: Timestamp;
         role: Record<string, TripRole>;
         gears: Record<string, TripGear>;
