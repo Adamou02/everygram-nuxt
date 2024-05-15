@@ -1,10 +1,19 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="gear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')"
+        :header="
+            editingGear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')
+        "
         modal
         class="w-full mx-2 max-w-20rem"
-        @update:visible="(value: boolean) => !value && $emit('cancel')"
+        @update:visible="
+            (value: boolean) => {
+                if (!value) {
+                    $emit('cancel');
+                    onCancelEditGear();
+                }
+            }
+        "
     >
         <template v-if="isOpen" #default>
             <FormField
@@ -17,7 +26,7 @@
                     class="w-full"
                     :minlength="constants.LIMIT.minNameLength"
                     :maxlength="constants.LIMIT.maxNameLength"
-                    :autofocus="!gear"
+                    :autofocus="!editingGear"
                     :invalid="vuelidate.name.$error"
                     @keypress.enter="onSubmit"
                 />
@@ -43,7 +52,7 @@
                 <PrimeDropdown
                     v-model="formState.category"
                     :options="
-                        constants.GEAR_CATEGORY_KEYS.map((category) => ({
+                        selectableCategories.map((category) => ({
                             value: category,
                         }))
                     "
@@ -90,10 +99,15 @@
                 text
                 severity="secondary"
                 :disabled="isSaving"
-                @click="$emit('cancel')"
+                @click="
+                    () => {
+                        $emit('cancel');
+                        onCancelEditGear();
+                    }
+                "
             />
             <PrimeButton
-                :label="gear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :label="editingGear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
                 @click="onSubmit"
             />
@@ -104,17 +118,29 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
 
-const props = defineProps<{
-    isOpen: boolean;
-    gear: Gear | null;
-    defaultCategory?: GearCategory;
-}>();
-
 const emit = defineEmits<{
     'complete-create': [gear: Gear];
     'complete-edit': [gear: Gear];
     cancel: [];
 }>();
+
+const {
+    onCompleteCreateGear,
+    onCompleteEditGear,
+    onCancelEditGear,
+    isAddingGear,
+    isEditingGear,
+    editingGear,
+    defaultGearCategory,
+    categories,
+} = useEditGear();
+
+const isOpen = computed(() => isAddingGear.value || isEditingGear.value);
+const selectableCategories = computed(() =>
+    categories.value
+        ? _intersection(constants.GEAR_CATEGORY_KEYS, categories.value)
+        : constants.GEAR_CATEGORY_KEYS,
+);
 
 const { gearCategoryToLabel } = useLangUtils();
 
@@ -144,20 +170,17 @@ const formRules = {
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-watch(
-    () => props.isOpen,
-    () => {
-        if (props.isOpen) {
-            formState.name = props.gear?.name || initialFormState.name;
-            formState.weight = props.gear?.weight || initialFormState.weight;
-            formState.category =
-                props.gear?.category ||
-                props.defaultCategory ||
-                initialFormState.category;
-            vuelidate.value.$reset();
-        }
-    },
-);
+watch(isOpen, (newValue) => {
+    if (newValue) {
+        formState.name = editingGear.value?.name || initialFormState.name;
+        formState.weight = editingGear.value?.weight || initialFormState.weight;
+        formState.category =
+            editingGear.value?.category ||
+            defaultGearCategory.value ||
+            initialFormState.category;
+        vuelidate.value.$reset();
+    }
+});
 
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
@@ -175,18 +198,23 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
-        if (props.gear) {
+        if (editingGear.value) {
             await userGearsStore.updateGear({
-                id: props.gear.id,
+                id: editingGear.value.id,
                 gearData,
             });
-            emit('complete-edit', userGearsStore.getGearById(props.gear.id));
+            emit(
+                'complete-edit',
+                userGearsStore.getGearById(editingGear.value.id),
+            );
+            onCompleteEditGear();
         } else {
             const docId = await userGearsStore.createGear(gearData);
             if (!docId) {
                 throw new Error('Failed to add gear');
             }
             emit('complete-create', userGearsStore.getGearById(docId));
+            onCompleteCreateGear();
         }
     } catch (error) {
         console.error(error);

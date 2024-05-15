@@ -3,6 +3,7 @@ const isAddingGear = ref<boolean>(false);
 const isEditingGear = ref<boolean>(false);
 const editingGear = ref<Gear | null>(null);
 const defaultGearCategory = ref<GearCategory | undefined>();
+const categories = ref<GearCategory[] | undefined>();
 
 export default function () {
     return {
@@ -10,8 +11,13 @@ export default function () {
         isEditingGear,
         editingGear,
         defaultGearCategory,
-        onCreateGear: (props?: { category?: GearCategory }) => {
+        categories,
+        onCreateGear: (props?: {
+            category?: GearCategory;
+            categories?: GearCategory[];
+        }) => {
             defaultGearCategory.value = props?.category || undefined;
+            categories.value = props?.categories;
             isAddingGear.value = true;
         },
         onEditGear: (gear: Gear) => {

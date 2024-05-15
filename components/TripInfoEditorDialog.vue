@@ -1,10 +1,19 @@
 <template>
     <PrimeDialog
         :visible="isOpen"
-        :header="trip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')"
+        :header="
+            editingTrip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')
+        "
         modal
         class="w-full mx-2 max-w-20rem"
-        @update:visible="(value: boolean) => !value && $emit('cancel')"
+        @update:visible="
+            (value: boolean) => {
+                if (!value) {
+                    $emit('cancel');
+                    onCancelEditTrip();
+                }
+            }
+        "
     >
         <template v-if="isOpen" #default>
             <FormField
@@ -17,7 +26,7 @@
                     class="w-full"
                     :minlength="constants.LIMIT.minNameLength"
                     :maxlength="constants.LIMIT.maxNameLength"
-                    :autofocus="!trip"
+                    :autofocus="!editingTrip"
                     :invalid="vuelidate.title.$error"
                     @keypress.enter="onSubmit"
                 />
@@ -71,10 +80,15 @@
                 text
                 severity="secondary"
                 :disabled="isSaving"
-                @click="$emit('cancel')"
+                @click="
+                    () => {
+                        $emit('cancel');
+                        onCancelEditTrip();
+                    }
+                "
             />
             <PrimeButton
-                :label="trip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                :label="editingTrip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
                 @click="onSubmit()"
             />
@@ -85,10 +99,16 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
 
-const props = defineProps<{
-    isOpen: boolean;
-    trip: Trip | null;
-}>();
+const {
+    onCompleteCreateTrip,
+    onCompleteEditTrip,
+    onCancelEditTrip,
+    isAddingTrip,
+    isEditingTrip,
+    editingTrip,
+} = useEditTrip();
+
+const isOpen = computed(() => isAddingTrip.value || isEditingTrip.value);
 
 const emit = defineEmits<{
     'complete-create': [trip: Trip];
@@ -126,23 +146,22 @@ const formRules = {
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-watch(
-    () => props.isOpen,
-    () => {
-        if (props.isOpen) {
-            formState.title = props.trip?.title || initialFormState.title;
-            formState.dateMode =
-                props.trip?.dateMode || initialFormState.dateMode;
-            formState.startDate =
-                (props.trip?.startDate && new Date(props.trip?.startDate)) ||
-                initialFormState.startDate;
-            formState.endDate =
-                (props.trip?.endDate && new Date(props.trip?.endDate)) ||
-                initialFormState.endDate;
-            vuelidate.value.$reset();
-        }
-    },
-);
+watch(isOpen, (newValue) => {
+    if (newValue) {
+        formState.title = editingTrip.value?.title || initialFormState.title;
+        formState.dateMode =
+            editingTrip.value?.dateMode || initialFormState.dateMode;
+        formState.startDate =
+            (editingTrip.value?.startDate &&
+                new Date(editingTrip.value?.startDate)) ||
+            initialFormState.startDate;
+        formState.endDate =
+            (editingTrip.value?.endDate &&
+                new Date(editingTrip.value?.endDate)) ||
+            initialFormState.endDate;
+        vuelidate.value.$reset();
+    }
+});
 
 const isSaving = ref<boolean>(false);
 const onSubmit = async () => {
@@ -170,18 +189,23 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
-        if (props.trip) {
+        if (editingTrip.value) {
             await userTripsStore.updateTrip({
-                id: props.trip.id,
+                id: editingTrip.value.id,
                 tripData,
             });
-            emit('complete-edit', userTripsStore.getTripById(props.trip.id));
+            emit(
+                'complete-edit',
+                userTripsStore.getTripById(editingTrip.value.id),
+            );
+            onCompleteEditTrip();
         } else {
             const tripId = await userTripsStore.createTrip(tripData);
             if (!tripId) {
                 throw new Error('Failed to create trip');
             }
             emit('complete-create', userTripsStore.getTripById(tripId));
+            onCompleteCreateTrip();
         }
     } catch (error) {
         console.error(error);

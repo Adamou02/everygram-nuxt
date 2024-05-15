@@ -113,9 +113,11 @@
                         :hasQuantity="true"
                         :actions="['edit', 'remove']"
                         @gear-edit="onEditGear"
-                        @gear-remove="(gear) => onRemoveGear(gear, 'gears')"
+                        @gear-remove="
+                            (gear: Gear) => onRemoveGear(gear, 'gears')
+                        "
                         @gear-cell-edit-complete="
-                            (e) =>
+                            (e: any) =>
                                 onGearCellEditComplete({
                                     ...e,
                                     type: 'gears',
@@ -203,7 +205,10 @@
                                 label: $t('ACTION_CREATE'),
                                 onClick: () => {
                                     creatingGearType = 'wornGears';
-                                    onCreateGear();
+                                    onCreateGear({
+                                        categories:
+                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                    });
                                 },
                             },
                         ]"
@@ -227,7 +232,10 @@
                                 label: $t('ACTION_CREATE_GEAR'),
                                 command: () => {
                                     creatingGearType = 'wornGears';
-                                    onCreateGear();
+                                    onCreateGear({
+                                        categories:
+                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                    });
                                 },
                             },
                         ]"
@@ -244,7 +252,11 @@
                                 label: $t('ACTION_CREATE_GEAR'),
                                 onClick: () => {
                                     creatingGearType = 'wornGears';
-                                    onCreateGear({ category });
+                                    onCreateGear({
+                                        category,
+                                        categories:
+                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                    });
                                 },
                             },
                         ]"
@@ -256,9 +268,11 @@
                         :hasQuantity="true"
                         :actions="['edit', 'remove']"
                         @gear-edit="onEditGear"
-                        @gear-remove="(gear) => onRemoveGear(gear, 'wornGears')"
+                        @gear-remove="
+                            (gear: Gear) => onRemoveGear(gear, 'wornGears')
+                        "
                         @gear-cell-edit-complete="
-                            (e) =>
+                            (e: any) =>
                                 onGearCellEditComplete({
                                     ...e,
                                     type: 'wornGears',
@@ -299,8 +313,8 @@
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />
-    <GearEditor @complete-create-gear="onCompleteCreateGearInTrip" />
-    <TripInfoEditor />
+    <GearEditorDialog @complete-create="onCompleteCreateGearInTrip" />
+    <TripInfoEditorDialog />
     <ConsumableEditor :tripId="tripId" />
 </template>
 

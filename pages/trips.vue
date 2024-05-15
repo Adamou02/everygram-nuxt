@@ -45,7 +45,7 @@
             </template>
         </EmptyState>
     </div>
-    <TripInfoEditor />
+    <TripInfoEditorDialog />
 </template>
 
 <script setup lang="ts">

@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>
-    <GearEditor />
+    <GearEditorDialog />
     <PageLoading v-if="isFetchingGears" />
 </template>
 
