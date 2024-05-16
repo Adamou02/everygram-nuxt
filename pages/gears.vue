@@ -129,4 +129,8 @@ const onCellEditComplete = async (e: {
             break;
     }
 };
+
+useHead({
+    title: i18n.t('PAGE_GEARS'),
+});
 </script>

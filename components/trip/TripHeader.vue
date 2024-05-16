@@ -2,7 +2,7 @@
     <div class="trip-header">
         <div class="trip-header__banner w-full border-round-md overflow-hidden">
             <img
-                src="/image/illustration/illu-mountains.jpg"
+                :src="constants.DEFAULT_TRIP_BANNER_IMAGE_PATH"
                 alt="Trip Banner Image"
             />
         </div>
@@ -27,18 +27,7 @@
 const props = defineProps<{
     trip: Trip | TripShare;
 }>();
-const formattedDate = computed(() => {
-    if (
-        props.trip.dateMode === 'multi' &&
-        props.trip.startDate &&
-        props.trip.endDate
-    ) {
-        return `${dataUtils.formatDateString(props.trip.startDate, '/')} ~ ${dataUtils.formatDateString(props.trip.endDate, '/')}`;
-    } else if (props.trip.dateMode === 'single' && props.trip.startDate) {
-        return dataUtils.formatDateString(props.trip.startDate, '/');
-    }
-    return '';
-});
+const formattedDate = computed(() => dataUtils.formatTripDate(props.trip));
 </script>
 
 <style lang="scss">

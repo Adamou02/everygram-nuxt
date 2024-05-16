@@ -82,26 +82,62 @@ definePageMeta({
     layout: 'public-page',
 });
 
+// ! the values below are non-reactive //
 const app = getApp();
 const db = getFirestore(app);
 const route = useRoute();
-const tripId = ref(route.params.id as string);
-const tripShareRef = doc(db, 'tripShare', tripId.value);
+const tripId = route.params.id as string;
+const tripShareRef = doc(db, 'tripShare', tripId);
 const tripShareSnap = await getDoc(tripShareRef);
-const tripShareData = (tripShareSnap.data() as TripShare) || null;
-const tripShare = ref<TripShare | null>(
-    (tripShareSnap.data() as TripShare) || null,
+const tripShare: TripShare | null = (tripShareSnap.data() as TripShare) || null;
+const gearsInTrip: GearWithQuantity[] = _values(tripShare?.gears || []);
+const wornGearsInTrip: GearWithQuantity[] = _values(tripShare?.wornGears || []);
+const consumablesInTrip: ConsumableWithIndex[] = tripShare
+    ? _map(tripShare.consumables || [], (consumable, index) => ({
+          ...consumable,
+          index,
+      }))
+    : [];
+const gearsWeight = _sumBy(
+    gearsInTrip,
+    (gear) => (+gear.weight || 0) * gear.quantity,
 );
-const gearsInTrip = ref<GearWithQuantity[]>(_values(tripShareData.gears));
-const wornGearsInTrip = ref<GearWithQuantity[]>(
-    _values(tripShareData.wornGears),
+const consumablesWeight = _sumBy(
+    tripShare?.consumables || [],
+    (consumable) => +consumable.weight || 0,
 );
-const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
-    tripShareData
-        ? _map(tripShareData.consumables || [], (consumable, index) => ({
-              ...consumable,
-              index,
-          }))
-        : [],
-);
+
+// SEO and meta
+const i18n = useI18n();
+const { formatWeight } = useLangUtils();
+const metaTitle = tripShare
+    ? i18n.t('META_TRIP_SHARE_TITLE', {
+          title: tripShare.title,
+      })
+    : i18n.t('META_TRIP_SHARE_NOT_FOUND_TITLE');
+const metaDescription = tripShare
+    ? i18n.t('META_TRIP_SHARE_DESCRIPTION', {
+          title: tripShare.title,
+          owner: tripShare.owner.displayName,
+          packWeight: formatWeight(gearsWeight + consumablesWeight),
+          baseWeight: formatWeight(gearsWeight),
+          consumablesWeight: formatWeight(consumablesWeight),
+          date: dataUtils.formatTripDate(tripShare),
+      })
+    : i18n.t('META_TRIP_SHARE_NOT_FOUND_DESCRIPTION');
+const defaultBannerImageUrl =
+    constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
+
+useSeoMeta({
+    title: metaTitle,
+    ogTitle: metaTitle,
+    description: metaDescription,
+    ogDescription: metaDescription,
+    ogImage: tripShare?.bannerImageUrl || defaultBannerImageUrl,
+    robots: tripShare ? 'index, follow' : 'noindex, nofollow',
+});
+
+useHead({
+    title: metaTitle,
+});
 </script>

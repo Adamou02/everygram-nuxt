@@ -504,4 +504,13 @@ const moreActionsMenuItems = [
         command: () => trip.value && confirmDeleteTrip(trip.value),
     },
 ];
+
+useHead({
+    title: () => {
+        if (isFetchingTrips.value) return null;
+        return trip.value
+            ? i18n.t('META_TRIP_TITLE', { title: trip.value.title })
+            : i18n.t('META_TRIP_NOT_FOUND_TITLE');
+    },
+});
 </script>

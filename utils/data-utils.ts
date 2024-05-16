@@ -82,6 +82,15 @@ const getDaysBetweenDates = (startDate: string, endDate: string): number => {
     return Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 };
 
+const formatTripDate = (trip: Trip | TripShare): string => {
+    if (trip.dateMode === 'multi' && trip.startDate && trip.endDate) {
+        return `${formatDateString(trip.startDate, '/')} ~ ${formatDateString(trip.endDate, '/')}`;
+    } else if (trip.dateMode === 'single' && trip.startDate) {
+        return formatDateString(trip.startDate, '/');
+    }
+    return '';
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -94,4 +103,5 @@ export default {
     formatDateToString,
     formatDateString,
     getDaysBetweenDates,
+    formatTripDate,
 };

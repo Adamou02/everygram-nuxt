@@ -68,6 +68,7 @@ declare global {
         wornGears: Record<string, TripGear>;
         consumables: Consumable[];
         isPublished?: boolean;
+        bannerImageUrl?: string;
     };
     type EditingTrip = Partial<Trip>;
 

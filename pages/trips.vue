@@ -57,4 +57,9 @@ definePageMeta({
 const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const { onCreateTrip } = useEditTrip();
+const i18n = useI18n();
+
+useHead({
+    title: i18n.t('PAGE_TRIPS'),
+});
 </script>

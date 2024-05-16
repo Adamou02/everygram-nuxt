@@ -6,7 +6,7 @@
         <template #actions>
             <UserMenu />
         </template>
-        <template #menu>
+        <template #mobile-actions>
             <UserMobileMenu />
         </template>
     </AppHeader>
