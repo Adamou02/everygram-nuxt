@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="flex flex-column static lg:sticky"
-        style="top: var(--app-header-height)"
-    >
+    <div>
         <div
             :class="[
                 'flex flex-column gap-3 p-3 bg-white border-round-top-md',

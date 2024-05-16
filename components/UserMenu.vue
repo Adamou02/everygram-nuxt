@@ -6,18 +6,9 @@
         aria-controls="user-menu"
         text
     >
-        <div class="user-menu flex gap-2 align-items-center">
-            <img
-                class="border-circle"
-                width="32px"
-                height="32px"
-                :src="user?.photoURL"
-                alt="User Photo"
-            />
-            <div class="text-ellipsis">
-                {{ user?.displayName }}
-            </div>
-            <span class="pi pi-angle-down"></span>
+        <div class="user-menu flex gap-2 align-items-center w-full">
+            <UserLabel v-if="user" :user="user" avatarSize="sm" />
+            <span class="pi pi-angle-down flex-0"></span>
         </div>
     </PrimeButton>
     <PrimeMenu ref="menu" id="user-menu" :model="items" :popup="true" />

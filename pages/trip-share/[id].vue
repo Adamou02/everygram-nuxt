@@ -1,13 +1,29 @@
 <template>
     <TripPageLayout v-if="tripShare">
         <template #header>
-            <TripHeader :trip="tripShare" />
+            <TripHeader :trip="tripShare">
+                <template #actions>
+                    <div class="flex align-items-center gap-1">
+                        <UserLabel :user="tripShare.owner" />
+                        <div class="text-600">
+                            {{ $t('INFO_CREATED_THIS_TRIP') }}
+                        </div>
+                    </div>
+                </template>
+            </TripHeader>
         </template>
         <template #side>
             <TripWeightInfo
                 :gears="gearsInTrip"
                 :wornGears="wornGearsInTrip"
                 :consumables="consumablesInTrip"
+            />
+            <PrimeButton
+                :label="$t('ACTION_CREATE_YOUR_GEAR_LIST')"
+                icon="pi pi-arrow-right"
+                icon-pos="right"
+                class="w-full mt-3"
+                @click="navigateTo('/welcome')"
             />
         </template>
         <template #main>

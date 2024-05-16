@@ -18,7 +18,7 @@
                             class="flex align-items-center gap-1 text-600"
                         >
                             <i class="material-symbols-outlined">language</i>
-                            <div class="hide-in-mobile">
+                            <div>
                                 {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
                             </div>
                         </div>

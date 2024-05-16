@@ -6,27 +6,18 @@
                 alt="Trip Banner Image"
             />
         </div>
-        <div class="flex flex-column py-4 lg:py-6">
-            <div class="flex justify-content-between align-items-center">
-                <h1>{{ trip.title }}</h1>
+        <div
+            class="flex flex-column lg:flex-row py-4 lg:py-6 lg:justify-content-between lg:align-items-center gap-3"
+        >
+            <div>
+                <h1 class="text-2xl lg:text-3xl">{{ trip.title }}</h1>
+                <!-- trip date -->
+                <div v-if="formattedDate" class="mt-1">
+                    {{ formattedDate }}
+                </div>
+            </div>
+            <div>
                 <slot name="actions" />
-            </div>
-
-            <!-- trip date -->
-            <div
-                v-if="
-                    trip.dateMode === 'multi' && trip.startDate && trip.endDate
-                "
-                class="mt-2 lg:mt-3"
-            >
-                {{ dataUtils.formatDateString(trip.startDate, '/') }} ~
-                {{ dataUtils.formatDateString(trip.endDate, '/') }}
-            </div>
-            <div
-                v-else-if="trip.dateMode === 'single' && trip.startDate"
-                class="py-3"
-            >
-                {{ dataUtils.formatDateString(trip.startDate, '/') }}
             </div>
         </div>
     </div>
@@ -36,6 +27,18 @@
 const props = defineProps<{
     trip: Trip | TripShare;
 }>();
+const formattedDate = computed(() => {
+    if (
+        props.trip.dateMode === 'multi' &&
+        props.trip.startDate &&
+        props.trip.endDate
+    ) {
+        return `${dataUtils.formatDateString(props.trip.startDate, '/')} ~ ${dataUtils.formatDateString(props.trip.endDate, '/')}`;
+    } else if (props.trip.dateMode === 'single' && props.trip.startDate) {
+        return dataUtils.formatDateString(props.trip.startDate, '/');
+    }
+    return '';
+});
 </script>
 
 <style lang="scss">

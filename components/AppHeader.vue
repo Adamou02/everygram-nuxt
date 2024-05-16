@@ -34,7 +34,7 @@
     display: grid;
     align-items: center;
     padding: 0 16px;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: auto 1fr;
     background-color: $eg-c-bright;
     z-index: 1100; // higher than dropdown menu, lower than modal
 
@@ -60,7 +60,7 @@
 
     @media (min-width: $lg) {
         padding: 0 40px;
-        grid-template-columns: 200px 1fr 200px;
+        grid-template-columns: 300px 1fr 300px;
         gap: 16px;
         &__mobile-actions {
             display: none;
