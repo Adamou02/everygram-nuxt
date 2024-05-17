@@ -1,75 +1,39 @@
-# Nuxt 3 Minimal Starter
+# Everygram
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4a7a03d0-7095-41e5-903c-cb81c8fa72a0/deploy-status)](https://app.netlify.com/sites/everygram/deploys)
 
-## Setup
+## Count Every Gram, Every Gram Counts
 
-Make sure to install the dependencies:
+Welcome to Everygram, the ultimate web app designed for hiking enthusiasts who understand the importance of meticulous weight management. Everygram empowers you to create detailed gear lists for your hiking trips, ensuring that every gram is accounted for and optimized for a lighter, more efficient backpacking experience.
 
-```bash
-# npm
-npm install
+## Why Everygram?
 
-# pnpm
-pnpm install
+Hiking can be an exhilarating adventure, but carrying a heavy pack can quickly turn the journey into a burden. With Everygram, you can effortlessly track and manage the weight of your gear, helping you make informed decisions about what to carry. Our app breaks down your gear into essential categories—pack weight, base weight, and consumable weight—giving you a clear overview of your load distribution.
 
-# yarn
-yarn install
+## Key Features
 
-# bun
-bun install
-```
+-   **Gear List Creation**: Easily create and organize lists for all your hiking trips. Add each piece of gear with its weight to keep a precise inventory.
+-   **Weight Calculation**: Automatically calculate the total pack weight, base weight, and consumable weight. See how much each category contributes to your overall load.
+-   **Weight Distribution Visualization**: Get a visual representation of your gear’s weight distribution. Quickly identify areas where you can cut down on weight.
+-   **Optimized Packing**: Use the insights provided by Everygram to make smarter packing choices. Aim for a lighter pack without sacrificing essential gear.
 
-## Development Server
+## How It Works
 
-Start the development server on `http://localhost:3000`:
+1. **Create a Trip**: Start by creating a new hiking trip in Everygram.
+2. **Add Your Gear**: Enter each item you plan to take along, specifying its weight.
+3. **Categorize Your Gear**: Assign items to categories such as pack weight, base weight, and consumable weight.
+4. **Analyze the Data**: Review the calculated totals and distribution charts to understand the weight impact of each item.
+5. **Optimize Your Pack**: Use the insights to adjust your gear list for a balanced and lightweight pack.
 
-```bash
-# npm
-npm run dev
+## Benefits
 
-# pnpm
-pnpm run dev
+-   **Efficiency**: Save time and effort by organizing your gear list digitally.
+-   **Precision**: Ensure every gram is accounted for, enhancing your hiking efficiency.
+-   **Awareness**: Build a sense of lightweight packing and become more mindful of your gear choices.
+-   **Preparation**: Be better prepared for your hiking trips with a well-managed pack.
 
-# yarn
-yarn dev
+## Join the Everygram Community
 
-# bun
-bun run dev
-```
+Everygram is more than just an app; it's a community of hikers who value the art and science of lightweight packing. Join us, and let’s make every gram count together.
 
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Start your journey with Everygram today and experience the difference that meticulous weight management can make in your hiking adventures.
