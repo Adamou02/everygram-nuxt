@@ -272,3 +272,41 @@ const unpublishTrip = async (tripId: string) => {
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);
     await tripShareDocRef.delete();
 };
+
+// when trip banner image is updated, delete the old image by old banner image file name
+export const onTripBannerImageUpdatedDeleteOldImage = onDocumentWritten(
+    'trip/{tripId}',
+    async (event) => {
+        const tripId = event.params.tripId;
+        const newTrip = event.data?.after.data();
+        const oldTrip = event.data?.before.data();
+
+        if (!newTrip || !oldTrip) {
+            return null;
+        }
+
+        if (newTrip.bannerImage?.fileName === oldTrip.bannerImage?.fileName) {
+            return null;
+        }
+
+        if (oldTrip.bannerImage?.fileName) {
+            const oldFileName = oldTrip.bannerImage.fileName;
+            const oldFilePath = `trip/${tripId}/${oldFileName}`;
+            await admin.storage().bucket().file(oldFilePath).delete();
+        }
+
+        return null;
+    },
+);
+
+// when trip is deleted, delete the storage path trip/{tripId}
+export const onTripDeletedDeleteTripStorage = onDocumentDeleted(
+    'trip/{tripId}',
+    async (event) => {
+        const tripId = event.params.tripId;
+        const filePath = `trip/${tripId}`;
+        await admin.storage().bucket().deleteFiles({
+            prefix: filePath,
+        });
+    },
+);

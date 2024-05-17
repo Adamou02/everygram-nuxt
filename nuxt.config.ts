@@ -11,7 +11,7 @@ export default defineNuxtConfig({
                 },
                 {
                     name: 'theme-color',
-                    content: '#9d8b73',
+                    content: '#ffffff',
                 },
             ],
             link: [

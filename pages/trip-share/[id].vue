@@ -138,7 +138,9 @@ useSeoMeta({
     ogTitle: metaOgTitle,
     description: metaDescription,
     ogDescription: metaDescription,
-    ogImage: tripShare?.bannerImageUrl || defaultBannerImageUrl,
+    ogImage: tripShare.bannerImage
+        ? tripShare.bannerImage.url
+        : defaultBannerImageUrl,
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',
 });
 </script>

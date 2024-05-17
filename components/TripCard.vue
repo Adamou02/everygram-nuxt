@@ -1,8 +1,13 @@
 <template>
     <div
-        class="trip-card border-round-md shadow-1 bg-white flex flex-column w-full"
+        class="trip-card border-round-md overflow-hidden shadow-1 bg-white flex flex-column w-full"
     >
-        <div class="trip-card__image"></div>
+        <div
+            class="trip-card__image"
+            :style="{
+                backgroundImage: `url('${trip.bannerImage ? trip.bannerImage.url : constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH}')`,
+            }"
+        ></div>
         <div class="px-4 py-3">
             <h3 class="text-lg mb-2 text-ellipsis">
                 {{ trip.title }}
@@ -55,8 +60,7 @@ const days = computed(() => {
 <style lang="scss">
 .trip-card {
     &__image {
-        aspect-ratio: 3 / 1;
-        background-image: url('/image/illustration/illu-mountains.jpg');
+        aspect-ratio: 2 / 1;
         background-size: cover;
     }
 }

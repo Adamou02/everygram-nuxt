@@ -11,6 +11,17 @@
     <TripPageLayout v-if="trip">
         <template #header>
             <TripHeader :trip="trip">
+                <template #banner-actions>
+                    <ImageUpload
+                        :path="`trip/${trip.id}`"
+                        :label="
+                            trip.bannerImage
+                                ? $t('ACTION_CHANGE_PHOTO')
+                                : $t('ACTION_UPLOAD_PHOTO')
+                        "
+                        @upload-complete="onUploadBannerImage"
+                    />
+                </template>
                 <template #actions>
                     <div class="flex gap-3">
                         <div
@@ -504,6 +515,26 @@ const moreActionsMenuItems = [
         command: () => trip.value && confirmDeleteTrip(trip.value),
     },
 ];
+
+const onUploadBannerImage = ({
+    downloadUrl,
+    fileName,
+}: {
+    downloadUrl: string;
+    fileName: string;
+}) => {
+    if (trip.value) {
+        userTripsStore.updateTrip({
+            id: trip.value.id,
+            tripData: {
+                bannerImage: {
+                    url: downloadUrl,
+                    fileName,
+                },
+            },
+        });
+    }
+};
 
 useHead({
     title: () => {

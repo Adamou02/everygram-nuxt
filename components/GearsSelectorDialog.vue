@@ -28,6 +28,7 @@
                 :value="selectableGears"
                 size="large"
                 dataKey="id"
+                class="select-none"
             >
                 <PrimeColumn selectionMode="multiple" />
                 <PrimeColumn field="name" :header="$t('LABEL_NAME')" />

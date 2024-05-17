@@ -67,7 +67,10 @@ export type Trip = {
     wornGears: Record<string, TripGear>;
     consumables: Consumable[];
     isPublished?: boolean;
-    bannerImageUrl?: string;
+    bannerImage?: {
+        url: string;
+        fileName: string;
+    };
 };
 export type EditingTrip = Partial<Trip>;
 

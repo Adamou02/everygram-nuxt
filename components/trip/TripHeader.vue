@@ -1,10 +1,19 @@
 <template>
     <div class="trip-header">
-        <div class="trip-header__banner w-full border-round-md overflow-hidden">
+        <div
+            class="trip-header__banner w-full border-round-md overflow-hidden relative"
+        >
             <img
-                :src="constants.DEFAULT_TRIP_BANNER_IMAGE_PATH"
+                :src="
+                    trip.bannerImage
+                        ? trip.bannerImage.url
+                        : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH
+                "
                 alt="Trip Banner Image"
             />
+            <div class="absolute bottom-0 right-0 p-3">
+                <slot name="banner-actions" />
+            </div>
         </div>
         <div
             class="flex flex-column lg:flex-row py-4 lg:py-6 lg:justify-content-between lg:align-items-center gap-3"
@@ -35,14 +44,14 @@ const formattedDate = computed(() => dataUtils.formatTripDate(props.trip));
 
 .trip-header {
     &__banner {
-        aspect-ratio: 3 / 1;
+        aspect-ratio: 2 / 1;
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         @media (min-width: $lg) {
-            aspect-ratio: 4 / 1;
+            aspect-ratio: 3 / 1;
         }
     }
 }
