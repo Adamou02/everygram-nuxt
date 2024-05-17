@@ -115,6 +115,11 @@ const metaTitle = tripShare
           title: tripShare.title,
       })
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_TITLE');
+const metaOgTitle = tripShare
+    ? i18n.t('META_TRIP_SHARE_OG_TITLE', {
+          title: tripShare.title,
+      })
+    : i18n.t('META_TRIP_SHARE_NOT_FOUND_OG_TITLE');
 const metaDescription = tripShare
     ? i18n.t('META_TRIP_SHARE_DESCRIPTION', {
           title: tripShare.title,
@@ -130,14 +135,10 @@ const defaultBannerImageUrl =
 
 useSeoMeta({
     title: metaTitle,
-    ogTitle: metaTitle,
+    ogTitle: metaOgTitle,
     description: metaDescription,
     ogDescription: metaDescription,
     ogImage: tripShare?.bannerImageUrl || defaultBannerImageUrl,
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',
-});
-
-useHead({
-    title: metaTitle,
 });
 </script>

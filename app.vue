@@ -15,4 +15,7 @@ useHead({
             : i18n.t('APP_NAME');
     },
 });
+useSeoMeta({
+    keywords: i18n.t('META_KEYWORDS'),
+});
 </script>
