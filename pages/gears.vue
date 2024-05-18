@@ -1,75 +1,122 @@
 <!-- a page to list all gear the user has -->
 <template>
     <PageLoading v-if="isFetchingGears" />
-    <div v-else-if="gears.length" class="grid">
-        <div class="col-12 lg:col-offset-2 lg:col-8">
-            <div class="flex flex-column gap-5">
-                <SectionTitleBar>
-                    <div class="text-600">
-                        {{
-                            $t(
-                                'INFO_GEAR_NUM',
-                                { num: gears.length },
-                                gears.length,
-                            )
-                        }}
-                    </div>
-                    <div class="flex align-items-center gap-2">
-                        <PrimeButton
-                            :label="$t('ACTION_IMPORT_GEARS')"
-                            icon="pi pi-file-arrow-up"
-                            class="hide-in-mobile"
-                            @click="isOpenImportGearsDialog = true"
-                            outlined
-                        />
-                        <PrimeButton
-                            icon="pi pi-file-arrow-up"
-                            @click="isOpenImportGearsDialog = true"
-                            class="lg:hidden"
-                            outlined
-                        />
-                        <PrimeButton
-                            :label="$t('ACTION_CREATE_GEAR')"
-                            icon="pi pi-plus"
-                            @click="() => onCreateGear()"
-                        />
-                    </div>
-                </SectionTitleBar>
-                <SectionPanel
-                    v-for="category in displayGearCatergories"
-                    :key="category"
+    <div v-else-if="gears.length" class="flex flex-column gap-5">
+        <SectionTitleBar>
+            <div class="text-600">
+                {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
+            </div>
+            <div class="flex align-items-center gap-2">
+                <PrimeButton
+                    :label="$t('ACTION_IMPORT_GEARS')"
+                    icon="pi pi-file-arrow-up"
+                    class="hide-in-mobile"
+                    @click="isOpenImportGearsDialog = true"
+                    outlined
+                />
+                <PrimeButton
+                    icon="pi pi-file-arrow-up"
+                    @click="isOpenImportGearsDialog = true"
+                    class="lg:hidden"
+                    outlined
+                />
+                <PrimeButton
+                    :label="$t('ACTION_CREATE_GEAR')"
+                    icon="pi pi-plus"
+                    @click="() => onCreateGear()"
+                />
+            </div>
+        </SectionTitleBar>
+        <div class="grid">
+            <!-- sidebar -->
+            <div class="hide-in-mobile col-2">
+                <div
+                    class="flex flex-column gap-2 align-items-start sticky z-1"
+                    style="top: var(--app-header-height)"
                 >
-                    <template #header>
-                        <CategoryHeader
-                            :category="category"
-                            type="gear"
-                            class="p-3 bg-white border-round-top-md"
-                            sticky
+                    <PrimeButton
+                        v-for="(category, index) in [
+                            ...displayGearCatergories,
+                            ...emptyGearCategories,
+                        ]"
+                        :key="category"
+                        :label="gearCategoryToLabel(category)"
+                        text
+                        :class="[
+                            'text-color text-left w-full',
+                            { 'opacity-50': !gearsGroupByCategory[category] },
+                        ]"
+                        @click="
+                            () => {
+                                sections[index]?.$el.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start',
+                                });
+                            }
+                        "
+                    >
+                        <template #icon>
+                            <GearCategoryAvatar
+                                :category="category"
+                                size="small"
+                                class="mr-3 flex-none"
+                            />
+                        </template>
+                    </PrimeButton>
+                </div>
+            </div>
+            <!-- main -->
+            <div class="col-12 lg:col-10">
+                <div class="flex flex-column gap-5">
+                    <SectionPanel
+                        v-for="category in [
+                            ...displayGearCatergories,
+                            ...emptyGearCategories,
+                        ]"
+                        ref="sections"
+                        :key="category"
+                        :class="{
+                            'opacity-50': !gearsGroupByCategory[category],
+                        }"
+                        style="scroll-margin-top: var(--app-header-height)"
+                    >
+                        <template #header>
+                            <CategoryHeader
+                                :category="category"
+                                type="gear"
+                                class="p-3 bg-white border-round-md"
+                                sticky
+                            >
+                                <template #actions>
+                                    <ActionButtonsGroup
+                                        type="icon"
+                                        :actions="[
+                                            {
+                                                icon: 'pi pi-plus',
+                                                label: $t('ACTION_CREATE_GEAR'),
+                                                onClick: () =>
+                                                    onCreateGear({ category }),
+                                            },
+                                        ]"
+                                    />
+                                </template>
+                            </CategoryHeader>
+                        </template>
+                        <template
+                            v-if="gearsGroupByCategory[category]"
+                            #default
                         >
-                            <template #actions>
-                                <ActionButtonsGroup
-                                    type="icon"
-                                    :actions="[
-                                        {
-                                            icon: 'pi pi-plus',
-                                            label: $t('ACTION_CREATE_GEAR'),
-                                            onClick: () =>
-                                                onCreateGear({ category }),
-                                        },
-                                    ]"
-                                />
-                            </template>
-                        </CategoryHeader>
-                    </template>
-                    <GearDataTable
-                        :gears="gearsGroupByCategory[category]"
-                        :hasQuantity="false"
-                        :actions="['edit', 'delete']"
-                        @gear-edit="onEditGear"
-                        @gear-delete="confirmDeleteGear"
-                        @gear-cell-edit-complete="onCellEditComplete"
-                    />
-                </SectionPanel>
+                            <GearDataTable
+                                :gears="gearsGroupByCategory[category]"
+                                :hasQuantity="false"
+                                :actions="['edit', 'delete']"
+                                @gear-edit="onEditGear"
+                                @gear-delete="confirmDeleteGear"
+                                @gear-cell-edit-complete="onCellEditComplete"
+                            />
+                        </template>
+                    </SectionPanel>
+                </div>
             </div>
         </div>
     </div>
@@ -105,10 +152,14 @@
 </template>
 
 <script setup lang="ts">
+import type SectionPanel from '~/components/SectionPanel.vue';
+
 definePageMeta({
     middleware: ['auth-guard'],
     layout: 'user-page',
 });
+
+const sections = ref<(InstanceType<typeof SectionPanel> | null)[]>([]);
 
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
@@ -120,7 +171,13 @@ const displayGearCatergories = computed(() =>
         (category) => gearsGroupByCategory.value[category],
     ),
 );
+const emptyGearCategories = computed(() =>
+    constants.GEAR_CATEGORY_KEYS.filter(
+        (category) => !gearsGroupByCategory.value[category],
+    ),
+);
 const { confirmDeleteDialog } = useUiUitls();
+const { gearCategoryToLabel } = useLangUtils();
 const i18n = useI18n();
 
 // for GearEditor
