@@ -2,11 +2,19 @@
     <footer class="app-footer">
         <div class="app-footer__hr">
             <div class="app-footer__hr-line"></div>
-            <img
-                class="app-footer__brand-icon"
-                src="/image/brand-icon.svg"
-                alt="App Icon"
-            />
+            <div
+                class="app-footer__brand-icon-container"
+                @click="onClickBrandIcon"
+            >
+                <img
+                    class="app-footer__brand-icon"
+                    src="/image/brand-icon.svg"
+                    alt="App Icon"
+                />
+                <div class="app-footer__greeting">
+                    \ {{ $t('INFO_HELLO') }} /
+                </div>
+            </div>
             <div class="app-footer__hr-line"></div>
         </div>
         <div class="app-footer__content">
@@ -35,6 +43,15 @@
     </footer>
 </template>
 
+<script setup lang="ts">
+const onClickBrandIcon = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+};
+</script>
+
 <style lang="scss">
 @import '~/assets/theme/themes/mytheme/_variables.scss';
 @import '~/assets/theme/primeflex/core/_variables.scss';
@@ -44,10 +61,32 @@
         display: grid;
         grid-template-columns: 1fr auto 1fr;
     }
+    &__brand-icon-container {
+        position: relative;
+        line-height: 0;
+        bottom: -4px;
+    }
     &__brand-icon {
         height: 32px;
-        position: relative;
-        bottom: -4px;
+    }
+    &__greeting {
+        display: none;
+        position: absolute;
+        z-index: 1;
+        bottom: 32px;
+        left: 28px;
+        font-size: 12px;
+        white-space: nowrap;
+        transform: scale(0) rotate(-30deg);
+        transform-origin: bottom left;
+        transition: transform 0.2s;
+        transition-timing-function: ease-out;
+        @media (hover: hover) {
+            display: block;
+        }
+    }
+    &__brand-icon-container:hover &__greeting {
+        transform: scale(1) rotate(-30deg);
     }
     &__hr-line {
         border-bottom: 1px solid $eg-c-primary;

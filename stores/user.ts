@@ -68,6 +68,7 @@ export const useUserStore = defineStore('userStore', () => {
         signOutUser: async () => {
             try {
                 await signOut(auth);
+                analyticsUtils.log(constants.ANALYTICS_EVENTS.SIGN_OUT);
             } catch (error) {
                 console.error(error);
                 throw error;
@@ -79,6 +80,9 @@ export const useUserStore = defineStore('userStore', () => {
             try {
                 // await signInWithRedirect(auth, provider); TODO: Implement this
                 await signInWithPopup(auth, provider);
+                analyticsUtils.log(constants.ANALYTICS_EVENTS.SIGN_IN, {
+                    sign_in_method: 'google',
+                });
             } catch (error) {
                 console.error(error);
                 throw error;
