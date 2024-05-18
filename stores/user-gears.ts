@@ -9,6 +9,7 @@ import {
     query,
     where,
     serverTimestamp,
+    writeBatch,
     // connectFirestoreEmulator,
 } from 'firebase/firestore';
 
@@ -81,6 +82,31 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
     };
 
+    const createGears = async (gears: EditingGear[]) => {
+        if (!user.value) {
+            return;
+        }
+        const userId = user.value.uid;
+        try {
+            const batch = writeBatch(db);
+            gears.forEach((gear) => {
+                const docRef = doc(gearCollectionRef);
+                batch.set(docRef, {
+                    ...constants.EMPTY_GEAR_DATA,
+                    ...gear,
+                    role: {
+                        [userId]: constants.ROLES.OWNER,
+                    },
+                    created: serverTimestamp(),
+                });
+            });
+            await batch.commit();
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
     const updateGear = async ({
         id,
         gearData,
@@ -119,6 +145,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         initialize,
         destroy,
         createGear,
+        createGears,
         updateGear,
         deleteGear,
     };

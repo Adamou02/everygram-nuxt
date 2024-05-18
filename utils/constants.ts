@@ -47,6 +47,9 @@ const LIMIT = {
     maxWeight: 100000,
     minNameLength: 1,
     maxNameLength: 50,
+    imageWidth: 1920,
+    imageHeight: 1080,
+    importLimit: 200,
 };
 
 const TRIP_DATE_MODE: Record<string, TripDateMode> = {
@@ -56,8 +59,6 @@ const TRIP_DATE_MODE: Record<string, TripDateMode> = {
 
 const DEFAULT_TRIP_BANNER_IMAGE_PATH = '/image/illustration/illu-mountains.jpg';
 const SITE_DOMAIN = 'https://everygram.netlify.app'; // to be updated
-const MAX_IMAGE_WIDTH = 1920;
-const MAX_IMAGE_HEIGHT = 1080;
 
 export default {
     ROLES,
@@ -76,6 +77,4 @@ export default {
     TRIP_DATE_MODE,
     DEFAULT_TRIP_BANNER_IMAGE_PATH,
     SITE_DOMAIN,
-    MAX_IMAGE_WIDTH,
-    MAX_IMAGE_HEIGHT,
 };

@@ -13,11 +13,14 @@
                             )
                         }}
                     </div>
-                    <PrimeButton
-                        :label="$t('ACTION_CREATE_GEAR')"
-                        icon="pi pi-plus"
-                        @click="() => onCreateGear()"
-                    />
+                    <div class="flex align-items-center gap-2">
+                        <ImportGearsButton />
+                        <PrimeButton
+                            :label="$t('ACTION_CREATE_GEAR')"
+                            icon="pi pi-plus"
+                            @click="() => onCreateGear()"
+                        />
+                    </div>
                 </SectionTitleBar>
                 <SectionPanel
                     v-for="category in displayGearCatergories"
@@ -62,6 +65,8 @@
 </template>
 
 <script setup lang="ts">
+import ImportGearsButton from '~/components/ImportGearsButton.vue';
+
 definePageMeta({
     middleware: ['auth-guard'],
     layout: 'user-page',

@@ -9,7 +9,7 @@
             }"
         ></div>
         <div class="px-4 py-3">
-            <h3 class="text-lg mb-2 text-ellipsis">
+            <h3 class="text-lg text-color mb-2 text-ellipsis">
                 {{ trip.title }}
             </h3>
             <div class="text-600 mb-3 text-ellipsis">

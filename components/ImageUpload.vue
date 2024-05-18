@@ -67,9 +67,9 @@ const onSelectFile = async (event: Event) => {
         isUploading.value = true;
 
         // format image to jpeg
-        const formattedFile = await utils.formatImageToJpeg(file, {
-            maxWidth: constants.MAX_IMAGE_WIDTH,
-            maxHeight: constants.MAX_IMAGE_HEIGHT,
+        const formattedFile = await fileUtils.formatImageToJpeg(file, {
+            maxWidth: constants.LIMIT.imageWidth,
+            maxHeight: constants.LIMIT.imageHeight,
         });
 
         // upload image to storage with uuid as file name

@@ -21,54 +21,15 @@
                 image-src="/image/illustration/illu-adventure.svg"
             >
             </EmptyState>
-            <PrimeDataTable
+            <GearSelectDataTable
                 v-else
-                v-model:selection="selectedGears"
-                selectionMode="multiple"
-                :value="selectableGears"
-                size="large"
+                :selectableGears="selectableGears"
+                :selectedGears="selectedGears"
                 dataKey="id"
-                class="select-none"
-            >
-                <PrimeColumn selectionMode="multiple" />
-                <PrimeColumn field="name" :header="$t('LABEL_NAME')" />
-                <PrimeColumn
-                    field="weight"
-                    :header="$t('LABEL_WEIGHT')"
-                    class="text-right"
-                >
-                    <template #body="{ data }">
-                        {{ data.weight ? formatWeight(data.weight) : '-' }}
-                    </template>
-                </PrimeColumn>
-                <!-- desktop category -->
-                <PrimeColumn
-                    field="category"
-                    :header="$t('LABEL_CATEGORY')"
-                    class="hide-in-mobile"
-                >
-                    <template #body="{ data }">
-                        <div class="flex align-items-center gap-2">
-                            <GearCategoryAvatar
-                                :category="data.category"
-                                size="small"
-                            />
-                            <div>
-                                {{ gearCategoryToLabel(data.category) }}
-                            </div>
-                        </div>
-                    </template>
-                </PrimeColumn>
-                <!-- mobile category -->
-                <PrimeColumn field="category" class="lg:hidden">
-                    <template #body="{ data }">
-                        <GearCategoryAvatar
-                            :category="data.category"
-                            size="small"
-                        />
-                    </template>
-                </PrimeColumn>
-            </PrimeDataTable>
+                @update="
+                    (newSelectedGears) => (selectedGears = newSelectedGears)
+                "
+            />
             <template #footer>
                 <div
                     class="flex justify-content-between align-items-center gap-3 w-full"
@@ -105,6 +66,8 @@
 </template>
 
 <script setup lang="ts">
+import GearSelectDataTable from './GearSelectDataTable.vue';
+
 const props = defineProps<{
     isOpen: boolean;
     selectedGearIds: string[];
@@ -115,10 +78,10 @@ const emit = defineEmits<{
     cancel: [];
 }>();
 
-const { gearCategoryToLabel, formatWeight } = useLangUtils();
+const { formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
-const selectableGears = computed(() =>
+const selectableGears = computed<Gear[]>(() =>
     _sortBy(
         gears.value.filter(
             (gear) =>
