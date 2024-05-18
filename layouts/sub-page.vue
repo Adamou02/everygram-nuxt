@@ -1,12 +1,13 @@
 <template>
     <AppHeader>
         <template #left>
-            <PrimeButton
-                icon="pi pi-arrow-left"
-                @click="$router.push(backButton.parent)"
-                :label="backButton.label"
-                text
-            />
+            <NuxtLink :to="backButton.parent">
+                <PrimeButton
+                    icon="pi pi-arrow-left"
+                    :label="backButton.label"
+                    text
+                />
+            </NuxtLink>
         </template>
         <template #navigation>
             <div id="app-header-navigation-slot"></div>

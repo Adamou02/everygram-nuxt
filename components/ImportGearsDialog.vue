@@ -1,24 +1,11 @@
 <template>
-    <PrimeButton
-        :label="$t('ACTION_IMPORT_GEARS')"
-        icon="pi pi-file-arrow-up"
-        class="hide-in-mobile"
-        @click="isOpen = true"
-        outlined
-    />
-    <PrimeButton
-        icon="pi pi-file-arrow-up"
-        @click="isOpen = true"
-        class="lg:hidden"
-        outlined
-    />
     <PrimeDialog
         ref="importGearsDialog"
         :header="$t('ACTION_IMPORT_GEARS')"
         :visible="isOpen"
         :modal="true"
         class="mx-2 w-30rem"
-        @update:visible="isOpen = false"
+        @update:visible="emit('close')"
         :pt="{
             content: {
                 class: {
@@ -152,7 +139,12 @@
 
 <script setup lang="ts">
 type ImportGear = Pick<Gear, 'name' | 'weight' | 'category'>;
-const isOpen = ref(false);
+const props = defineProps<{
+    isOpen: boolean;
+}>();
+const emit = defineEmits<{
+    close: [];
+}>();
 const isFormatting = ref(false);
 const isImporting = ref(false);
 const activeStep = ref(0);
@@ -227,7 +219,7 @@ const onImportGears = async () => {
     try {
         isImporting.value = true;
         await userGearsStore.createGears(gears);
-        isOpen.value = false;
+        emit('close');
     } catch (error) {
         console.error(error);
     } finally {
@@ -236,10 +228,13 @@ const onImportGears = async () => {
 };
 
 // reset dialog state when dialog is open
-watch(isOpen, (isOpen) => {
-    if (isOpen) {
-        resetData();
-        activeStep.value = 0;
-    }
-});
+watch(
+    () => props.isOpen,
+    (isOpen) => {
+        if (isOpen) {
+            resetData();
+            activeStep.value = 0;
+        }
+    },
+);
 </script>

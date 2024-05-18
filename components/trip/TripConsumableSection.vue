@@ -10,6 +10,7 @@
             </SectionTitleBar>
         </template>
         <div
+            v-if="displayConsumableCatergories.length"
             v-for="category in displayConsumableCatergories"
             :key="category"
             class="flex flex-column gap-3"
@@ -28,6 +29,9 @@
                 :category="category"
                 :consumables="consumablesByCategory[category]"
             />
+        </div>
+        <div v-else>
+            <slot name="empty-state" />
         </div>
     </SectionPanel>
 </template>

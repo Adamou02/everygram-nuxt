@@ -1,8 +1,9 @@
 <template>
-    <div v-if="totalWeight > 0" class="weight-bar-chart flex flex-column gap-3">
+    <div class="weight-bar-chart flex flex-column gap-3">
         <!-- bar -->
         <div class="weight-bar-chart__bar">
             <div
+                v-if="barSectionItems.length && totalWeight > 0"
                 v-for="item in barSectionItems"
                 v-tooltip.top="
                     `${item.label} ${formatWeight(item.weight)} (${_round((item.weight / totalWeight) * 100)}%)`
@@ -16,6 +17,13 @@
                     width: `${(item.weight / totalWeight) * 100}%`,
                 }"
             />
+            <div
+                v-else
+                class="weight-bar-chart__section w-full"
+                :style="{
+                    backgroundColor: constants.COLORS.EMPTY_WEIGHT,
+                }"
+            ></div>
         </div>
 
         <!-- labels -->
@@ -63,7 +71,12 @@
                     <DashedLine />
                     <div>{{ formatWeight(item.weight) }}</div>
                     <div class="w-2rem text-600 text-right">
-                        {{ _round((item.weight / totalWeight) * 100) }}%
+                        {{
+                            _round(
+                                (totalWeight ? item.weight / totalWeight : 0) *
+                                    100,
+                            )
+                        }}%
                     </div>
                 </div>
                 <div
@@ -79,7 +92,13 @@
                         <DashedLine />
                         <div>{{ formatWeight(subItem.weight) }}</div>
                         <div class="w-2rem text-600 text-right">
-                            {{ _round((subItem.weight / totalWeight) * 100) }}%
+                            {{
+                                _round(
+                                    (totalWeight
+                                        ? subItem.weight / totalWeight
+                                        : 0) * 100,
+                                )
+                            }}%
                         </div>
                     </div>
                 </div>

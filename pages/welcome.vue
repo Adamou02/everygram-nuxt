@@ -10,11 +10,12 @@
             />
         </template>
         <template v-else>
-            <PrimeButton
-                :label="$t('ACTION_START_USING_EVERYGRAM')"
-                class="w-full"
-                @click="navigateTo('/trips')"
-            />
+            <NuxtLink to="/trips" class="block w-full">
+                <PrimeButton
+                    :label="$t('ACTION_START_USING_EVERYGRAM')"
+                    class="w-full"
+                />
+            </NuxtLink>
         </template>
     </div>
 </template>

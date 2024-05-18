@@ -16,6 +16,7 @@ const COLORS = {
     BASE_WEIGHT: '#444444',
     WORN_WEIGHT: '#888888',
     CONSUMABLES_WEIGHT: '#ffffff',
+    EMPTY_WEIGHT: '#cccccc',
 };
 
 const EMPTY_GEAR_DATA: Omit<Gear, 'id'> = {

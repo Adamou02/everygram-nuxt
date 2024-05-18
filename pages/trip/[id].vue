@@ -137,6 +137,11 @@
                         class="lg:ml-6"
                     />
                 </template>
+                <template #empty-state>
+                    <TripGearSectionEmptyState
+                        :description="$t('INFO_NO_BASE_GEAR_HINT')"
+                    />
+                </template>
             </TripGearSection>
 
             <!-- comsumables -->
@@ -193,6 +198,11 @@
                             onConsumableCellEditComplete
                         "
                         class="lg:ml-6"
+                    />
+                </template>
+                <template #empty-state>
+                    <TripGearSectionEmptyState
+                        :description="$t('INFO_NO_CONSUMABLES_HINT')"
                     />
                 </template>
             </TripConsumableSection>
@@ -290,6 +300,11 @@
                                 })
                         "
                         class="lg:ml-6"
+                    />
+                </template>
+                <template #empty-state>
+                    <TripGearSectionEmptyState
+                        :description="$t('INFO_NO_WORN_GEAR_HINT')"
                     />
                 </template>
             </TripGearSection>

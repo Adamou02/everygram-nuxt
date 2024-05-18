@@ -106,13 +106,17 @@ const backpackWeightItems = computed<WeightBarChartItem[]>(() => [
         weight,
         color: constants.GEAR_CATEGORIES[category as GearCategory].color,
     })),
-    {
-        label: i18n.t('LABEL_CONSUMABLES'),
-        weight: consumablesWeight.value,
-        color: constants.COLORS.CONSUMABLES_WEIGHT,
-        addBorder: true,
-        subItems: consumablesWeightItems.value,
-    },
+    ...(consumablesWeight.value
+        ? [
+              {
+                  label: i18n.t('LABEL_CONSUMABLES'),
+                  weight: consumablesWeight.value,
+                  color: constants.COLORS.CONSUMABLES_WEIGHT,
+                  addBorder: true,
+                  subItems: consumablesWeightItems.value,
+              },
+          ]
+        : []),
 ]);
 
 // worn gears

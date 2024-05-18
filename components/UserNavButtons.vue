@@ -1,34 +1,42 @@
 <template>
     <div class="user-nav-buttons flex gap-2">
-        <PrimeButton
-            :class="[
-                'user-nav-buttons__button',
-                {
-                    'user-nav-buttons__button--active':
-                        $route.name === 'trips' || $route.name === 'trip-id',
-                },
-            ]"
-            :label="$t('PAGE_TRIPS')"
-            text
-            @click="navigateTo('/trips')"
-        >
-            <template #icon>
-                <span class="material-symbols-outlined mr-2">landscape</span>
-            </template>
-        </PrimeButton>
-        <PrimeButton
-            :class="[
-                'user-nav-buttons__button',
-                { 'user-nav-buttons__button--active': $route.name === 'gears' },
-            ]"
-            :label="$t('PAGE_GEARS')"
-            text
-            @click="navigateTo('/gears')"
-        >
-            <template #icon>
-                <span class="material-symbols-outlined mr-2">category</span>
-            </template>
-        </PrimeButton>
+        <NuxtLink to="/trips">
+            <PrimeButton
+                :class="[
+                    'user-nav-buttons__button',
+                    {
+                        'user-nav-buttons__button--active':
+                            $route.name === 'trips' ||
+                            $route.name === 'trip-id',
+                    },
+                ]"
+                :label="$t('PAGE_TRIPS')"
+                text
+            >
+                <template #icon>
+                    <span class="material-symbols-outlined mr-2"
+                        >landscape</span
+                    >
+                </template>
+            </PrimeButton>
+        </NuxtLink>
+        <NuxtLink to="/gears">
+            <PrimeButton
+                :class="[
+                    'user-nav-buttons__button',
+                    {
+                        'user-nav-buttons__button--active':
+                            $route.name === 'gears',
+                    },
+                ]"
+                :label="$t('PAGE_GEARS')"
+                text
+            >
+                <template #icon>
+                    <span class="material-symbols-outlined mr-2">category</span>
+                </template>
+            </PrimeButton>
+        </NuxtLink>
     </div>
 </template>
 

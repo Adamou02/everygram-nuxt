@@ -62,6 +62,7 @@ const days = computed(() => {
     &__image {
         aspect-ratio: 2 / 1;
         background-size: cover;
+        background-position: center;
     }
 }
 </style>

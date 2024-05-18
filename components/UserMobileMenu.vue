@@ -27,55 +27,63 @@
                 class="user-mobile-menu flex flex-column justify-content-between h-full"
             >
                 <div class="flex flex-column gap-2">
-                    <PrimeButton
-                        :class="[
-                            'text-left',
-                            'user-mobile-menu__button',
-                            {
-                                'user-mobile-menu__button--active':
-                                    $route.name === 'trips' ||
-                                    $route.name === 'trip-id',
-                            },
-                        ]"
-                        :label="$t('PAGE_TRIPS')"
-                        text
+                    <NuxtLink
+                        to="/trips"
+                        class="block w-full"
                         @click="
                             () => {
-                                navigateTo('/trips');
                                 isOpen = false;
                             }
                         "
                     >
-                        <template #icon>
-                            <span class="material-symbols-outlined mr-2"
-                                >landscape</span
-                            >
-                        </template>
-                    </PrimeButton>
-                    <PrimeButton
-                        :class="[
-                            'text-left',
-                            'user-mobile-menu__button',
-                            {
-                                'user-mobile-menu__button--active':
-                                    $route.name === 'gears',
-                            },
-                        ]"
-                        :label="$t('PAGE_GEARS')"
-                        text
+                        <PrimeButton
+                            :class="[
+                                'text-left w-full',
+                                'user-mobile-menu__button',
+                                {
+                                    'user-mobile-menu__button--active':
+                                        $route.name === 'trips' ||
+                                        $route.name === 'trip-id',
+                                },
+                            ]"
+                            :label="$t('PAGE_TRIPS')"
+                            text
+                        >
+                            <template #icon>
+                                <span class="material-symbols-outlined mr-2"
+                                    >landscape</span
+                                >
+                            </template>
+                        </PrimeButton>
+                    </NuxtLink>
+                    <NuxtLink
+                        to="/gears"
+                        class="block w-full"
                         @click="
                             () => {
-                                navigateTo('/gears');
                                 isOpen = false;
                             }
                         "
                     >
-                        <template #icon>
-                            <span class="material-symbols-outlined mr-2"
-                                >category</span
-                            >
-                        </template>
-                    </PrimeButton>
+                        <PrimeButton
+                            :class="[
+                                'text-left w-full',
+                                'user-mobile-menu__button',
+                                {
+                                    'user-mobile-menu__button--active':
+                                        $route.name === 'gears',
+                                },
+                            ]"
+                            :label="$t('PAGE_GEARS')"
+                            text
+                        >
+                            <template #icon>
+                                <span class="material-symbols-outlined mr-2"
+                                    >category</span
+                                >
+                            </template>
+                        </PrimeButton>
+                    </NuxtLink>
                 </div>
                 <div class="flex flex-column gap-2">
                     <PrimeButton

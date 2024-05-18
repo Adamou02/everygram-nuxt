@@ -10,6 +10,7 @@
             </SectionTitleBar>
         </template>
         <div
+            v-if="displayGearCatergories.length"
             v-for="category in displayGearCatergories"
             :key="category"
             class="flex flex-column gap-3"
@@ -28,6 +29,9 @@
                 :category="category"
                 :gears="gearsByCategory[category]"
             />
+        </div>
+        <div v-else>
+            <slot name="empty-state" />
         </div>
     </SectionPanel>
 </template>

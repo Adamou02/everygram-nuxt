@@ -49,6 +49,7 @@ const formattedDate = computed(() => dataUtils.formatTripDate(props.trip));
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
         }
         @media (min-width: $lg) {
             aspect-ratio: 3 / 1;

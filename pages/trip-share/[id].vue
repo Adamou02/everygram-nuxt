@@ -18,13 +18,14 @@
                 :wornGears="wornGearsInTrip"
                 :consumables="consumablesInTrip"
             />
-            <PrimeButton
-                :label="$t('ACTION_CREATE_YOUR_GEAR_LIST')"
-                icon="pi pi-arrow-right"
-                icon-pos="right"
-                class="w-full mt-3"
-                @click="navigateTo('/welcome')"
-            />
+            <NuxtLink to="/welcome" class="block w-full mt-3">
+                <PrimeButton
+                    :label="$t('ACTION_CREATE_YOUR_GEAR_LIST')"
+                    icon="pi pi-arrow-right"
+                    icon-pos="right"
+                    class="w-full"
+                />
+            </NuxtLink>
         </template>
         <template #main>
             <!-- base gears -->

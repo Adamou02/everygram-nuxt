@@ -1,6 +1,7 @@
 <!-- a page to list all gear the user has -->
 <template>
-    <div class="grid">
+    <PageLoading v-if="isFetchingGears" />
+    <div v-else-if="gears.length" class="grid">
         <div class="col-12 lg:col-offset-2 lg:col-8">
             <div class="flex flex-column gap-5">
                 <SectionTitleBar>
@@ -14,7 +15,19 @@
                         }}
                     </div>
                     <div class="flex align-items-center gap-2">
-                        <ImportGearsButton />
+                        <PrimeButton
+                            :label="$t('ACTION_IMPORT_GEARS')"
+                            icon="pi pi-file-arrow-up"
+                            class="hide-in-mobile"
+                            @click="isOpenImportGearsDialog = true"
+                            outlined
+                        />
+                        <PrimeButton
+                            icon="pi pi-file-arrow-up"
+                            @click="isOpenImportGearsDialog = true"
+                            class="lg:hidden"
+                            outlined
+                        />
                         <PrimeButton
                             :label="$t('ACTION_CREATE_GEAR')"
                             icon="pi pi-plus"
@@ -60,13 +73,38 @@
             </div>
         </div>
     </div>
+    <EmptyState
+        v-else
+        :title="$t('INFO_NO_USER_GEARS')"
+        :description="$t('INFO_NO_USER_GEARS_DESC')"
+        image-src="/image/illustration/illu-adventure.svg"
+    >
+        <template #actions>
+            <div
+                class="flex flex-column lg:flex-row-reverse align-items-stretch lg:align-items-center gap-2"
+            >
+                <PrimeButton
+                    :label="$t('ACTION_CREATE_GEAR')"
+                    icon="pi pi-plus"
+                    @click="() => onCreateGear()"
+                />
+                <PrimeButton
+                    :label="$t('ACTION_IMPORT_GEARS')"
+                    icon="pi pi-file-arrow-up"
+                    @click="isOpenImportGearsDialog = true"
+                    outlined
+                />
+            </div>
+        </template>
+    </EmptyState>
     <GearEditorDialog />
-    <PageLoading v-if="isFetchingGears" />
+    <ImportGearsDialog
+        :is-open="isOpenImportGearsDialog"
+        @close="isOpenImportGearsDialog = false"
+    />
 </template>
 
 <script setup lang="ts">
-import ImportGearsButton from '~/components/ImportGearsButton.vue';
-
 definePageMeta({
     middleware: ['auth-guard'],
     layout: 'user-page',
@@ -89,7 +127,6 @@ const i18n = useI18n();
 const { onCreateGear, onEditGear } = useEditGear();
 
 const onDeleteGear = async (gear: Gear) => {
-    // TODO: check if the gear has been used in any trips
     try {
         await userGearsStore.deleteGear(gear.id);
     } catch (error) {
@@ -138,4 +175,7 @@ const onCellEditComplete = async (e: {
 useHead({
     title: i18n.t('PAGE_GEARS'),
 });
+
+// for ImportGearsDialog
+const isOpenImportGearsDialog = ref<boolean>(false);
 </script>
