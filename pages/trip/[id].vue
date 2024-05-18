@@ -138,9 +138,7 @@
                     />
                 </template>
                 <template #empty-state>
-                    <TripGearSectionEmptyState
-                        :description="$t('INFO_NO_BASE_GEAR_HINT')"
-                    />
+                    <HintInfo :description="$t('INFO_NO_BASE_GEAR_HINT')" />
                 </template>
             </TripGearSection>
 
@@ -201,9 +199,7 @@
                     />
                 </template>
                 <template #empty-state>
-                    <TripGearSectionEmptyState
-                        :description="$t('INFO_NO_CONSUMABLES_HINT')"
-                    />
+                    <HintInfo :description="$t('INFO_NO_CONSUMABLES_HINT')" />
                 </template>
             </TripConsumableSection>
 
@@ -303,9 +299,7 @@
                     />
                 </template>
                 <template #empty-state>
-                    <TripGearSectionEmptyState
-                        :description="$t('INFO_NO_WORN_GEAR_HINT')"
-                    />
+                    <HintInfo :description="$t('INFO_NO_WORN_GEAR_HINT')" />
                 </template>
             </TripGearSection>
         </template>
@@ -339,7 +333,10 @@
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />
-    <GearEditorDialog @complete-create="onCompleteCreateGearInTrip" />
+    <GearEditorDialog
+        :hint="$t('INFO_NEW_GEAR_ADD_TO_GEARS')"
+        @complete-create="onCompleteCreateGearInTrip"
+    />
     <TripInfoEditorDialog />
     <ConsumableEditor :tripId="tripId" />
 </template>

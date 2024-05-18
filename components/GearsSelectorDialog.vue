@@ -20,6 +20,16 @@
                 "
                 image-src="/image/illustration/illu-adventure.svg"
             >
+                <template v-if="!gears.length" #actions>
+                    <NuxtLink to="/gears">
+                        <PrimeButton
+                            :label="$t('ACTION_CREATE_GEAR_IN_GEARS')"
+                            outlined
+                            icon="pi pi-arrow-right"
+                            icon-pos="right"
+                        />
+                    </NuxtLink>
+                </template>
             </EmptyState>
             <GearSelectDataTable
                 v-else
@@ -30,7 +40,7 @@
                     (newSelectedGears) => (selectedGears = newSelectedGears)
                 "
             />
-            <template #footer>
+            <template v-if="selectableGears.length" #footer>
                 <div
                     class="flex justify-content-between align-items-center gap-3 w-full"
                 >
@@ -56,6 +66,7 @@
                         />
                         <PrimeButton
                             :label="$t('ACTION_ADD')"
+                            :disabled="!selectedGears.length"
                             @click="onSubmit()"
                         />
                     </div>

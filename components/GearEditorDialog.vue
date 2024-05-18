@@ -92,6 +92,7 @@
                     </template>
                 </PrimeDropdown>
             </FormField>
+            <HintInfo v-if="props.hint" :description="props.hint" size="sm" />
         </template>
         <template #footer>
             <PrimeButton
@@ -117,6 +118,10 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
+
+const props = defineProps<{
+    hint?: string;
+}>();
 
 const emit = defineEmits<{
     'complete-create': [gear: Gear];

@@ -4,6 +4,7 @@
         @click="menu?.toggle"
         aria-haspopup="true"
         aria-controls="user-menu"
+        class="text-color"
         text
     >
         <div class="user-menu flex gap-2 align-items-center w-full">
