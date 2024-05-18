@@ -33,7 +33,10 @@
                             {{ item }}
                         </li>
                     </ol>
-                    <a href="/file/everygram_import_gears.csv" download>
+                    <a
+                        href="/file/everygram_gears.csv"
+                        download="everygram_gears.csv"
+                    >
                         <PrimeButton
                             :label="$t('ACTION_DOWNLOAD_GEARS_TEMPLATE')"
                             icon="pi pi-download"
