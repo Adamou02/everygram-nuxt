@@ -59,6 +59,10 @@ const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const { onCreateTrip } = useEditTrip();
 const i18n = useI18n();
 
+onMounted(() => {
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_TRIPS_PAGE);
+});
+
 useHead({
     title: i18n.t('PAGE_TRIPS'),
 });

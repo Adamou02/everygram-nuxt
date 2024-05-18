@@ -7,6 +7,7 @@ import {
     CONSUMABLE_CATEGORY_KEYS,
 } from './constants/consumable-categories';
 import { GEAR_BRANDS, GEAR_BRAND_KEYS } from './constants/gear-brands';
+import { ANALYTICS_EVENTS } from './constants/analytics-events';
 
 const ROLES = {
     OWNER: 'owner',
@@ -78,4 +79,5 @@ export default {
     TRIP_DATE_MODE,
     DEFAULT_TRIP_BANNER_IMAGE_PATH,
     SITE_DOMAIN,
+    ANALYTICS_EVENTS,
 };

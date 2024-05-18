@@ -15,6 +15,9 @@ export default function () {
             summary: i18n.t('INFO_TRIP_PUBLISHED'),
             life: 3000,
         });
+        analyticsUtils.log(constants.ANALYTICS_EVENTS.PUBLISH_TRIP, {
+            trip_id: trip.id,
+        });
     };
 
     const unpublishTrip = async (trip: Trip) => {
@@ -28,6 +31,9 @@ export default function () {
             severity: 'secondary',
             summary: i18n.t('INFO_TRIP_UNPUBLISHED'),
             life: 3000,
+        });
+        analyticsUtils.log(constants.ANALYTICS_EVENTS.UNPUBLISH_TRIP, {
+            trip_id: trip.id,
         });
     };
 

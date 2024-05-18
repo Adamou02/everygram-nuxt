@@ -229,10 +229,14 @@ const onCellEditComplete = async (e: {
     }
 };
 
+// for ImportGearsDialog
+const isOpenImportGearsDialog = ref<boolean>(false);
+
+onMounted(() => {
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_GEARS_PAGE);
+});
+
 useHead({
     title: i18n.t('PAGE_GEARS'),
 });
-
-// for ImportGearsDialog
-const isOpenImportGearsDialog = ref<boolean>(false);
 </script>

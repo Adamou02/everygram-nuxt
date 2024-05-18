@@ -117,6 +117,7 @@ const emit = defineEmits<{
 }>();
 
 const userTripsStore = useUserTripsStore();
+const { trips } = storeToRefs(userTripsStore);
 const i18n = useI18n();
 const dateModeOptions = ref<{ label: string; value: TripDateMode }[]>([
     { label: i18n.t('LABEL_ONE_DAY'), value: constants.TRIP_DATE_MODE.single },
@@ -206,6 +207,10 @@ const onSubmit = async () => {
             }
             emit('complete-create', userTripsStore.getTripById(tripId));
             onCompleteCreateTrip();
+            analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_TRIP, {
+                date_mode: tripData.dateMode,
+                trip_num: trips.value.length,
+            });
         }
     } catch (error) {
         console.error(error);

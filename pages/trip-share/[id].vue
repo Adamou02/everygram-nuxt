@@ -144,4 +144,10 @@ useSeoMeta({
         : defaultBannerImageUrl,
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',
 });
+
+onMounted(() => {
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_TRIP_SHARE_PAGE, {
+        trip_id: tripId,
+    });
+});
 </script>

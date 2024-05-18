@@ -62,6 +62,9 @@ const onCopyLink = () => {
     setTimeout(() => {
         copyIcon.value = 'pi pi-copy';
     }, 1000);
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.COPY_SHARE_TRIP_LINK, {
+        trip_id: props.trip.id,
+    });
 };
 const onViewSharedTrip = () => {
     window.open(tripShareLink.value, '_blank');

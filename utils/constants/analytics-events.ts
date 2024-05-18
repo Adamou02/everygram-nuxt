@@ -1,0 +1,24 @@
+const ANALYTICS_EVENTS = {
+    CHANGE_LOCALE: 'change_locale',
+    CLICK_FEEDBACK_BUTTON: 'click_feedback_button',
+    CLICK_SIGN_IN_BUTTON: 'click_sign_in_button',
+    COMPLETE_IMPORT_GEARS: 'complete_import_gears',
+    COPY_SHARE_TRIP_LINK: 'copy_share_trip_link',
+    CREATE_CONSUMABLE: 'create_consumable',
+    CREATE_GEAR: 'create_gear',
+    CREATE_TRIP: 'create_trip',
+    DOWNLOAD_IMPORT_GEARS_TEMPLATE: 'download_import_gears_template',
+    PUBLISH_TRIP: 'publish_trip',
+    SIGN_IN: 'sign_in',
+    SIGN_OUT: 'sign_out',
+    START_IMPORT_GEARS: 'start_import_gears',
+    UNPUBLISH_TRIP: 'unpublish_trip',
+    UPLOAD_IMPORT_GEARS_DATA: 'upload_import_gears_data',
+    UPLOAD_TRIP_BANNER_IMAGE: 'upload_trip_banner_image',
+    VIEW_GEARS_PAGE: 'view_gears_page',
+    VIEW_LANDING_PAGE: 'view_landing_page',
+    VIEW_TRIP_SHARE_PAGE: 'view_trip_share_page',
+    VIEW_TRIPS_PAGE: 'view_trips_page',
+};
+
+export { ANALYTICS_EVENTS };

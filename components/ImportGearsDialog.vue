@@ -36,6 +36,12 @@
                     <a
                         href="/file/everygram_gears.csv"
                         download="everygram_gears.csv"
+                        @click="
+                            analyticsUtils.log(
+                                constants.ANALYTICS_EVENTS
+                                    .DOWNLOAD_IMPORT_GEARS_TEMPLATE,
+                            )
+                        "
                     >
                         <PrimeButton
                             :label="$t('ACTION_DOWNLOAD_GEARS_TEMPLATE')"
@@ -202,6 +208,9 @@ const onFileSelected = async (file: File) => {
     });
     selectedGears.value = formattedGearsData.value;
     isFormatting.value = false;
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.UPLOAD_IMPORT_GEARS_DATA, {
+        gear_num: importedGearRows.value.length,
+    });
 };
 
 const resetData = () => {
@@ -223,6 +232,9 @@ const onImportGears = async () => {
         isImporting.value = true;
         await userGearsStore.createGears(gears);
         emit('close');
+        analyticsUtils.log(constants.ANALYTICS_EVENTS.COMPLETE_IMPORT_GEARS, {
+            gear_num: gears.length,
+        });
     } catch (error) {
         console.error(error);
     } finally {
@@ -237,6 +249,7 @@ watch(
         if (isOpen) {
             resetData();
             activeStep.value = 0;
+            analyticsUtils.log(constants.ANALYTICS_EVENTS.START_IMPORT_GEARS);
         }
     },
 );

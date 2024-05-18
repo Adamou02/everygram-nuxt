@@ -545,6 +545,12 @@ const onUploadBannerImage = ({
                 },
             },
         });
+        analyticsUtils.log(
+            constants.ANALYTICS_EVENTS.UPLOAD_TRIP_BANNER_IMAGE,
+            {
+                trip_id: trip.value.id,
+            },
+        );
     }
 };
 

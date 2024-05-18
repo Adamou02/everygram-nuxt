@@ -10,6 +10,9 @@ export default function () {
         },
         setLocale: (locale: string) => {
             i18n.setLocale(locale);
+            analyticsUtils.log(constants.ANALYTICS_EVENTS.CHANGE_LOCALE, {
+                locale,
+            });
         },
         formatWeight: (weight: number) => {
             return weight < 1000

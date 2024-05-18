@@ -208,6 +208,9 @@ const onSubmit = async () => {
                 consumable: consumableData,
             });
             emit('complete-create', consumableData);
+            analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_CONSUMABLE, {
+                consumable_category: consumableData.category,
+            });
         }
     } catch (error) {
         console.error(error);

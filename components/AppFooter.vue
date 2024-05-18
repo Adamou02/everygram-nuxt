@@ -18,6 +18,13 @@
                     to="https://docs.google.com/forms/d/e/1FAIpQLSdYyYfy1i7yfBjf-KrqlpD97UVxxtMrAqEyBlRoqWb3INEgeg/viewform"
                     target="_blank"
                     rel="noopener"
+                    @click="
+                        () =>
+                            analyticsUtils.log(
+                                constants.ANALYTICS_EVENTS
+                                    .CLICK_FEEDBACK_BUTTON,
+                            )
+                    "
                 >
                     <PrimeButton link>
                         {{ $t('ACTION_FEEDBACK') }}

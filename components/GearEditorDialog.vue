@@ -189,6 +189,7 @@ watch(isOpen, (newValue) => {
 
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
+const { gears } = storeToRefs(userGearsStore);
 const onSubmit = async () => {
     const valid = await vuelidate.value.$validate();
     if (!valid) {
@@ -220,6 +221,10 @@ const onSubmit = async () => {
             }
             emit('complete-create', userGearsStore.getGearById(docId));
             onCompleteCreateGear();
+            analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_GEAR, {
+                gear_category: gearData.category,
+                gear_num: gears.value.length,
+            });
         }
     } catch (error) {
         console.error(error);

@@ -116,4 +116,14 @@ declare global {
 
     type GearBrand = 'mont-bell' | 'patagonia' | 'arcteryx';
     type BrandData = { name: string; originalName?: string };
+
+    type EventParamKey =
+        | 'sign_in_method'
+        | 'locale'
+        | 'gear_category'
+        | 'consumable_category'
+        | 'gear_num'
+        | 'trip_num'
+        | 'date_mode'
+        | 'trip_id';
 }
