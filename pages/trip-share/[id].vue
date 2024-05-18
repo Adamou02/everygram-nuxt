@@ -18,7 +18,18 @@
                 :wornGears="wornGearsInTrip"
                 :consumables="consumablesInTrip"
             />
-            <NuxtLink to="/welcome" class="block w-full mt-3">
+            <NuxtLink
+                to="/welcome"
+                class="block w-full mt-3"
+                @click="
+                    () =>
+                        analyticsUtils.log(
+                            constants.ANALYTICS_EVENTS
+                                .CLICK_TRIP_SHARE_PAGE_CTA,
+                            { trip_id: tripShare?.id },
+                        )
+                "
+            >
                 <PrimeButton
                     :label="$t('ACTION_CREATE_YOUR_GEAR_LIST')"
                     icon="pi pi-arrow-right"

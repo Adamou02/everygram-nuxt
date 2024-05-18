@@ -2,7 +2,7 @@
     <SectionPanel>
         <template #header>
             <SectionTitleBar
-                class="p-3 bg-white border-round-top-md h-5rem"
+                class="px-3 py-2 lg:py-3 bg-white border-round-top-md"
                 sticky
             >
                 <h2>{{ title }}</h2>

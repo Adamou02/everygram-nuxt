@@ -6,17 +6,17 @@
                 { 'border-round-bottom-md': !wornGears.length },
             ]"
         >
-            <div class="flex justify-content-between text-lg">
+            <h3 class="flex justify-content-between text-lg">
                 <div>
                     {{ $t('LABEL_PACK_WEIGHT') }}
                 </div>
                 <div>
                     {{ formatWeight(backpackWeight) }}
                 </div>
-            </div>
+            </h3>
             <WeightBarChart :items="backpackWeightItems" :showLabel="true" />
             <div
-                class="flex justify-content-between surface-200 p-3 border-round-md"
+                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
             >
                 <div>
                     {{ $t('LABEL_BASE_WEIGHT') }}
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div
-                class="flex justify-content-between surface-200 p-3 border-round-md"
+                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
             >
                 <div>
                     {{ $t('LABEL_CONSUMABLES') }}
@@ -41,7 +41,7 @@
             class="flex flex-column gap-3 p-3 bg-white border-round-bottom-md border-top-solid border-top-1 border-200"
         >
             <div
-                class="flex justify-content-between surface-200 p-3 border-round-md"
+                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
             >
                 <div>
                     {{ $t('LABEL_WORN_GEARS') }}

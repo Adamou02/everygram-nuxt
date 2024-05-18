@@ -92,12 +92,13 @@
                             })
                         "
                     >
-                        <ul class="text-red-700 pl-5">
+                        <ul class="text-red-700 pl-3 line-height-3">
                             <li v-for="row in invalidRows">
                                 {{
                                     $t('INFO_INVALID_GEAR_DATA_ROW', {
-                                        index: row.index + 1,
-                                        data: row.row.join(', '),
+                                        index: row.index + 2,
+                                        data: row.data.join(', '),
+                                        reason: row.reason,
                                     })
                                 }}
                             </li>
@@ -154,13 +155,17 @@ const props = defineProps<{
 const emit = defineEmits<{
     close: [];
 }>();
+const i18n = useI18n();
 const isFormatting = ref(false);
 const isImporting = ref(false);
 const activeStep = ref(0);
 const importedGearRows = ref<string[][]>([]);
 const selectedGears = ref<ImportGear[]>([]);
-const invalidRows = ref<{ index: number; row: string[] }[]>([]);
+const invalidRows = ref<{ index: number; data: string[]; reason: string }[]>(
+    [],
+);
 const formattedGearsData = ref<ImportGear[]>([]);
+const gearNameExists = ref<Record<string, boolean>>({});
 
 const onFileSelected = async (file: File) => {
     resetData();
@@ -169,18 +174,39 @@ const onFileSelected = async (file: File) => {
     importedGearRows.value = parsedContent;
     parsedContent.forEach((row, index) => {
         if (formattedGearsData.value.length >= constants.LIMIT.importLimit) {
-            invalidRows.value.push({ index, row });
+            invalidRows.value.push({
+                index,
+                data: row,
+                reason: i18n.t('INFO_INVALID_GEAR_REASON_LIMIT'),
+            });
             return;
         }
 
         if (row.length !== 3) {
-            invalidRows.value.push({ index, row });
+            invalidRows.value.push({
+                index,
+                data: row,
+                reason: i18n.t('INFO_INVALID_GEAR_REASON_ROW_LENGTH'),
+            });
+            return;
+        }
+
+        if (gearNameExists.value[row[0]]) {
+            invalidRows.value.push({
+                index,
+                data: row,
+                reason: i18n.t('INFO_INVALID_GEAR_REASON_NAME_EXISTS'),
+            });
             return;
         }
 
         const name = row[0];
         if (!name || name.length > constants.LIMIT.maxNameLength) {
-            invalidRows.value.push({ index, row });
+            invalidRows.value.push({
+                index,
+                data: row,
+                reason: i18n.t('INFO_INVALID_GEAR_REASON_NAME_LENGTH'),
+            });
             return;
         }
 
@@ -190,7 +216,11 @@ const onFileSelected = async (file: File) => {
             weight < constants.LIMIT.minWeight ||
             weight > constants.LIMIT.maxWeight
         ) {
-            invalidRows.value.push({ index, row });
+            invalidRows.value.push({
+                index,
+                data: row,
+                reason: i18n.t('INFO_INVALID_GEAR_REASON_WEIGHT'),
+            });
             return;
         }
 
@@ -205,6 +235,8 @@ const onFileSelected = async (file: File) => {
             weight,
             category,
         });
+
+        gearNameExists.value[name] = true;
     });
     selectedGears.value = formattedGearsData.value;
     isFormatting.value = false;
@@ -218,6 +250,7 @@ const resetData = () => {
     formattedGearsData.value = [];
     invalidRows.value = [];
     selectedGears.value = [];
+    gearNameExists.value = {};
 };
 
 const userGearsStore = useUserGearsStore();
