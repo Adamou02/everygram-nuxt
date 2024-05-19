@@ -19,7 +19,10 @@
         </div>
         <div class="app-footer__content">
             <div class="text-600">
-                <small>Copyright &copy; 2024 Everygram</small>
+                <small
+                    >Copyright &copy; {{ currentYear }}
+                    {{ $t('APP_NAME') }}</small
+                >
             </div>
             <div class="flex gap-2">
                 <NuxtLink
@@ -44,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+const currentYear = new Date().getFullYear();
 const onClickBrandIcon = () => {
     window.scrollTo({
         top: 0,

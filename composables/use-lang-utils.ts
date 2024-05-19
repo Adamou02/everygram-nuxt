@@ -14,16 +14,22 @@ export default function () {
                 locale,
             });
         },
-        formatWeight: (weight: number) => {
-            return weight < 1000
-                ? i18n.t('INFO_WEIGHT_GRAM', { weight }, weight)
-                : i18n.t(
-                      'INFO_WEIGHT_KILOGRAM',
-                      {
-                          weight: _round(weight / 1000, 2),
-                      },
-                      weight,
-                  );
+        formatWeight: (weight: number, unit?: 'g' | 'kg') => {
+            const weightG = i18n.t('INFO_WEIGHT_GRAM', { weight }, weight);
+            const weightKg = i18n.t(
+                'INFO_WEIGHT_KILOGRAM',
+                {
+                    weight: _round(weight / 1000, 2),
+                },
+                weight,
+            );
+            if (unit === 'g') {
+                return weightG;
+            }
+            if (unit === 'kg') {
+                return weightKg;
+            }
+            return weight < 1000 ? weightG : weightKg;
         },
         gearCategoryToLabel: (category: GearCategory) => {
             if (!constants.GEAR_CATEGORY_KEYS.includes(category)) {

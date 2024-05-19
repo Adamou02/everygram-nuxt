@@ -54,8 +54,8 @@ export const onTripDeletedUnpublishTrip = onDocumentDeleted(
     },
 );
 
-// update trip share when gear is written
-export const onGearWrittenUpdateTripShare = onDocumentWritten(
+// publish trip again share when gear is written (to calculate weights again)
+export const onGearWrittenPublishTripShareAgain = onDocumentWritten(
     'gear/{gearId}',
     async (event) => {
         const gearId = event.params.gearId;
@@ -88,36 +88,12 @@ export const onGearWrittenUpdateTripShare = onDocumentWritten(
             'id',
         );
 
-        const allUpdates = tripShareDocs.map(async (doc) => {
-            const tripShare = doc.data() as TripShare;
+        // publish trip share again
+        const allPublishes = tripShareDocs.map(async (doc) =>
+            publishTrip(doc.id),
+        );
 
-            // update gear in trip share
-            const gearWithQuantity = tripShare.gears[gearId];
-            if (gearWithQuantity) {
-                const newGearWithQuantity: GearWithQuantity = {
-                    ...gearWithQuantity,
-                    ...gear,
-                };
-                tripShare.gears[gearId] = newGearWithQuantity;
-            }
-
-            // update worn gear in trip share
-            const wornGearWithQuantity = tripShare.wornGears[gearId];
-            if (wornGearWithQuantity) {
-                const newWornGearWithQuantity: GearWithQuantity = {
-                    ...wornGearWithQuantity,
-                    ...gear,
-                };
-                tripShare.wornGears[gearId] = newWornGearWithQuantity;
-            }
-
-            return await doc.ref.update({
-                ...tripShare,
-                updated: FieldValue.serverTimestamp(),
-            });
-        });
-
-        return Promise.all(allUpdates);
+        return Promise.all(allPublishes);
     },
 );
 
@@ -246,6 +222,23 @@ const publishTrip = async (tripId: string) => {
         {} as Record<string, GearWithQuantity>,
     );
 
+    const baseWeight = Object.values(tripShareGears).reduce(
+        (acc, gear) => acc + gear.weight * gear.quantity,
+        0,
+    );
+
+    const consumablesWeight = trip.consumables.reduce(
+        (acc, consumable) => acc + consumable.weight,
+        0,
+    );
+
+    const packWeight = baseWeight + consumablesWeight;
+
+    const wornWeight = Object.values(tripShareWornGears).reduce(
+        (acc, gear) => acc + gear.weight * gear.quantity,
+        0,
+    );
+
     // build trip share data
     const tripShare: TripShare = {
         ...trip,
@@ -255,6 +248,10 @@ const publishTrip = async (tripId: string) => {
             displayName: owner.displayName || '',
             photoURL: owner.photoURL || '',
         },
+        baseWeight,
+        consumablesWeight,
+        packWeight,
+        wornWeight,
     };
 
     // write trip share data to firestore in tripShare collection
@@ -262,7 +259,7 @@ const publishTrip = async (tripId: string) => {
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);
     await tripShareDocRef.set({
         ...tripShare,
-        created: FieldValue.serverTimestamp(),
+        tripShareCreated: FieldValue.serverTimestamp(),
     });
 };
 

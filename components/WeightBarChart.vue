@@ -58,15 +58,6 @@
                                 },
                             ]"
                         ></span>
-                        <!-- <span
-                            v-if="item.subItems"
-                            class="material-symbols-outlined text-sm text-600"
-                            >{{
-                                itemsToggle[index]
-                                    ? 'expand_less'
-                                    : 'expand_more'
-                            }}</span
-                        > -->
                     </div>
                     <DashedLine />
                     <div>{{ formatWeight(item.weight) }}</div>

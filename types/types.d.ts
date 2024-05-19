@@ -79,6 +79,11 @@ declare global {
         gears: Record<string, GearWithQuantity>;
         wornGears: Record<string, GearWithQuantity>;
         owner: UserInfo;
+        baseWeight: number;
+        consumablesWeight: number;
+        packWeight: number;
+        wornWeight: number;
+        tripShareCreated?: Timestamp;
     };
 
     type UserInfo = {
