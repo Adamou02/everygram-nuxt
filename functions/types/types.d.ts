@@ -44,6 +44,7 @@ export type Gear = {
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };
+export type UserGears = Record<string, Gear>;
 
 export type TripRole = 'owner' | 'participant';
 export type TripGear = {

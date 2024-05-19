@@ -58,8 +58,12 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
         if (unsubscribe.value) {
             unsubscribe.value();
         }
+
+        // reset all ref values
         trips.value = [];
         isInitialized.value = false;
+        isFirstFetching.value = true;
+        unsubscribe.value = null;
     };
 
     const createTrip = async (trip: EditingTrip) => {

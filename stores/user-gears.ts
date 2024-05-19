@@ -2,16 +2,18 @@ import {
     collection,
     addDoc,
     doc,
+    getDoc,
     updateDoc,
     deleteDoc,
     onSnapshot,
     getFirestore,
-    query,
-    where,
     serverTimestamp,
     writeBatch,
     // connectFirestoreEmulator,
+    setDoc,
+    deleteField,
 } from 'firebase/firestore';
+import type { DocumentReference } from 'firebase/firestore';
 
 export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = getFirestore();
@@ -19,8 +21,8 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
     const gearCollectionRef = collection(db, 'gear');
-    const gears = ref<Gear[]>([]);
-    const gearMap = computed(() => _keyBy(gears.value, 'id'));
+    const gearMap = ref<UserGears>({});
+    const gears = computed(() => Object.values(gearMap.value));
     const isFirstFetching = ref(true);
     const unsubscribe = ref<null | (() => void)>(null);
     const isInitialized = ref(false);
@@ -32,25 +34,37 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             console.error('initialize useUserGearsStore fail');
             return;
         }
-        unsubscribe.value = onSnapshot(
-            query(
-                gearCollectionRef,
-                where(`role.${user.value.uid}`, '==', constants.ROLES.OWNER),
-            ),
-            (querySnapshot) => {
-                gears.value = querySnapshot.docs.map((doc) => {
-                    const docData = doc.data();
-                    return {
-                        ...constants.EMPTY_GEAR_DATA,
-                        ...docData,
-                        id: doc.id,
-                    } as Gear;
+
+        const userId = user.value.uid;
+        const userGearsDocRef = doc(db, 'user-gears', userId);
+        unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
+            const docData = doc.data();
+            if (!doc.exists || !docData) {
+                // create initial user-gears document
+                setDoc(userGearsDocRef, {
+                    gears: {},
                 });
-                if (isFirstFetching.value) {
-                    isFirstFetching.value = false;
-                }
-            },
-        );
+                return;
+            }
+
+            const userGears = _cloneDeep(docData.gears) as UserGears;
+
+            // fill in missing gear fields
+            Object.entries(userGears).forEach(([gearId, gear]) => {
+                userGears[gearId] = {
+                    ...constants.EMPTY_GEAR_DATA,
+                    ...gear,
+                    id: gearId,
+                };
+            });
+
+            gearMap.value = userGears;
+
+            if (isFirstFetching.value) {
+                isFirstFetching.value = false;
+            }
+        });
+
         isInitialized.value = true;
     };
 
@@ -58,24 +72,47 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         if (unsubscribe.value) {
             unsubscribe.value();
         }
-        gears.value = [];
+
+        // reset all ref values
+        gearMap.value = {};
+        isFirstFetching.value = true;
         isInitialized.value = false;
+        unsubscribe.value = null;
     };
 
-    const createGear = async (gear: EditingGear) => {
+    const createGear = async (editingGear: EditingGear) => {
         if (!user.value) {
             return;
         }
+        const userId = user.value.uid;
         try {
-            const docRef = await addDoc(gearCollectionRef, {
+            // Add new gear to gear collection
+            const gearDocRef = await addDoc(gearCollectionRef, {
                 ...constants.EMPTY_GEAR_DATA,
-                ...gear,
+                ...editingGear,
                 role: {
-                    [user.value.uid]: constants.ROLES.OWNER,
+                    [userId]: constants.ROLES.OWNER,
                 },
                 created: serverTimestamp(),
             });
-            return docRef.id;
+
+            // Get new gear data
+            const gearId = gearDocRef.id;
+            const gearDocSnap = await getDoc(gearDocRef);
+            const gearData = gearDocSnap.data();
+            const newGear: Gear = {
+                ...constants.EMPTY_GEAR_DATA,
+                ...gearData,
+                id: gearId,
+            };
+
+            // Add new gear to user-gears document
+            const userGearsDocRef = doc(db, 'user-gears', userId);
+            await updateDoc(userGearsDocRef, {
+                [`gears.${gearId}`]: newGear,
+            });
+
+            return newGear;
         } catch (error) {
             console.error(error);
             throw error;
@@ -88,9 +125,12 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
+            // write new gears to gear collection in batch
+            const newGearRefs: DocumentReference[] = [];
             const batch = writeBatch(db);
             gears.forEach((gear) => {
                 const docRef = doc(gearCollectionRef);
+                newGearRefs.push(docRef);
                 batch.set(docRef, {
                     ...constants.EMPTY_GEAR_DATA,
                     ...gear,
@@ -101,6 +141,30 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 });
             });
             await batch.commit();
+
+            // get new gears data
+            const newGearDocs = await Promise.all(
+                newGearRefs.map((ref) => getDoc(ref)),
+            );
+            const newGears: Gear[] = newGearDocs.map((doc, index) => {
+                const gearData = doc.data();
+                return {
+                    ...constants.EMPTY_GEAR_DATA,
+                    ...gearData,
+                    id: newGearRefs[index].id,
+                };
+            });
+
+            // write new gears to user-gears document
+            const newGearsFields: Record<string, Gear> = newGears.reduce(
+                (acc, gear) => {
+                    acc[`gears.${gear.id}`] = gear;
+                    return acc;
+                },
+                {} as Record<string, Gear>,
+            );
+            const userGearsDocRef = doc(db, 'user-gears', userId);
+            await updateDoc(userGearsDocRef, newGearsFields);
         } catch (error) {
             console.error(error);
             throw error;
@@ -114,13 +178,31 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         id: string;
         gearData: EditingGear;
     }) => {
+        if (!user.value) {
+            return;
+        }
+        const userId = user.value.uid;
         try {
             const gearRef = doc(db, 'gear', id);
             delete gearData.id;
-            await updateDoc(gearRef, {
+
+            // update gear data
+            const updateGearPromise = updateDoc(gearRef, {
                 ...gearData,
                 updated: serverTimestamp(),
             });
+
+            // update user-gears document
+            const userGearsDocRef = doc(db, 'user-gears', userId);
+            const updateUserGearsPromise = updateDoc(userGearsDocRef, {
+                [`gears.${id}`]: {
+                    ...gearMap.value[id],
+                    ...gearData,
+                    updated: serverTimestamp(),
+                },
+            });
+
+            await Promise.all([updateGearPromise, updateUserGearsPromise]);
         } catch (error) {
             console.error(error);
             throw error;
@@ -128,9 +210,25 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     };
 
     const deleteGear = async (id: string) => {
+        if (!user.value) {
+            return;
+        }
+        const userId = user.value.uid;
         try {
+            // delete gear from gear collection
             const gearRef = doc(db, 'gear', id);
-            await deleteDoc(gearRef);
+            const deleteGearPromise = deleteDoc(gearRef);
+
+            // delete gear from user-gears document
+            const userGearsDocRef = doc(db, 'user-gears', userId);
+            const deleteGearInUserGearsPromise = updateDoc(userGearsDocRef, {
+                [`gears.${id}`]: deleteField(),
+            });
+
+            await Promise.all([
+                deleteGearPromise,
+                deleteGearInUserGearsPromise,
+            ]);
         } catch (error) {
             console.error(error);
             throw error;

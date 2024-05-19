@@ -45,6 +45,7 @@ declare global {
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };
+    type UserGears = Record<string, Gear>;
 
     type TripRole = 'owner' | 'participant';
     type TripGear = {
