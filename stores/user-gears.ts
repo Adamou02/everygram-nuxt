@@ -36,11 +36,11 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
 
         const userId = user.value.uid;
-        const userGearsDocRef = doc(db, 'user-gears', userId);
+        const userGearsDocRef = doc(db, 'userGears', userId);
         unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
             const docData = doc.data();
             if (!doc.exists || !docData) {
-                // create initial user-gears document
+                // create initial userGears document
                 setDoc(userGearsDocRef, {
                     gears: {},
                 });
@@ -106,8 +106,8 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 id: gearId,
             };
 
-            // Add new gear to user-gears document
-            const userGearsDocRef = doc(db, 'user-gears', userId);
+            // Add new gear to userGears document
+            const userGearsDocRef = doc(db, 'userGears', userId);
             await updateDoc(userGearsDocRef, {
                 [`gears.${gearId}`]: newGear,
             });
@@ -155,7 +155,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 };
             });
 
-            // write new gears to user-gears document
+            // write new gears to userGears document
             const newGearsFields: Record<string, Gear> = newGears.reduce(
                 (acc, gear) => {
                     acc[`gears.${gear.id}`] = gear;
@@ -163,7 +163,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 },
                 {} as Record<string, Gear>,
             );
-            const userGearsDocRef = doc(db, 'user-gears', userId);
+            const userGearsDocRef = doc(db, 'userGears', userId);
             await updateDoc(userGearsDocRef, newGearsFields);
         } catch (error) {
             console.error(error);
@@ -192,8 +192,8 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 updated: serverTimestamp(),
             });
 
-            // update user-gears document
-            const userGearsDocRef = doc(db, 'user-gears', userId);
+            // update userGears document
+            const userGearsDocRef = doc(db, 'userGears', userId);
             const updateUserGearsPromise = updateDoc(userGearsDocRef, {
                 [`gears.${id}`]: {
                     ...gearMap.value[id],
@@ -219,8 +219,8 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             const gearRef = doc(db, 'gear', id);
             const deleteGearPromise = deleteDoc(gearRef);
 
-            // delete gear from user-gears document
-            const userGearsDocRef = doc(db, 'user-gears', userId);
+            // delete gear from userGears document
+            const userGearsDocRef = doc(db, 'userGears', userId);
             const deleteGearInUserGearsPromise = updateDoc(userGearsDocRef, {
                 [`gears.${id}`]: deleteField(),
             });
