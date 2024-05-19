@@ -77,6 +77,7 @@
     "INFO_DOWNLOAD_GEARS_TEMPLATE": "下載裝備資料模板",
     "INFO_DROP_FILE_HERE": "拖曳檔案到此處",
     "INFO_DROP_FILE_TYPE_HERE": "拖曳 {fileType} 檔案到此處",
+    "INFO_EDIT_GEAR_SYNC_TO_GEARS": "編輯裝備將會同步更新到你的裝備庫",
     "INFO_GEAR_NUM": "{num} 件裝備",
     "INFO_HELLO": "哈囉！",
     "INFO_INVALID_GEAR_DATA_ROW": "第 {index} 列: {data}，{reason}",

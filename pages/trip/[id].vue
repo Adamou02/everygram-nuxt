@@ -334,7 +334,11 @@
         @cancel="isSelectingGears = false"
     />
     <GearEditorDialog
-        :hint="$t('INFO_NEW_GEAR_ADD_TO_GEARS')"
+        :hint="
+            isEditingGear
+                ? $t('INFO_EDIT_GEAR_SYNC_TO_GEARS')
+                : $t('INFO_NEW_GEAR_ADD_TO_GEARS')
+        "
         @complete-create="onCompleteCreateGearInTrip"
     />
     <TripInfoEditorDialog />
@@ -410,7 +414,7 @@ const onCompletSelectGears = (selectedGears: TripGear[]) => {
 };
 
 // for GearEditor
-const { onCreateGear, onEditGear } = useEditGear();
+const { onCreateGear, onEditGear, isEditingGear } = useEditGear();
 const creatingGearType = ref<TripGearType>('gears');
 const onCompleteCreateGearInTrip = (gear: Gear) => {
     userTripsStore.setGearsToTrip(

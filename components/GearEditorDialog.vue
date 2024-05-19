@@ -215,11 +215,11 @@ const onSubmit = async () => {
             );
             onCompleteEditGear();
         } else {
-            const docId = await userGearsStore.createGear(gearData);
-            if (!docId) {
+            const newGear = await userGearsStore.createGear(gearData);
+            if (!newGear) {
                 throw new Error('Failed to add gear');
             }
-            emit('complete-create', userGearsStore.getGearById(docId));
+            emit('complete-create', newGear);
             onCompleteCreateGear();
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_GEAR, {
                 gear_category: gearData.category,

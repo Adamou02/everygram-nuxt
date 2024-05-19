@@ -80,9 +80,11 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         unsubscribe.value = null;
     };
 
-    const createGear = async (editingGear: EditingGear) => {
+    const createGear = async (
+        editingGear: EditingGear,
+    ): Promise<Gear | null> => {
         if (!user.value) {
-            return;
+            return null;
         }
         const userId = user.value.uid;
         try {
