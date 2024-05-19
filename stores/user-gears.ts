@@ -9,9 +9,9 @@ import {
     getFirestore,
     serverTimestamp,
     writeBatch,
-    // connectFirestoreEmulator,
     setDoc,
     deleteField,
+    // connectFirestoreEmulator,
 } from 'firebase/firestore';
 import type { DocumentReference } from 'firebase/firestore';
 

@@ -1,17 +1,9 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
 import {
     onDocumentDeleted,
-    onDocumentWritten,
+    onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
 import type { Gear, GearWithQuantity, Trip, TripShare } from '../types/types';
 import { setGlobalOptions } from 'firebase-functions/v2';
@@ -26,121 +18,6 @@ setGlobalOptions({
 });
 
 admin.initializeApp();
-
-// update trip share when trip is written
-export const onTripWrittenUpdateTripShare = onDocumentWritten(
-    'trip/{tripId}',
-    (event) => {
-        const tripId = event.params.tripId;
-        const newTrip = event.data?.after.data();
-        const oldTrip = event.data?.before.data();
-
-        if (newTrip?.isPublished) {
-            return publishTrip(tripId);
-        }
-        if (oldTrip?.isPublished && !newTrip?.isPublished) {
-            return unpublishTrip(tripId);
-        }
-        return null;
-    },
-);
-
-// unpublish trip share when trip is deleted
-export const onTripDeletedUnpublishTrip = onDocumentDeleted(
-    'trip/{tripId}',
-    (event) => {
-        const tripId = event.params.tripId;
-        return unpublishTrip(tripId);
-    },
-);
-
-// publish trip again share when gear is written (to calculate weights again)
-export const onGearWrittenPublishTripShareAgain = onDocumentWritten(
-    'gear/{gearId}',
-    async (event) => {
-        const gearId = event.params.gearId;
-        const gear = event.data?.after.data();
-
-        if (!gear) {
-            return null;
-        }
-
-        // get trip shares that have the gear
-        const tripSharesWithGearSnapshot = await admin
-            .firestore()
-            .collection('tripShare')
-            .where(`gears.${gearId}`, '!=', false)
-            .get();
-
-        // get trip shares that have the worn gear
-        const tripSharesWithWornGearSnapshot = await admin
-            .firestore()
-            .collection('tripShare')
-            .where(`wornGears.${gearId}`, '!=', false)
-            .get();
-
-        // merge trip shares with gear and worn gear
-        const tripShareDocs = _.uniqBy(
-            [
-                ...tripSharesWithGearSnapshot.docs,
-                ...tripSharesWithWornGearSnapshot.docs,
-            ],
-            'id',
-        );
-
-        // publish trip share again
-        const allPublishes = tripShareDocs.map(async (doc) =>
-            publishTrip(doc.id),
-        );
-
-        return Promise.all(allPublishes);
-    },
-);
-
-// update trip when gear is deleted (and then trip share will be updated automatically)
-export const onGearDeletedUpdateTrip = onDocumentDeleted(
-    'gear/{gearId}',
-    async (event) => {
-        const gearId = event.params.gearId;
-
-        // get trips that have the gear
-        const tripsWithGearSnapshot = await admin
-            .firestore()
-            .collection('trip')
-            .where(`gears.${gearId}`, '!=', false)
-            .get();
-
-        // get trips that have the worn gear
-        const tripsWithWornGearSnapshot = await admin
-            .firestore()
-            .collection('trip')
-            .where(`wornGears.${gearId}`, '!=', false)
-            .get();
-
-        // merge trips with gear and worn gear
-        const tripsSnapshot = _.uniqBy(
-            [...tripsWithGearSnapshot.docs, ...tripsWithWornGearSnapshot.docs],
-            'id',
-        );
-
-        const allUpdates = tripsSnapshot.map(async (doc) => {
-            const trip = doc.data() as Trip;
-
-            // delete gear from trip
-            delete trip.gears[gearId];
-
-            // delete worn gear from trip
-            delete trip.wornGears[gearId];
-
-            return await doc.ref.update({
-                ...trip,
-                updated: FieldValue.serverTimestamp(),
-            });
-        });
-
-        return Promise.all(allUpdates);
-    },
-);
 
 const publishTrip = async (tripId: string) => {
     // get trip data from firestore
@@ -222,18 +99,16 @@ const publishTrip = async (tripId: string) => {
         {} as Record<string, GearWithQuantity>,
     );
 
+    // calculate weights
     const baseWeight = Object.values(tripShareGears).reduce(
         (acc, gear) => acc + gear.weight * gear.quantity,
         0,
     );
-
     const consumablesWeight = trip.consumables.reduce(
         (acc, consumable) => acc + consumable.weight,
         0,
     );
-
     const packWeight = baseWeight + consumablesWeight;
-
     const wornWeight = Object.values(tripShareWornGears).reduce(
         (acc, gear) => acc + gear.weight * gear.quantity,
         0,
@@ -270,40 +145,174 @@ const unpublishTrip = async (tripId: string) => {
     await tripShareDocRef.delete();
 };
 
-// when trip banner image is updated, delete the old image by old banner image file name
-export const onTripBannerImageUpdatedDeleteOldImage = onDocumentWritten(
+export const onGearUpdated = onDocumentUpdated(
+    'gear/{gearId}',
+    async (event) => {
+        const gearId = event.params.gearId;
+        // const newGear = event.data?.after.data();
+        // const oldGear = event.data?.before.data();
+
+        // 1. publish trips again share when gear is updated (to calculate weights again)
+        const publishTripShareAgainPromise = (async () => {
+            // get trip shares that have the gear or worn gear
+            const [tripSharesWithGearSnapshot, tripSharesWithWornGearSnapshot] =
+                await Promise.all([
+                    // get trip shares that have the gear
+                    admin
+                        .firestore()
+                        .collection('tripShare')
+                        .where(`gears.${gearId}`, '!=', false)
+                        .get(),
+                    // get trip shares that have the worn gear
+                    admin
+                        .firestore()
+                        .collection('tripShare')
+                        .where(`wornGears.${gearId}`, '!=', false)
+                        .get(),
+                ]);
+
+            // merge trip shares with gear and worn gear
+            const tripShareDocs = _.uniqBy(
+                [
+                    ...tripSharesWithGearSnapshot.docs,
+                    ...tripSharesWithWornGearSnapshot.docs,
+                ],
+                'id',
+            );
+
+            // publish trip share again
+            const allPublishes = tripShareDocs.map(async (doc) =>
+                publishTrip(doc.id),
+            );
+
+            return Promise.all(allPublishes);
+        })();
+
+        return Promise.all([publishTripShareAgainPromise]);
+    },
+);
+
+export const onGearDeleted = onDocumentDeleted(
+    'gear/{gearId}',
+    async (event) => {
+        const gearId = event.params.gearId;
+
+        // 1. delete the storage path gear/{gearId}
+        const deleteStoragePromise = (async () => {
+            const filePath = `gear/${gearId}`;
+            await admin.storage().bucket().deleteFiles({
+                prefix: filePath,
+            });
+        })();
+
+        // 2. update trips when gear is deleted (and then trip share will be updated automatically)
+        const updateTripsPromise = (async () => {
+            // get trips that have the gear or worn gear
+            const [tripsWithGearSnapshot, tripsWithWornGearSnapshot] =
+                await Promise.all([
+                    // get trips that have the gear
+                    admin
+                        .firestore()
+                        .collection('trip')
+                        .where(`gears.${gearId}`, '!=', false)
+                        .get(),
+                    // get trips that have the worn gear
+                    admin
+                        .firestore()
+                        .collection('trip')
+                        .where(`wornGears.${gearId}`, '!=', false)
+                        .get(),
+                ]);
+
+            // merge trips with gear and worn gear
+            const tripsSnapshot = _.uniqBy(
+                [
+                    ...tripsWithGearSnapshot.docs,
+                    ...tripsWithWornGearSnapshot.docs,
+                ],
+                'id',
+            );
+
+            const allUpdates = tripsSnapshot.map(async (doc) => {
+                const trip = doc.data() as Trip;
+
+                // delete gear from trip
+                delete trip.gears[gearId];
+
+                // delete worn gear from trip
+                delete trip.wornGears[gearId];
+
+                await doc.ref.update({
+                    ...trip,
+                    updated: FieldValue.serverTimestamp(),
+                });
+            });
+
+            return Promise.all(allUpdates);
+        })();
+
+        return Promise.all([deleteStoragePromise, updateTripsPromise]);
+    },
+);
+
+export const onTripUpdated = onDocumentUpdated(
     'trip/{tripId}',
     async (event) => {
         const tripId = event.params.tripId;
         const newTrip = event.data?.after.data();
         const oldTrip = event.data?.before.data();
 
-        if (!newTrip || !oldTrip) {
-            return null;
-        }
+        // 1. update trip share when trip is updated
+        const updateTripSharePromise = (async () => {
+            if (newTrip?.isPublished) {
+                // publish or re-publish trip share if trip is published
+                await publishTrip(tripId);
+                return;
+            }
+            if (oldTrip?.isPublished && !newTrip?.isPublished) {
+                // unpublish trip share if trip is unpublished
+                await unpublishTrip(tripId);
+                return;
+            }
+        })();
 
-        if (newTrip.bannerImage?.fileName === oldTrip.bannerImage?.fileName) {
-            return null;
-        }
+        // 2. when trip banner image is updated, delete the old image by old banner image file name
+        const deleteOldBannerImagePromise = (async () => {
+            if (
+                newTrip?.bannerImage?.fileName !==
+                oldTrip?.bannerImage?.fileName
+            ) {
+                if (oldTrip?.bannerImage?.fileName) {
+                    const oldFileName = oldTrip.bannerImage.fileName;
+                    const oldFilePath = `trip/${tripId}/${oldFileName}`;
+                    await admin.storage().bucket().file(oldFilePath).delete();
+                }
+            }
+        })();
 
-        if (oldTrip.bannerImage?.fileName) {
-            const oldFileName = oldTrip.bannerImage.fileName;
-            const oldFilePath = `trip/${tripId}/${oldFileName}`;
-            await admin.storage().bucket().file(oldFilePath).delete();
-        }
-
-        return null;
+        return Promise.all([
+            updateTripSharePromise,
+            deleteOldBannerImagePromise,
+        ]);
     },
 );
 
-// when trip is deleted, delete the storage path trip/{tripId}
-export const onTripDeletedDeleteTripStorage = onDocumentDeleted(
+export const onTripDeleted = onDocumentDeleted(
     'trip/{tripId}',
     async (event) => {
         const tripId = event.params.tripId;
-        const filePath = `trip/${tripId}`;
-        await admin.storage().bucket().deleteFiles({
-            prefix: filePath,
-        });
+
+        // 1. delete the storage path trip/{tripId}
+        const deleteStoragePromise = (async () => {
+            const filePath = `trip/${tripId}`;
+            await admin.storage().bucket().deleteFiles({
+                prefix: filePath,
+            });
+        })();
+
+        // 2. unpublish trip share when trip is deleted
+        const unpublishTripPromise = unpublishTrip(tripId);
+
+        return Promise.all([deleteStoragePromise, unpublishTripPromise]);
     },
 );
