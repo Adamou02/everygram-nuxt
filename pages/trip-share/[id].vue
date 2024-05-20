@@ -19,7 +19,7 @@
                 :consumables="consumablesInTrip"
             />
             <NuxtLink
-                to="/welcome"
+                to="/home"
                 class="block w-full mt-3"
                 @click="
                     () =>

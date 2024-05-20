@@ -9,6 +9,7 @@
     }
 
     --app-background-color: #{$eg-c-background};
+    --max-page-width: 1440px;
 }
 
 /* reset & normalize */
@@ -73,8 +74,17 @@ img {
     }
 }
 
+.container {
+    max-width: var(--max-page-width);
+    margin: auto;
+    padding: 16px;
+    @media (min-width: $lg) {
+        padding: 24px;
+    }
+}
+
 .page-container {
-    max-width: 1200px;
+    max-width: var(--max-page-width);
     min-height: 100vh;
     margin: auto;
     padding: 16px;

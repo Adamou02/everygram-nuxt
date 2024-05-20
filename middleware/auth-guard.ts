@@ -17,12 +17,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (user) {
             return navigateTo('/trips');
         } else {
-            return navigateTo('/welcome');
+            return navigateTo('/home');
         }
     }
 
     if (!user) {
-        return navigateTo('/welcome');
+        return navigateTo('/home');
     }
 
     if (

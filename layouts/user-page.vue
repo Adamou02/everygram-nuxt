@@ -1,5 +1,5 @@
 <template>
-    <AppHeader>
+    <AppHeader sticky>
         <template #navigation>
             <UserNavButtons />
         </template>

@@ -1,12 +1,26 @@
 <template>
-    <header class="app-header sticky top-0 border-bottom-1 border-200">
+    <header
+        :class="[
+            'app-header top-0 w-full',
+            {
+                sticky,
+                fixed,
+                absolute,
+                'bg-white border-bottom-1 border-200': !transparent,
+            },
+        ]"
+    >
         <div class="app-header__left">
             <slot name="left">
                 <!-- default show logo -->
                 <NuxtLink to="/">
                     <img
                         class="app-header__logo"
-                        src="/image/logo-horizontal.svg"
+                        :src="
+                            colorReverse
+                                ? '/image/logo-horizontal-white.svg'
+                                : '/image/logo-horizontal.svg'
+                        "
                         alt="App Logo"
                         height="24px"
                     />
@@ -25,6 +39,16 @@
     </header>
 </template>
 
+<script setup lang="ts">
+const props = defineProps<{
+    sticky?: boolean;
+    fixed?: boolean;
+    absolute?: boolean;
+    transparent?: boolean;
+    colorReverse?: boolean;
+}>();
+</script>
+
 <style lang="scss">
 @import '~/assets/theme/themes/mytheme/_variables.scss';
 @import '~/assets/theme/primeflex/core/_variables.scss';
@@ -35,7 +59,6 @@
     align-items: center;
     padding: 0 16px;
     grid-template-columns: auto 1fr;
-    background-color: $eg-c-bright;
     z-index: 1100; // higher than dropdown menu, lower than modal
 
     &__left {

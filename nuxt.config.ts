@@ -70,7 +70,7 @@ export default defineNuxtConfig({
         '~/assets/theme/eg-custom.scss', // everygram custom styles
     ],
     routeRules: {
-        '/welcome': { prerender: true },
+        '/home': { prerender: true },
         '/trip-share/**': { ssr: true },
 
         // pages that require authentication

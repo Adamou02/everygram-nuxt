@@ -3,7 +3,7 @@
         <div
             id="file-upload-drop-zone"
             :class="[
-                'flex flex-column gap-4 align-items-center justify-content-center text-center text-primary cursor-pointer w-full h-10rem border-dashed border-primary border-rounded-md p-5',
+                'flex flex-column gap-4 align-items-center justify-content-center text-center text-primary cursor-pointer w-full h-10rem border-dashed border-primary border-round-md p-5',
                 { hover: isHovering },
             ]"
             @dragover.prevent="onDragOver"

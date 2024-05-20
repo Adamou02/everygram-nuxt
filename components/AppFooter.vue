@@ -9,7 +9,7 @@
                 <img
                     class="app-footer__brand-icon"
                     src="/image/brand-icon.svg"
-                    alt="App Icon"
+                    alt="Brand Icon"
                 />
                 <div class="app-footer__greeting">
                     \ {{ $t('INFO_HELLO') }} /
