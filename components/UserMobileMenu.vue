@@ -93,6 +93,7 @@
                                 locale: localeToLabel(getCurrentLocale()),
                             })
                         "
+                        icon="pi pi-language"
                         text
                         @click="
                             () => {
@@ -101,16 +102,12 @@
                             }
                         "
                     >
-                        <template #icon>
-                            <span class="material-symbols-outlined mr-2"
-                                >language</span
-                            >
-                        </template>
                     </PrimeButton>
                     <PrimeButton
+                        :class="['text-left', 'user-mobile-menu__button']"
                         :label="$t('ACTION_SIGN_OUT')"
                         icon="pi pi-sign-out"
-                        outlined
+                        text
                         @click="onSignOut"
                     />
                 </div>

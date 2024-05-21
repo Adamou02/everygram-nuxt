@@ -37,7 +37,7 @@ const items = computed(() => [
         label: i18n.t('LABEL_LOCALE_CURRENT', {
             locale: localeToLabel(getCurrentLocale()),
         }),
-        icon: 'pi pi-globe',
+        icon: 'pi pi-language',
         command: () => {
             isOpenLocaleMenu.value = true;
         },
