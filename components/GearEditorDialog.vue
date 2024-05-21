@@ -223,7 +223,7 @@ const onSubmit = async () => {
             onCompleteCreateGear();
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_GEAR, {
                 gear_category: gearData.category,
-                gear_num: gears.value.length,
+                user_gear_num: gears.value.length,
             });
         }
     } catch (error) {

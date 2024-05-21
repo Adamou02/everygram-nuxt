@@ -24,9 +24,8 @@
                 @click="
                     () =>
                         analyticsUtils.log(
-                            constants.ANALYTICS_EVENTS
-                                .CLICK_TRIP_SHARE_PAGE_CTA,
-                            { trip_id: tripShare?.id },
+                            constants.ANALYTICS_EVENTS.CLICK_CTA_BUTTON,
+                            { trip_id: tripShare?.id, page_name: 'trip-share' },
                         )
                 "
             >

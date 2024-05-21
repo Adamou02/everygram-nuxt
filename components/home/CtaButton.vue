@@ -7,7 +7,15 @@
             :severity="severity"
             rounded
             :loading="isSigningIn"
-            @click="onSignInWithGoogle"
+            @click="
+                () => {
+                    onSignInWithGoogle();
+                    analyticsUtils.log(
+                        constants.ANALYTICS_EVENTS.CLICK_CTA_BUTTON,
+                        { page_name: 'home', container_name: containerName },
+                    );
+                }
+            "
         />
     </template>
     <template v-else>

@@ -1,8 +1,8 @@
 const ANALYTICS_EVENTS = {
     CHANGE_LOCALE: 'change_locale',
+    CLICK_CTA_BUTTON: 'click_cta_button',
     CLICK_FEEDBACK_BUTTON: 'click_feedback_button',
     CLICK_SIGN_IN_BUTTON: 'click_sign_in_button',
-    CLICK_TRIP_SHARE_PAGE_CTA: 'click_trip_share_page_cta',
     COMPLETE_IMPORT_GEARS: 'complete_import_gears',
     COPY_SHARE_TRIP_LINK: 'copy_share_trip_link',
     CREATE_CONSUMABLE: 'create_consumable',

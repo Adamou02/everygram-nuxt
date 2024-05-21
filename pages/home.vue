@@ -14,7 +14,7 @@
         </HomeBrandIconSection>
         <HomeTriangleLine />
     </div>
-    <div class="features">
+    <div class="key-features">
         <HomeTriangleConnectLine />
         <HomeKeyFeature image-src="/image/home-key-feature-1.png">
             <template #title>
@@ -57,7 +57,7 @@
                 quisque nunc. Id hendrerit sapien pellentesque augue quis
                 blandit.
             </p>
-            <HomeCtaButton severity="secondary" container-name="hero" />
+            <HomeCtaButton severity="secondary" container-name="key-features" />
         </HomeBrandIconSection>
         <HomeTriangleLine />
     </div>
@@ -84,7 +84,7 @@ onMounted(() => {
 .intro {
     background-color: $eg-brown-200;
 }
-.features {
+.key-features {
     background-color: $eg-brown-100;
 }
 </style>

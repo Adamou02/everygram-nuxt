@@ -124,12 +124,16 @@ declare global {
     type BrandData = { name: string; originalName?: string };
 
     type EventParamKey =
-        | 'sign_in_method'
-        | 'locale'
-        | 'gear_category'
         | 'consumable_category'
-        | 'gear_num'
-        | 'trip_num'
+        | 'container_name'
         | 'date_mode'
-        | 'trip_id';
+        | 'gear_category'
+        | 'import_gear_num'
+        | 'locale'
+        | 'page_name'
+        | 'sign_in_method'
+        | 'trip_id'
+        | 'user_trip_num'
+        | 'user_gear_num';
+    // archived: user_num, trip_num
 }

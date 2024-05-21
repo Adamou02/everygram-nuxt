@@ -240,9 +240,7 @@ const onFileSelected = async (file: File) => {
     });
     selectedGears.value = formattedGearsData.value;
     isFormatting.value = false;
-    analyticsUtils.log(constants.ANALYTICS_EVENTS.UPLOAD_IMPORT_GEARS_DATA, {
-        gear_num: importedGearRows.value.length,
-    });
+    analyticsUtils.log(constants.ANALYTICS_EVENTS.UPLOAD_IMPORT_GEARS_DATA);
 };
 
 const resetData = () => {
@@ -266,7 +264,7 @@ const onImportGears = async () => {
         await userGearsStore.createGears(gears);
         emit('close');
         analyticsUtils.log(constants.ANALYTICS_EVENTS.COMPLETE_IMPORT_GEARS, {
-            gear_num: gears.length,
+            import_gear_num: gears.length,
         });
     } catch (error) {
         console.error(error);

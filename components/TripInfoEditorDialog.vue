@@ -209,7 +209,7 @@ const onSubmit = async () => {
             onCompleteCreateTrip();
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_TRIP, {
                 date_mode: tripData.dateMode,
-                trip_num: trips.value.length,
+                user_trip_num: trips.value.length,
             });
         }
     } catch (error) {
