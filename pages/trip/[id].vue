@@ -342,7 +342,7 @@
         @complete-create="onCompleteCreateGearInTrip"
     />
     <TripInfoEditorDialog />
-    <ConsumableEditor :tripId="tripId" />
+    <ConsumableEditorDialog :tripId="tripId" />
 </template>
 
 <script setup lang="ts">

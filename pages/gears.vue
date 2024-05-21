@@ -144,7 +144,7 @@
             </div>
         </template>
     </EmptyState>
-    <GearEditorDialog />
+    <GearEditorDialog :hint="$t('INFO_EDIT_GEAR_SYNC_TO_TRIPS')" />
     <ImportGearsDialog
         :is-open="isOpenImportGearsDialog"
         @close="isOpenImportGearsDialog = false"

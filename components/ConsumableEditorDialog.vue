@@ -2,13 +2,20 @@
     <PrimeDialog
         :visible="isOpen"
         :header="
-            existingConsumable
+            editingConsumable
                 ? $t('ACTION_EDIT_CONSUMABLE')
                 : $t('ACTION_CREATE_CONSUMABLE')
         "
         modal
         class="w-full mx-2 max-w-20rem"
-        @update:visible="(value: boolean) => !value && $emit('cancel')"
+        @update:visible="
+            (value: boolean) => {
+                if (!value) {
+                    $emit('cancel');
+                    onCancelEditConsumable();
+                }
+            }
+        "
     >
         <template v-if="isOpen" #default>
             <FormField
@@ -21,7 +28,7 @@
                     class="w-full"
                     :minlength="constants.LIMIT.minNameLength"
                     :maxlength="constants.LIMIT.maxNameLength"
-                    :autofocus="!existingConsumable"
+                    :autofocus="!editingConsumable"
                     :invalid="vuelidate.name.$error"
                     @keypress.enter="onSubmit"
                 />
@@ -96,11 +103,16 @@
                 text
                 severity="secondary"
                 :disabled="isSaving"
-                @click="$emit('cancel')"
+                @click="
+                    () => {
+                        $emit('cancel');
+                        onCancelEditConsumable();
+                    }
+                "
             />
             <PrimeButton
                 :label="
-                    existingConsumable ? $t('ACTION_SAVE') : $t('ACTION_CREATE')
+                    editingConsumable ? $t('ACTION_SAVE') : $t('ACTION_CREATE')
                 "
                 :loading="isSaving"
                 @click="onSubmit()"
@@ -111,13 +123,11 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
-import { v4 as uuidv4 } from 'uuid';
+// @ts-ignore
+import { v4 as uuid } from 'uuid';
 
 const props = defineProps<{
-    isOpen: boolean;
     tripId: string;
-    existingConsumable: Consumable | null;
-    defaultCategory?: ConsumableCategory;
 }>();
 
 const emit = defineEmits<{
@@ -125,6 +135,20 @@ const emit = defineEmits<{
     'complete-edit': [consumable: Consumable];
     cancel: [];
 }>();
+
+const {
+    isAddingConsumable,
+    isEditingConsumable,
+    editingConsumable,
+    defaultConsumableCategory,
+    onCompleteCreateConsumable,
+    onCompleteEditConsumable,
+    onCancelEditConsumable,
+} = useEditConsumable();
+
+const isOpen = computed(
+    () => isAddingConsumable.value || isEditingConsumable.value,
+);
 
 const { consumableCategoryToLabel } = useLangUtils();
 const userTripsStore = useUserTripsStore();
@@ -156,20 +180,18 @@ const formRules = {
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-watch(
-    () => props.isOpen,
-    () => {
-        if (props.isOpen) {
-            formState.name =
-                props.existingConsumable?.name || initialFormState.name;
-            formState.weight =
-                props.existingConsumable?.weight || initialFormState.weight;
-            formState.category =
-                props.existingConsumable?.category || initialFormState.category;
-            vuelidate.value.$reset();
-        }
-    },
-);
+watch(isOpen, (newValue) => {
+    if (newValue) {
+        formState.name = editingConsumable.value?.name || initialFormState.name;
+        formState.weight =
+            editingConsumable.value?.weight || initialFormState.weight;
+        formState.category =
+            editingConsumable.value?.category ||
+            defaultConsumableCategory.value ||
+            initialFormState.category;
+        vuelidate.value.$reset();
+    }
+});
 
 const isSaving = ref<boolean>(false);
 const onSubmit = async () => {
@@ -179,7 +201,7 @@ const onSubmit = async () => {
     }
 
     const consumableData = {
-        id: props.existingConsumable?.id || uuidv4(),
+        id: editingConsumable.value?.id || uuid(),
         name: formState.name,
         weight: formState.weight || 0,
         category: formState.category || 'others',
@@ -187,19 +209,21 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
-        if (props.existingConsumable) {
+        if (editingConsumable.value) {
             await userTripsStore.updateConsumableInTrip({
                 tripId: props.tripId,
-                consumableId: props.existingConsumable.id,
+                consumableId: editingConsumable.value.id,
                 consumable: consumableData,
             });
             emit('complete-edit', consumableData);
+            onCompleteEditConsumable();
         } else {
             await userTripsStore.addConsumableToTrip({
                 tripId: props.tripId,
                 consumable: consumableData,
             });
             emit('complete-create', consumableData);
+            onCompleteCreateConsumable();
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_CONSUMABLE, {
                 consumable_category: consumableData.category,
             });

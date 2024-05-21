@@ -36,7 +36,8 @@ import {
     uploadBytes,
     getDownloadURL,
 } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
+// @ts-ignore
+import { v4 as uuid } from 'uuid';
 
 const props = defineProps<{
     path: string;
@@ -73,7 +74,7 @@ const onSelectFile = async (event: Event) => {
         });
 
         // upload image to storage with uuid as file name
-        const fileName = uuidv4();
+        const fileName = uuid();
         const fileRef = storageRef(storage, `${props.path}/${fileName}`);
         const snapshot = await uploadBytes(fileRef, formattedFile);
         const downloadUrl = await getDownloadURL(snapshot.ref);
