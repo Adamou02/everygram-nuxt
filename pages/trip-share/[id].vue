@@ -79,11 +79,18 @@
         </template>
     </TripPageLayout>
     <EmptyState
+        v-else
         :title="$t('INFO_TRIP_NOT_FOUND')"
         :description="$t('INFO_TRIP_NOT_FOUND_DESC')"
         image-src="/image/illustration/illu-camping.svg"
-        v-else
-    />
+    >
+        <template #actions>
+            <!-- back to home -->
+            <NuxtLink to="/home">
+                <PrimeButton :label="$t('ACTION_BACK_TO_HOME')" />
+            </NuxtLink>
+        </template>
+    </EmptyState>
 </template>
 
 <script setup lang="ts">
@@ -145,7 +152,7 @@ useSeoMeta({
     ogTitle: metaOgTitle,
     description: metaDescription,
     ogDescription: metaDescription,
-    ogImage: tripShare.bannerImage
+    ogImage: tripShare?.bannerImage
         ? tripShare.bannerImage.url
         : defaultBannerImageUrl,
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',

@@ -2,6 +2,7 @@
     "ACTION_ADD_FROM_GEARS": "從裝備庫加入",
     "ACTION_ADD": "新增",
     "ACTION_ARCHIVE": "封存",
+    "ACTION_BACK_TO_HOME": "回到首頁",
     "ACTION_BACK_TO_TRIPS": "返回行程列表",
     "ACTION_BACK": "返回",
     "ACTION_CANCEL": "取消",
