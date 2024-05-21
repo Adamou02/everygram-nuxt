@@ -104,18 +104,13 @@ const tripShareSnap = await getDoc(tripShareRef);
 const tripShare: TripShare | null = (tripShareSnap.data() as TripShare) || null;
 const gearsInTrip: GearWithQuantity[] = _values(tripShare?.gears || []);
 const wornGearsInTrip: GearWithQuantity[] = _values(tripShare?.wornGears || []);
-const consumablesInTrip: ConsumableWithIndex[] = tripShare
-    ? _map(tripShare.consumables || [], (consumable, index) => ({
-          ...consumable,
-          index,
-      }))
-    : [];
+const consumablesInTrip: Consumable[] = _values(tripShare?.consumables || []);
 const gearsWeight = _sumBy(
     gearsInTrip,
     (gear) => (+gear.weight || 0) * gear.quantity,
 );
 const consumablesWeight = _sumBy(
-    tripShare?.consumables || [],
+    consumablesInTrip,
     (consumable) => +consumable.weight || 0,
 );
 

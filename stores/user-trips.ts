@@ -170,11 +170,10 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             if (!trip) {
                 throw 'fail to add consumable to trip, trip not found';
             }
-            const tripConsumables = trip.consumables || [];
             await updateTrip({
                 id: tripId,
                 tripData: {
-                    consumables: [...tripConsumables, consumable],
+                    [`consumables.${consumable.id}`]: consumable,
                 },
             });
         } catch (error) {
@@ -185,11 +184,11 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
 
     const updateConsumableInTrip = async ({
         tripId,
-        consumableIndex,
+        consumableId,
         consumable,
     }: {
         tripId: string;
-        consumableIndex: number;
+        consumableId: string;
         consumable: Consumable;
     }) => {
         try {
@@ -197,15 +196,13 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
             if (!trip) {
                 throw 'fail to update consumable in trip, trip not found';
             }
-            const newConsumables = [...(trip.consumables || [])];
-            if (consumableIndex > newConsumables.length - 1) {
-                throw 'fail to update consumable in trip, consumable index out of bound';
+            if (!trip.consumables[consumableId]) {
+                throw 'fail to update consumable in trip, consumable not found';
             }
-            newConsumables[consumableIndex] = consumable;
             await updateTrip({
                 id: tripId,
                 tripData: {
-                    consumables: newConsumables,
+                    [`consumables.${consumable.id}`]: consumable,
                 },
             });
         } catch (error) {
@@ -216,25 +213,23 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
 
     const deleteConsumableFromTrip = async ({
         tripId,
-        consumableIndex,
+        consumableId,
     }: {
         tripId: string;
-        consumableIndex: number;
+        consumableId: string;
     }) => {
         try {
             const trip = getTripById.value(tripId);
             if (!trip) {
                 throw 'fail to remove consumable from trip, trip not found';
             }
-            const newConsumables = [...(trip.consumables || [])];
-            if (consumableIndex > newConsumables.length - 1) {
-                throw 'fail to remove consumable from trip, consumable index out of bound';
+            if (!trip.consumables[consumableId]) {
+                throw 'fail to remove consumable from trip, consumable not found';
             }
-            newConsumables.splice(consumableIndex, 1);
             await updateTrip({
                 id: tripId,
                 tripData: {
-                    consumables: newConsumables,
+                    [`consumables.${consumableId}`]: deleteField(),
                 },
             });
         } catch (error) {

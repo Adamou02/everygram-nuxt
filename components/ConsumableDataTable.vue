@@ -76,14 +76,14 @@
                             icon: 'pi pi-pencil',
                             label: $t('ACTION_EDIT'),
                             command: () => {
-                                emit('consumable-edit', data.index);
+                                emit('consumable-edit', data);
                             },
                         },
                         {
                             icon: 'pi pi-times',
                             label: $t('ACTION_DELETE'),
                             command: () => {
-                                emit('consumable-delete', data.index);
+                                emit('consumable-delete', data);
                             },
                         },
                     ]"
@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    consumables?: ConsumableWithIndex[];
+    consumables?: Consumable[];
     readonly?: boolean;
 }>();
 
@@ -104,11 +104,11 @@ const sortedConsumables = computed(() => {
 });
 
 const emit = defineEmits<{
-    'consumable-edit': [index: number];
-    'consumable-delete': [index: number];
+    'consumable-edit': [consumable: Consumable];
+    'consumable-delete': [consumable: Consumable];
     'consumable-cell-edit-complete': [
         {
-            data: ConsumableWithIndex;
+            data: Consumable;
             newValue: any;
             field: string;
         },

@@ -74,12 +74,12 @@ const consumableWeightByCategory = computed(() =>
     ),
 );
 const consumablesWeightItems = computed<WeightBarChartSubItem[]>(() =>
-    Object.entries(consumableWeightByCategory.value).map(
-        ([category, weight]) => ({
+    Object.entries(consumableWeightByCategory.value)
+        .map(([category, weight]) => ({
             label: consumableCategoryToLabel(category as ConsumableCategory),
             weight,
-        }),
-    ),
+        }))
+        .sort((a, b) => b.weight - a.weight),
 );
 const consumablesWeight = computed(() => _sumBy(props.consumables, 'weight'));
 

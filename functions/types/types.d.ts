@@ -66,7 +66,7 @@ export type Trip = {
     role: Record<string, TripRole>;
     gears: Record<string, TripGear>;
     wornGears: Record<string, TripGear>;
-    consumables: Consumable[];
+    consumables: Record<string, Consumable>;
     isPublished?: boolean;
     bannerImage?: {
         url: string;
@@ -100,12 +100,12 @@ export type ConsumableCategory =
     | 'medical'
     | 'others';
 export type Consumable = {
+    id: string;
     name: string;
     weight: number; // grams
     category: ConsumableCategory;
 };
 export type EditingConsumable = Partial<Consumable>;
-export type ConsumableWithIndex = Consumable & { index: number };
 
 export type WeightBarChartItem = {
     weight: number;

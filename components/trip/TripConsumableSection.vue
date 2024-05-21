@@ -39,7 +39,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     title: string;
-    consumables: ConsumableWithIndex[];
+    consumables: Consumable[];
 }>();
 
 const consumablesByCategory = computed(() =>

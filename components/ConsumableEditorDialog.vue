@@ -111,11 +111,12 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core';
+import { v4 as uuidv4 } from 'uuid';
 
 const props = defineProps<{
     isOpen: boolean;
     tripId: string;
-    consumableIndex: number | null;
+    existingConsumable: Consumable | null;
     defaultCategory?: ConsumableCategory;
 }>();
 
@@ -128,16 +129,6 @@ const emit = defineEmits<{
 const { consumableCategoryToLabel } = useLangUtils();
 const userTripsStore = useUserTripsStore();
 const trip = computed(() => userTripsStore.getTripById(props.tripId));
-
-const existingConsumable = computed<Consumable | null>(() => {
-    return (
-        (isNumber(props.consumableIndex) &&
-            trip.value &&
-            trip.value.consumables &&
-            trip.value.consumables[props.consumableIndex]) ||
-        null
-    );
-});
 
 // form state and validation rules
 const initialFormState = {
@@ -170,11 +161,11 @@ watch(
     () => {
         if (props.isOpen) {
             formState.name =
-                existingConsumable.value?.name || initialFormState.name;
+                props.existingConsumable?.name || initialFormState.name;
             formState.weight =
-                existingConsumable.value?.weight || initialFormState.weight;
+                props.existingConsumable?.weight || initialFormState.weight;
             formState.category =
-                existingConsumable.value?.category || initialFormState.category;
+                props.existingConsumable?.category || initialFormState.category;
             vuelidate.value.$reset();
         }
     },
@@ -188,6 +179,7 @@ const onSubmit = async () => {
     }
 
     const consumableData = {
+        id: props.existingConsumable?.id || uuidv4(),
         name: formState.name,
         weight: formState.weight || 0,
         category: formState.category || 'others',
@@ -195,10 +187,10 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
-        if (isNumber(props.consumableIndex) && existingConsumable) {
+        if (props.existingConsumable) {
             await userTripsStore.updateConsumableInTrip({
                 tripId: props.tripId,
-                consumableIndex: props.consumableIndex,
+                consumableId: props.existingConsumable.id,
                 consumable: consumableData,
             });
             emit('complete-edit', consumableData);

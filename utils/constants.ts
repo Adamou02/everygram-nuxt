@@ -33,7 +33,7 @@ const EMPTY_TRIP_DATA: Omit<Trip, 'id'> = {
     role: {},
     gears: {},
     wornGears: {},
-    consumables: [],
+    consumables: {},
 };
 
 const WEARABLE_GEAR_CATEGORIES: GearCategory[] = [

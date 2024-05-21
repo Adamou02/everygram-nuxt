@@ -104,9 +104,9 @@ const publishTrip = async (tripId: string) => {
         (acc, gear) => acc + gear.weight * gear.quantity,
         0,
     );
-    const consumablesWeight = trip.consumables.reduce(
-        (acc, consumable) => acc + consumable.weight,
-        0,
+    const consumablesWeight = _.sumBy(
+        _.values(trip.consumables),
+        (consumable) => +consumable.weight || 0,
     );
     const packWeight = baseWeight + consumablesWeight;
     const wornWeight = Object.values(tripShareWornGears).reduce(

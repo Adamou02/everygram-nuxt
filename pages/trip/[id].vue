@@ -386,13 +386,8 @@ const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
 );
 
 // consumables
-const consumablesInTrip = computed<ConsumableWithIndex[]>(() =>
-    trip.value
-        ? _map(trip.value.consumables || [], (consumable, index) => ({
-              ...consumable,
-              index,
-          }))
-        : [],
+const consumablesInTrip = computed<Consumable[]>(() =>
+    trip.value ? _values(trip.value.consumables) : [],
 );
 
 // for gear selector
@@ -472,7 +467,7 @@ const onGearCellEditComplete = async ({
 
 // for edit consumable cell
 const onConsumableCellEditComplete = async (e: {
-    data: ConsumableWithIndex;
+    data: Consumable;
     newValue: any;
     field: string;
 }) => {
@@ -482,9 +477,9 @@ const onConsumableCellEditComplete = async (e: {
         case 'weight':
             await userTripsStore.updateConsumableInTrip({
                 tripId,
-                consumableIndex: data.index,
+                consumableId: data.id,
                 consumable: {
-                    ...consumablesInTrip.value[data.index],
+                    ...data,
                     [field]: newValue,
                 },
             });
@@ -495,23 +490,23 @@ const onConsumableCellEditComplete = async (e: {
 // consumables
 const { onCreateConsumable, onEditConsumable } = useEditConsumable();
 
-const onDeleteConsumable = async (consumableIndex: number) => {
+const onDeleteConsumable = async (consumable: Consumable) => {
     await userTripsStore.deleteConsumableFromTrip({
         tripId,
-        consumableIndex,
+        consumableId: consumable.id,
     });
 };
 
 const { confirmDeleteDialog } = useUiUitls();
-const confirmDeleteConsumable = (consumableIndex: number) => {
+const confirmDeleteConsumable = (consumable: Consumable) => {
     confirmDeleteDialog({
         message: i18n.t('MESSAGE_CONFIRM_DELETE_CONSUMABLE', {
-            consumableName: consumablesInTrip.value[consumableIndex].name,
+            consumableName: consumable.name,
         }),
         header: i18n.t('ACTION_DELETE_CONSUMABLE'),
         toastSummary: i18n.t('FEEDBACK_CONSUMABLE_DELETED'),
         onAccept: async () => {
-            await onDeleteConsumable(consumableIndex);
+            await onDeleteConsumable(consumable);
         },
     });
 };

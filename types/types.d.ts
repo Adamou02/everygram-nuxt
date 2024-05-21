@@ -67,7 +67,7 @@ declare global {
         role: Record<string, TripRole>;
         gears: Record<string, TripGear>;
         wornGears: Record<string, TripGear>;
-        consumables: Consumable[];
+        consumables: Record<string, Consumable>;
         isPublished?: boolean;
         bannerImage?: {
             url: string;
@@ -101,12 +101,12 @@ declare global {
         | 'medical'
         | 'others';
     type Consumable = {
+        id: string;
         name: string;
         weight: number; // grams
         category: ConsumableCategory;
     };
     type EditingConsumable = Partial<Consumable>;
-    type ConsumableWithIndex = Consumable & { index: number };
 
     type WeightBarChartSubItem = {
         weight: number;

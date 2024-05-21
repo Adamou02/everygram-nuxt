@@ -2,7 +2,7 @@
     <ConsumableEditorDialog
         :is-open="isAddingConsumable || isEditingConsumable"
         :trip-id="tripId"
-        :consumable-index="editingConsumableIndex"
+        :existingConsumable="editingConsumable"
         :default-category="defaultConsumableCategory"
         @complete-create="
             (consumable) => {
@@ -37,7 +37,7 @@ const emit = defineEmits<{
 const {
     isAddingConsumable,
     isEditingConsumable,
-    editingConsumableIndex,
+    editingConsumable,
     defaultConsumableCategory,
     onCompleteCreateConsumable,
     onCompleteEditConsumable,
