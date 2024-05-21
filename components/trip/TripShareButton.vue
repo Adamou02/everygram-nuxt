@@ -6,10 +6,15 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
-                icon="pi pi-share-alt"
                 :label="$t('ACTION_SHARE')"
                 @click="toggle"
-            />
+            >
+                <template #icon>
+                    <span class="material-symbols-outlined mr-2"
+                        >ios_share</span
+                    >
+                </template>
+            </PrimeButton>
             <PrimeOverlayPanel
                 ref="overlayPanel"
                 class="border-round-lg p-2 w-25rem"
@@ -23,10 +28,13 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
-                icon="pi pi-share-alt"
                 aria-haspopup="true"
                 @click="isOpenBottomMenu = true"
-            />
+            >
+                <template #icon>
+                    <span class="material-symbols-outlined">ios_share</span>
+                </template></PrimeButton
+            >
             <BottomSheet
                 :isOpen="isOpenBottomMenu"
                 @close="isOpenBottomMenu = false"
