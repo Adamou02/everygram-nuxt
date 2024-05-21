@@ -22,6 +22,7 @@ const props = defineProps<{
 <style lang="scss">
 .category-avatar {
     display: flex;
+    flex: 0 0 auto; // avoid shrinking
     justify-content: center;
     align-items: center;
     border-radius: 50%;
