@@ -60,7 +60,7 @@ const TRIP_DATE_MODE: Record<string, TripDateMode> = {
 };
 
 const DEFAULT_TRIP_BANNER_IMAGE_PATH = '/image/illustration/illu-mountains.jpg';
-const SITE_DOMAIN = 'https://everygram.netlify.app'; // to be updated
+const SITE_DOMAIN = 'https://everygram.app';
 
 export default {
     ROLES,

@@ -21,7 +21,7 @@ const props = defineProps<{
     background-position: center center;
     height: 160px;
     &--reverse {
-        transform: rotateX(180deg);
+        transform: rotateY(180deg);
     }
 }
 </style>

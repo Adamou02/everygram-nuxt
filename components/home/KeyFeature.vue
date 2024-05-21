@@ -18,7 +18,7 @@
                     <h2 class="text-3xl lg:text-5xl mb-5">
                         <slot name="title" />
                     </h2>
-                    <p class="text-700 text-lg">
+                    <p class="text-700 text-lg line-height-3">
                         <slot name="description" />
                     </p>
                 </div>

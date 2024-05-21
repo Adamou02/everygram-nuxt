@@ -1,37 +1,51 @@
 <template>
-    <div class="hero w-full">
-        <div class="grid grid-nogutter h-full lg:flex-row-reverse">
-            <div class="col-12 lg:col-offset-1 lg:col-6">
-                <div class="hero__img" />
-            </div>
-            <div class="col-12 lg:col-offset-1 lg:col-4">
+    <div class="hero w-full relative">
+        <div
+            class="hero__img absolute top-0 right-0 left-0 bottom-50 lg:left-50 lg:bottom-0"
+        ></div>
+        <div class="container h-full">
+            <div class="grid h-full align-items-end lg:align-items-stretch">
                 <div
-                    class="h-full flex flex-column justify-content-center gap-4 lg:gap-6 py-3 px-6 lg:py-0 lg:px-0"
+                    class="col-11 col-offset-1 lg:col-4 lg:h-full"
+                    style="height: 50%"
                 >
-                    <h1 class="text-4xl lg:text-6xl text-white">
-                        Count every gram, <br />
-                        every gram counts.
-                    </h1>
-                    <div class="flex flex-column align-items-start gap-4">
-                        <HomeCtaButton
-                            severity="contrast"
-                            rounded
-                            container-name="hero"
-                        />
-                        <PrimeButton
-                            severity="contrast"
-                            rounded
-                            outlined
-                            label="See Features"
-                            icon="pi pi-arrow-down"
-                            icon-pos="left"
-                        />
+                    <div
+                        class="h-full flex flex-column justify-content-center gap-4 lg:gap-6"
+                    >
+                        <h1
+                            class="hero__slogan text-4xl lg:text-6xl text-white"
+                        >
+                            {{ $t('APP_SLOGAN') }}
+                        </h1>
+                        <div class="flex flex-column align-items-start gap-4">
+                            <HomeCtaButton
+                                severity="contrast"
+                                rounded
+                                container-name="hero"
+                            />
+                            <PrimeButton
+                                severity="contrast"
+                                rounded
+                                outlined
+                                size="large"
+                                :label="$t('ACTION_SEE_KEY_FEATURES')"
+                                icon="pi pi-arrow-down"
+                                icon-pos="left"
+                                @click="() => emit('see-key-features')"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+const emit = defineEmits<{
+    'see-key-features': [];
+}>();
+</script>
 
 <style lang="scss" scoped>
 @import '~/assets/theme/themes/mytheme/_variables.scss';
@@ -40,18 +54,20 @@
 
 .hero {
     background-color: $eg-c-primary;
+    height: 600px;
     &__img {
-        height: 300px;
         background-image: url(/image/illustration/home-hero-1x.jpg);
         background-position: bottom center;
-        background-repeat: no-repeat;
         background-size: cover;
+        background-repeat: no-repeat;
 
         @media (min-width: $lg) {
-            height: 600px;
             background-image: url(/image/illustration/home-hero-2x.jpg);
             background-position: left center;
         }
+    }
+    &__slogan {
+        white-space: pre-line;
     }
 }
 </style>
