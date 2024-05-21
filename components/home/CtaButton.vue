@@ -5,6 +5,7 @@
             icon="pi pi-arrow-right"
             icon-pos="right"
             :severity="severity"
+            rounded
             :loading="isSigningIn"
             @click="onSignInWithGoogle"
         />
@@ -15,6 +16,7 @@
                 icon="pi pi-arrow-right"
                 icon-pos="right"
                 :severity="severity"
+                rounded
                 :label="$t('ACTION_START_USING_EVERYGRAM')"
             />
         </NuxtLink>

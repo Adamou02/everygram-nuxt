@@ -83,43 +83,43 @@ $plainButtonActiveBgColor: #dee2e6;
 
 /// Background of a secondary button
 /// @group button
-$secondaryButtonBg: #607d8b;
+$secondaryButtonBg: $secondaryColor;
 
 /// Text color of a secondary button
 /// @group button
-$secondaryButtonTextColor: #ffffff;
+$secondaryButtonTextColor: $secondaryTextColor;
 
 /// Border of a secondary button
 /// @group button
-$secondaryButtonBorder: 1px solid #607d8b;
+$secondaryButtonBorder: 1px solid $secondaryColor;
 
 /// Background of a secondary button in hover state
 /// @group button
-$secondaryButtonHoverBg: #546e7a;
+$secondaryButtonHoverBg: $secondaryDarkColor;
 
 /// Text color of a secondary button in hover state
 /// @group button
-$secondaryButtonTextHoverColor: #ffffff;
+$secondaryButtonTextHoverColor: $secondaryTextColor;
 
 /// Border color of a secondary button in hover state
 /// @group button
-$secondaryButtonHoverBorderColor: #546e7a;
+$secondaryButtonHoverBorderColor: $secondaryDarkColor;
 
 /// Background of a secondary button in pressed state
 /// @group button
-$secondaryButtonActiveBg: #455a64;
+$secondaryButtonActiveBg: $secondaryDarkerColor;
 
 /// Text color of a secondary button in pressed state
 /// @group button
-$secondaryButtonTextActiveColor: #ffffff;
+$secondaryButtonTextActiveColor: $secondaryTextColor;
 
 /// Border color of a secondary button in pressed state
 /// @group button
-$secondaryButtonActiveBorderColor: #455a64;
+$secondaryButtonActiveBorderColor: $secondaryDarkerColor;
 
 /// Box shadow of a secondary button in focused state
 /// @group button
-$secondaryButtonFocusShadow: 0 0 0 0.2rem #b0bec5;
+$secondaryButtonFocusShadow: 0 0 0 0.2rem lighten($secondaryButtonBg, 35%);
 
 /// Background of an info button
 /// @group button
@@ -320,6 +320,46 @@ $dangerButtonActiveBorderColor: #d32f2f;
 /// Box shadow of a danger button in focused state
 /// @group button
 $dangerButtonFocusShadow: 0 0 0 0.2rem lighten($dangerButtonBg, 35%);
+
+/// Background of a contrast button
+/// @group button
+$contrastButtonBg: $contrastColor;
+
+/// Text color of a contrast button
+/// @group button
+$contrastButtonTextColor: $contrastTextColor;
+
+/// Border of a contrast button
+/// @group button
+$contrastButtonBorder: 1px solid $contrastColor;
+
+/// Background of a contrast button in hover state
+/// @group button
+$contrastButtonHoverBg: $contrastDarkColor;
+
+/// Text color of a contrast button in hover state
+/// @group button
+$contrastButtonTextHoverColor: $contrastTextColor;
+
+/// Border color of a contrast button in hover state
+/// @group button
+$contrastButtonHoverBorderColor: $contrastDarkColor;
+
+/// Background of a contrast button in pressed state
+/// @group button
+$contrastButtonActiveBg: $contrastDarkerColor;
+
+/// Text color of a contrast button in pressed state
+/// @group button
+$contrastButtonTextActiveColor: $contrastTextColor;
+
+/// Border color of a contrast button in pressed state
+/// @group button
+$contrastButtonActiveBorderColor: $contrastDarkerColor;
+
+/// Box shadow of a contrast button in focused state
+/// @group button
+$contrastButtonFocusShadow: 0 0 0 0.2rem lighten($contrastButtonBg, 35%);
 
 /// Text color of a link button
 /// @group button

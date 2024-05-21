@@ -15,10 +15,13 @@
                     <div class="flex flex-column align-items-start gap-4">
                         <HomeCtaButton
                             severity="contrast"
+                            rounded
                             container-name="hero"
                         />
                         <PrimeButton
                             severity="contrast"
+                            rounded
+                            outlined
                             label="See Features"
                             icon="pi pi-arrow-down"
                             icon-pos="left"
