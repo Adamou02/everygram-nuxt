@@ -1,6 +1,6 @@
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
-import { FieldPath, FieldValue } from 'firebase-admin/firestore';
+import { FieldValue } from 'firebase-admin/firestore';
 import {
     onDocumentDeleted,
     onDocumentUpdated,
@@ -45,28 +45,20 @@ const publishTrip = async (tripId: string) => {
         return;
     }
 
-    // get all gear Id from trip
-    const gearIds = _.uniq([
-        ...Object.keys(trip.gears),
-        ...Object.keys(trip.wornGears),
-    ]);
-    const gearMap: Record<string, Gear> = {};
-
-    if (gearIds.length) {
-        // read gears data by gearIds from firestore
-        const gearsSnapshot = await admin
-            .firestore()
-            .collection('gear')
-            .where(FieldPath.documentId(), 'in', gearIds)
-            .get();
-        gearsSnapshot.docs.forEach((doc) => {
-            gearMap[doc.id] = {
-                id: doc.id,
-                ...doc.data(),
-            } as Gear;
-        });
+    // get owner's user gears
+    const ownerGearsSnapshot = await admin
+        .firestore()
+        .collection('userGears')
+        .doc(ownerUid)
+        .get();
+    const userGearsData = ownerGearsSnapshot.data();
+    if (!userGearsData) {
+        logger.error('Owner gears not found.');
+        return;
     }
+    const gearMap = userGearsData.gears as Record<string, Gear>;
 
+    // combine user's gears with trip's gears and worn gears = gears with quantity
     const tripShareGears: Record<string, GearWithQuantity> = Object.entries(
         trip.gears,
     ).reduce(
@@ -82,7 +74,6 @@ const publishTrip = async (tripId: string) => {
         },
         {} as Record<string, GearWithQuantity>,
     );
-
     const tripShareWornGears: Record<string, GearWithQuantity> = Object.entries(
         trip.wornGears,
     ).reduce(
