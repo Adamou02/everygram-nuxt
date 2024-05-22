@@ -204,7 +204,10 @@
             </TripConsumableSection>
 
             <!-- worn gears -->
-            <TripGearSection :title="$t('LABEL_WORN')" :gears="wornGearsInTrip">
+            <TripGearSection
+                :title="$t('LABEL_WORN_GEAR')"
+                :gears="wornGearsInTrip"
+            >
                 <template #header-actions>
                     <ActionButtonsGroup
                         type="text"

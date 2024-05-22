@@ -65,7 +65,10 @@
             </TripConsumableSection>
 
             <!-- worn gears -->
-            <TripGearSection :title="$t('LABEL_WORN')" :gears="wornGearsInTrip">
+            <TripGearSection
+                :title="$t('LABEL_WORN_GEAR')"
+                :gears="wornGearsInTrip"
+            >
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"

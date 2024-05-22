@@ -100,7 +100,14 @@ const props = defineProps<{
 }>();
 
 const sortedConsumables = computed(() => {
-    return props.consumables?.sort((a, b) => b.weight - a.weight) ?? [];
+    return (
+        props.consumables?.sort(
+            (a, b) =>
+                b.weight - a.weight ||
+                (b.name < a.name ? 1 : -1) ||
+                (b.id < a.id ? 1 : -1),
+        ) ?? []
+    );
 });
 
 const emit = defineEmits<{

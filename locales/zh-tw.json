@@ -163,7 +163,6 @@
     "LABEL_WEIGHT": "重量",
     "LABEL_WORN_GEARS": "穿著物品",
     "LABEL_WORN_WEIGHT": "穿著重量",
-    "LABEL_WORN": "穿著",
     "MESSAGE_CONFIRM_DELETE_CONSUMABLE": "你確定要刪除「{consumableName}」嗎？",
     "MESSAGE_CONFIRM_DELETE_GEAR": "你確定要刪除「{gearName}」嗎？\n刪除的裝備將會從所有行程中移除！",
     "MESSAGE_CONFIRM_DELETE_TRIP": "你確定要刪除「{tripName}」嗎？",
