@@ -66,7 +66,7 @@
 
             <!-- worn gears -->
             <TripGearSection
-                :title="$t('LABEL_WORN_GEAR')"
+                :title="$t('LABEL_WORN_GEARS')"
                 :gears="wornGearsInTrip"
             >
                 <template #category-body="{ gears }">
