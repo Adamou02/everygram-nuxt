@@ -29,6 +29,7 @@
             </EmptyState>
             <GearSelectDataTable
                 v-else
+                :show-photo="true"
                 :selectableGears="selectableGears"
                 :selectedGears="selectedGears"
                 dataKey="id"

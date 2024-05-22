@@ -7,6 +7,11 @@
         class="p-datatable-hide-thead"
     >
         <!-- desktop -->
+        <PrimeColumn field="photo" :header="$t('LABEL_PHOTO')" class="w-3rem">
+            <template #body="{ data }">
+                <GearPhoto class="w-3rem h-3rem" :gear="data" />
+            </template>
+        </PrimeColumn>
         <PrimeColumn
             field="name"
             :header="$t('LABEL_NAME')"

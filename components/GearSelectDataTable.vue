@@ -11,6 +11,17 @@
         class="select-none"
     >
         <PrimeColumn selectionMode="multiple" />
+        <!-- hide photo on mobile due to limited space -->
+        <PrimeColumn
+            v-if="showPhoto"
+            field="photo"
+            :header="$t('LABEL_PHOTO')"
+            class="hide-in-mobile w-3rem"
+        >
+            <template #body="{ data }">
+                <GearPhoto class="w-3rem h-3rem" :gear="data" />
+            </template>
+        </PrimeColumn>
         <PrimeColumn field="name" :header="$t('LABEL_NAME')" />
         <PrimeColumn
             field="weight"
@@ -57,6 +68,7 @@ const props = defineProps<{
     selectableGears: T[];
     selectedGears: T[];
     dataKey: string;
+    showPhoto?: boolean;
 }>();
 const emit = defineEmits<{
     update: [selectedGears: T[]];
