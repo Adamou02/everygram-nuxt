@@ -1,7 +1,7 @@
-import { getDoc, setDoc, doc, getFirestore } from 'firebase/firestore';
+import { getDoc, setDoc, doc } from 'firebase/firestore';
 
 export const useUserMemberStore = defineStore('userMemberStore', () => {
-    const db = getFirestore();
+    const db = firebaseUtils.getFirestoreDB();
     const { $i18n } = useNuxtApp();
     const member = ref<Member | null>();
     const isFirstFetching = ref(true);

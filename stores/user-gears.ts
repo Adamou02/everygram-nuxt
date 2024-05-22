@@ -6,18 +6,15 @@ import {
     updateDoc,
     deleteDoc,
     onSnapshot,
-    getFirestore,
     serverTimestamp,
     writeBatch,
     setDoc,
     deleteField,
-    // connectFirestoreEmulator,
 } from 'firebase/firestore';
 import type { DocumentReference } from 'firebase/firestore';
 
 export const useUserGearsStore = defineStore('userGearsStore', () => {
-    const db = getFirestore();
-    // connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    const db = firebaseUtils.getFirestoreDB();
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
     const gearCollectionRef = collection(db, 'gear');
