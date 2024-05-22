@@ -11,6 +11,11 @@ declare global {
 
     type CategoryData = { icon: string; color: string };
 
+    type StorageFile = {
+        url: string;
+        fileName: string;
+    };
+
     type GearRole = 'owner' | 'co-owner';
     type GearCategory =
         | 'accessories'
@@ -42,6 +47,7 @@ declare global {
             | 'other';
         created?: Timestamp;
         updated?: Timestamp;
+        photo?: StorageFile;
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };
@@ -69,10 +75,7 @@ declare global {
         wornGears: Record<string, TripGear>;
         consumables: Record<string, Consumable>;
         isPublished?: boolean;
-        bannerImage?: {
-            url: string;
-            fileName: string;
-        };
+        bannerImage?: StorageFile;
     };
     type EditingTrip = Partial<Trip>;
 

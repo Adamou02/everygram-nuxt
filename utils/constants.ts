@@ -49,10 +49,17 @@ const LIMIT = {
     minWeight: 0,
     maxWeight: 100000,
     minNameLength: 1,
-    maxNameLength: 50,
+    maxNameLength: 100,
     imageWidth: 1920,
     imageHeight: 1080,
     importLimit: 200,
+    gearPhotoWidth: 200,
+    gearPhotoHeight: 200,
+};
+
+const STORAGE_PATH = {
+    GEAR: 'gear',
+    TRIP: 'trip',
 };
 
 const TRIP_DATE_MODE: Record<string, TripDateMode> = {
@@ -81,4 +88,5 @@ export default {
     DEFAULT_TRIP_BANNER_IMAGE_PATH,
     SITE_DOMAIN,
     ANALYTICS_EVENTS,
+    STORAGE_PATH,
 };

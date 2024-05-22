@@ -10,6 +10,11 @@ export type Member = {
 
 export type CategoryData = { icon: string; color: string };
 
+export type StorageFile = {
+    url: string;
+    fileName: string;
+};
+
 export type GearRole = 'owner' | 'co-owner';
 export type GearCategory =
     | 'accessories'
@@ -41,6 +46,7 @@ export type Gear = {
         | 'other';
     created?: Timestamp;
     updated?: Timestamp;
+    photo?: StorageFile;
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };
@@ -68,10 +74,7 @@ export type Trip = {
     wornGears: Record<string, TripGear>;
     consumables: Record<string, Consumable>;
     isPublished?: boolean;
-    bannerImage?: {
-        url: string;
-        fileName: string;
-    };
+    bannerImage?: StorageFile;
 };
 export type EditingTrip = Partial<Trip>;
 

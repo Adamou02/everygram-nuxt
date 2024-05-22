@@ -13,7 +13,7 @@
             <TripHeader :trip="trip">
                 <template #banner-actions>
                     <ImageUpload
-                        :path="`trip/${trip.id}`"
+                        :path="`${constants.STORAGE_PATH.TRIP}/${trip.id}`"
                         :label="
                             trip.bannerImage
                                 ? $t('ACTION_CHANGE_PHOTO')

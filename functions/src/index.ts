@@ -140,8 +140,8 @@ export const onGearUpdated = onDocumentUpdated(
     'gear/{gearId}',
     async (event) => {
         const gearId = event.params.gearId;
-        // const newGear = event.data?.after.data();
-        // const oldGear = event.data?.before.data();
+        const newGear = event.data?.after.data();
+        const oldGear = event.data?.before.data();
 
         // 1. publish trips again share when gear is updated (to calculate weights again)
         const publishTripShareAgainPromise = (async () => {
@@ -179,7 +179,22 @@ export const onGearUpdated = onDocumentUpdated(
             return Promise.all(allPublishes);
         })();
 
-        return Promise.all([publishTripShareAgainPromise]);
+        // 2. when gear photo is updated, delete the old photo by old photo file name
+        const deleteOldPhotoPromise = (async () => {
+            const newPhotoFileName = newGear?.photo?.fileName;
+            const oldPhotoFileName = oldGear?.photo?.fileName;
+            if (newPhotoFileName !== oldPhotoFileName) {
+                if (oldPhotoFileName) {
+                    const oldFilePath = `gear/${gearId}/${oldPhotoFileName}`;
+                    await admin.storage().bucket().file(oldFilePath).delete();
+                }
+            }
+        })();
+
+        return Promise.all([
+            publishTripShareAgainPromise,
+            deleteOldPhotoPromise,
+        ]);
     },
 );
 

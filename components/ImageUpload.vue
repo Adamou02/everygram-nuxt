@@ -30,15 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL,
-} from 'firebase/storage';
-// @ts-ignore
-import { v4 as uuid } from 'uuid';
-
 const props = defineProps<{
     path: string;
     label?: string;
@@ -48,8 +39,7 @@ const emit = defineEmits<{
     'upload-complete': [{ downloadUrl: string; fileName: string }];
 }>();
 
-const isUploading = ref(false);
-const storage = getStorage();
+const { isUploading, uploadFile } = useStorage();
 
 const onSelectFile = async (event: Event) => {
     const target = event.target as HTMLInputElement;
@@ -74,11 +64,17 @@ const onSelectFile = async (event: Event) => {
         });
 
         // upload image to storage with uuid as file name
-        const fileName = uuid();
-        const fileRef = storageRef(storage, `${props.path}/${fileName}`);
-        const snapshot = await uploadBytes(fileRef, formattedFile);
-        const downloadUrl = await getDownloadURL(snapshot.ref);
-        emit('upload-complete', { downloadUrl, fileName });
+        const result = await uploadFile({
+            path: props.path,
+            file: formattedFile,
+        });
+        if (!result) {
+            throw new Error('Failed to upload file');
+        }
+        emit('upload-complete', {
+            downloadUrl: result.downloadUrl,
+            fileName: result.fileName,
+        });
     } catch (error) {
         console.error(error);
     } finally {

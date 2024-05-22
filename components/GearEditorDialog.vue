@@ -92,6 +92,16 @@
                     </template>
                 </PrimeDropdown>
             </FormField>
+            <FormField :label="$t('LABEL_PHOTO')">
+                <ImageUploadBox
+                    :width="120"
+                    :aspectRatio="1"
+                    :imageUrl="editingGear?.photo?.url"
+                    :isLoading="isSaving"
+                    @file-selected="(file) => (newPhotoFile = file)"
+                    @file-removed="() => (newPhotoFile = null)"
+                />
+            </FormField>
             <HintInfo v-if="props.hint" :description="props.hint" size="sm" />
         </template>
         <template #footer>
@@ -183,6 +193,7 @@ watch(isOpen, (newValue) => {
             editingGear.value?.category ||
             defaultGearCategory.value ||
             initialFormState.category;
+        newPhotoFile.value = null;
         vuelidate.value.$reset();
     }
 });
@@ -190,6 +201,8 @@ watch(isOpen, (newValue) => {
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
+const newPhotoFile = ref<File | null>(null);
+const { uploadFile } = useStorage();
 const onSubmit = async () => {
     const valid = await vuelidate.value.$validate();
     if (!valid) {
@@ -204,7 +217,37 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
+        let formattedPhotoFile: Blob | null = null;
+
+        // format image to jpeg
+        if (newPhotoFile.value) {
+            const formattedFile = await fileUtils.formatImageToJpeg(
+                newPhotoFile.value,
+                {
+                    maxWidth: constants.LIMIT.gearPhotoWidth,
+                    maxHeight: constants.LIMIT.gearPhotoHeight,
+                },
+            );
+            if (formattedFile) {
+                formattedPhotoFile = formattedFile;
+            }
+        }
+
         if (editingGear.value) {
+            // upload gear photo first
+            if (formattedPhotoFile) {
+                const result = await uploadFile({
+                    path: `${constants.STORAGE_PATH.GEAR}/${editingGear.value.id}`,
+                    file: formattedPhotoFile,
+                });
+                if (result) {
+                    gearData.photo = {
+                        url: result.downloadUrl,
+                        fileName: result.fileName,
+                    };
+                }
+            }
+            // update gear
             await userGearsStore.updateGear({
                 id: editingGear.value.id,
                 gearData,
@@ -215,9 +258,30 @@ const onSubmit = async () => {
             );
             onCompleteEditGear();
         } else {
+            // create new gear first
             const newGear = await userGearsStore.createGear(gearData);
             if (!newGear) {
                 throw new Error('Failed to add gear');
+            }
+            // upload gear photo
+            if (formattedPhotoFile) {
+                const result = await uploadFile({
+                    path: `${constants.STORAGE_PATH.GEAR}/${newGear.id}`,
+                    file: formattedPhotoFile,
+                });
+                if (result) {
+                    const photo = {
+                        url: result.downloadUrl,
+                        fileName: result.fileName,
+                    };
+                    await userGearsStore.updateGear({
+                        id: newGear.id,
+                        gearData: {
+                            photo,
+                        },
+                    });
+                    newGear.photo = photo;
+                }
             }
             emit('complete-create', newGear);
             onCompleteCreateGear();
