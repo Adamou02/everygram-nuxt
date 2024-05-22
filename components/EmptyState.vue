@@ -13,8 +13,8 @@
             style="aspect-ratio: 1"
         />
         <div class="flex flex-column gap-2 text-center mb-5">
-            <h2 class="text-2xl font-bold">{{ props.title }}</h2>
-            <p>{{ props.description }}</p>
+            <h2 class="text-2xl font-bold">{{ title }}</h2>
+            <p v-if="description">{{ description }}</p>
         </div>
         <slot name="actions" />
     </div>
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     title: string;
-    description: string;
+    description?: string;
     imageSrc: string;
 }>();
 </script>

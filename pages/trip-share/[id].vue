@@ -131,6 +131,7 @@ const metaTitle = tripShare
 const metaOgTitle = tripShare
     ? i18n.t('META_TRIP_SHARE_OG_TITLE', {
           title: tripShare.title,
+          owner: tripShare.owner.displayName,
       })
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_OG_TITLE');
 const metaDescription = tripShare

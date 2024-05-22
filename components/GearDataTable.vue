@@ -100,7 +100,7 @@
                             },
                             actions.includes('remove') && {
                                 icon: 'pi pi-times',
-                                label: $t('ACTION_REMOVE'),
+                                label: $t('ACTION_REMOVE_FROM_TRIP'),
                                 command: () => {
                                     emit('gear-remove', data);
                                 },

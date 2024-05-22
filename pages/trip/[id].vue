@@ -330,6 +330,16 @@
                 ? constants.WEARABLE_GEAR_CATEGORIES
                 : undefined
         "
+        :no-gear-hint="
+            selectingGearType === 'wornGears'
+                ? $t('INFO_NO_USER_WEARABLE_GEARS')
+                : $t('INFO_NO_USER_GEARS')
+        "
+        :no-selectable-hint="
+            selectingGearType === 'wornGears'
+                ? $t('INFO_ALL_WEARABLE_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
+                : $t('INFO_ALL_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
+        "
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />

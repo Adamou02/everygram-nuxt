@@ -40,6 +40,7 @@ const WEARABLE_GEAR_CATEGORIES: GearCategory[] = [
     'clothing',
     'accessories',
     'electronics',
+    'others',
 ];
 
 const LOCALES = ['en', 'zh-tw'];

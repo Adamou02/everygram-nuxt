@@ -12,11 +12,7 @@
                 v-if="!selectableGears.length"
                 :title="$t('INFO_NO_GEARS_TO_SELECT')"
                 :description="
-                    gears.length
-                        ? gears.length === selectedGearIds.length
-                            ? $t('INFO_ALL_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
-                            : ''
-                        : $t('INFO_NO_USER_GEARS')
+                    gearsInCategories.length ? noSelectableHint : noGearHint
                 "
                 image-src="/image/illustration/illu-adventure.svg"
             >
@@ -83,6 +79,8 @@ const props = defineProps<{
     isOpen: boolean;
     selectedGearIds: string[];
     categories?: GearCategory[];
+    noGearHint?: string;
+    noSelectableHint?: string;
 }>();
 const emit = defineEmits<{
     complete: [selectedGears: TripGear[]];
@@ -92,12 +90,16 @@ const emit = defineEmits<{
 const { formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
+const gearsInCategories = computed(() =>
+    gears.value.filter(
+        (gear) => !props.categories || props.categories.includes(gear.category),
+    ),
+);
+console.log('gearsInCategories', gearsInCategories.value);
 const selectableGears = computed<Gear[]>(() =>
     _sortBy(
-        gears.value.filter(
-            (gear) =>
-                !props.selectedGearIds.includes(gear.id) &&
-                (!props.categories || props.categories.includes(gear.category)),
+        gearsInCategories.value.filter(
+            (gear) => !props.selectedGearIds.includes(gear.id),
         ),
         (gear) => constants.GEAR_CATEGORY_KEYS.indexOf(gear.category),
         (gear) => -gear.weight,
