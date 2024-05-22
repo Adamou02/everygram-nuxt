@@ -12,7 +12,7 @@
     </div>
     <div class="key-features">
         <HomeTriangleConnectLine />
-        <HomeKeyFeature image-src="/image/home-key-feature-1.png">
+        <HomeKeyFeature image-src="/image/home-key-feature-1.jpg">
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_1_TITLE">
                     <template #keyword>
@@ -27,7 +27,7 @@
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine reverse />
-        <HomeKeyFeature image-src="/image/home-key-feature-2.png" reverse>
+        <HomeKeyFeature image-src="/image/home-key-feature-2.jpg" reverse>
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_2_TITLE">
                     <template #keyword>
@@ -42,7 +42,7 @@
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine />
-        <HomeKeyFeature image-src="/image/home-key-feature-3.png">
+        <HomeKeyFeature image-src="/image/home-key-feature-3.jpg">
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_3_TITLE">
                     <template #keyword>
@@ -77,7 +77,7 @@
             <h2 class="text-2xl lg:text-4xl">
                 {{ $t('LABEL_ALL_DEVICES_COMPATIBLE') }}
             </h2>
-            <img src="/image/compatible-devices.png" />
+            <img src="/image/compatible-devices.jpg" />
         </div>
         <AppFooter />
     </div>
