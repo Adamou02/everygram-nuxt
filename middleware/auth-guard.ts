@@ -13,24 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         );
     });
 
-    if (to.name === 'index') {
-        if (user) {
-            return navigateTo('/trips');
-        } else {
-            return navigateTo('/home');
-        }
-    }
-
     if (!user) {
-        return navigateTo('/home');
-    }
-
-    if (
-        user &&
-        (to.name === 'signin' ||
-            to.name === 'signup' ||
-            to.name === 'reset-password')
-    ) {
-        return navigateTo('/trips');
+        return navigateTo('/');
     }
 });

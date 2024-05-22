@@ -75,14 +75,10 @@ export default defineNuxtConfig({
         '~/assets/theme/eg-custom.scss', // everygram custom styles
     ],
     routeRules: {
-        '/home': { prerender: true },
+        '/': { prerender: true },
         '/trip-share/**': { ssr: true },
 
         // pages that require authentication
-        '/': { ssr: false },
-        '/signin': { ssr: false },
-        '/signup': { ssr: false },
-        '/reset-password': { ssr: false },
         '/gears': { ssr: false },
         '/trips': { ssr: false },
         '/trip/**': { ssr: false },

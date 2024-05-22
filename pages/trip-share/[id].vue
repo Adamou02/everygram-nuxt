@@ -19,7 +19,7 @@
                 :consumables="consumablesInTrip"
             />
             <NuxtLink
-                to="/home"
+                to="/"
                 class="block w-full mt-3"
                 @click="
                     () =>
@@ -85,7 +85,7 @@
     >
         <template #actions>
             <!-- back to home -->
-            <NuxtLink to="/home">
+            <NuxtLink to="/">
                 <PrimeButton :label="$t('ACTION_BACK_TO_HOME')" />
             </NuxtLink>
         </template>
@@ -146,6 +146,15 @@ const metaDescription = tripShare
 const defaultBannerImageUrl =
     constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
 
+useHead({
+    link: [
+        // add canonical link to avoid query params
+        {
+            rel: 'canonical',
+            href: constants.SITE_DOMAIN + route.path,
+        },
+    ],
+});
 useSeoMeta({
     title: metaTitle,
     ogTitle: metaOgTitle,

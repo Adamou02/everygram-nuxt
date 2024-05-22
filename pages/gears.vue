@@ -144,7 +144,9 @@
             </div>
         </template>
     </EmptyState>
-    <GearEditorDialog :hint="$t('INFO_EDIT_GEAR_SYNC_TO_TRIPS')" />
+    <GearEditorDialog
+        :hint="isEditingGear ? $t('INFO_EDIT_GEAR_SYNC_TO_TRIPS') : ''"
+    />
     <ImportGearsDialog
         :is-open="isOpenImportGearsDialog"
         @close="isOpenImportGearsDialog = false"
@@ -181,7 +183,7 @@ const { gearCategoryToLabel } = useLangUtils();
 const i18n = useI18n();
 
 // for GearEditor
-const { onCreateGear, onEditGear } = useEditGear();
+const { onCreateGear, onEditGear, isEditingGear } = useEditGear();
 
 const onDeleteGear = async (gear: Gear) => {
     try {

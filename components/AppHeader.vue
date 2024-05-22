@@ -13,7 +13,7 @@
         <div class="app-header__left">
             <slot name="left">
                 <!-- default show logo -->
-                <NuxtLink to="/">
+                <NuxtLink :to="user ? '/trips' : '/'">
                     <img
                         class="app-header__logo"
                         :src="
@@ -47,6 +47,8 @@ const props = defineProps<{
     transparent?: boolean;
     colorReverse?: boolean;
 }>();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 </script>
 
 <style lang="scss">
