@@ -139,4 +139,12 @@ declare global {
         | 'user_trip_num'
         | 'user_gear_num';
     // archived: user_num, trip_num
+
+    type PhotoCompressorOptions = {
+        maxWidth?: number;
+        maxHeight?: number;
+        width?: number;
+        height?: number;
+        resize?: 'none' | 'cover' | 'contain';
+    };
 }

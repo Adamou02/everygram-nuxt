@@ -12,7 +12,7 @@
         <template #header>
             <TripHeader :trip="trip">
                 <template #banner-actions>
-                    <ImageUpload
+                    <ImageUploadButton
                         :path="`${constants.STORAGE_PATH.TRIP}/${trip.id}`"
                         :label="
                             trip.bannerImage

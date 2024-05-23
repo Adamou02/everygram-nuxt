@@ -5,6 +5,7 @@
             {
                 'border-dashed border-2 border-400': !displayImageUrl,
                 'border-solid border-1 border-300': displayImageUrl,
+                'opacity-80': isHovering,
             },
         ]"
         :style="{
@@ -15,7 +16,18 @@
                 ? `url(${displayImageUrl})`
                 : 'none',
         }"
-        @click="openFilePicker"
+        @dragover.prevent="onDragOver"
+        @dragleave.prevent="onDragLeave"
+        @drop.prevent="
+            (event) => {
+                !isLoading && onDrop(event);
+            }
+        "
+        @click="
+            () => {
+                !isLoading && openFilePicker();
+            }
+        "
     >
         <div v-if="!displayImageUrl">
             <i class="pi pi-camera text-2xl"></i>
@@ -23,7 +35,11 @@
         <div
             v-else-if="!isLoading && selectedFile"
             class="absolute top-0 right-0 p-1 cursor-pointer"
-            @click.stop="onRemoveFile"
+            @click.stop="
+                () => {
+                    !isLoading && onRemoveFile();
+                }
+            "
         >
             <i class="pi pi-times"></i>
         </div>
@@ -44,42 +60,36 @@ const props = defineProps<{
     aspectRatio?: number;
     imageUrl?: string;
     isLoading?: boolean;
+    compressorOptions?: PhotoCompressorOptions;
 }>();
 const emit = defineEmits<{
-    'file-selected': [file: File];
+    'file-compressed': [file: Blob];
     'file-removed': [];
 }>();
-const fileInput = ref<HTMLInputElement | null>(null);
-const selectedFile = ref<File | null>(null);
-const selectedFilePath = computed(
-    () => selectedFile.value && URL.createObjectURL(selectedFile.value),
-);
+const {
+    fileInput,
+    selectedFile,
+    selectedFilePath,
+    openFilePicker,
+    onFileChange,
+    onRemoveFile,
+    onDragOver,
+    onDragLeave,
+    onDrop,
+    isHovering,
+} = useImageUpload({
+    ...props.compressorOptions,
+    onFileCompressed: (file) => {
+        emit('file-compressed', file);
+    },
+    onFileRemoved: () => {
+        emit('file-removed');
+    },
+});
+
 const displayImageUrl = computed(
     () => selectedFilePath.value || props.imageUrl,
 );
-const openFilePicker = () => {
-    if (props.isLoading) {
-        return;
-    }
-    fileInput.value?.click();
-};
-const onFileChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const files = target.files;
-    if (files) {
-        selectedFile.value = files[0];
-        emit('file-selected', files[0]);
-    }
-    // reset input value
-    target.value = '';
-};
-const onRemoveFile = () => {
-    if (props.isLoading) {
-        return;
-    }
-    selectedFile.value = null;
-    emit('file-removed');
-};
 </script>
 
 <style scoped lang="scss">

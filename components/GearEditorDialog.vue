@@ -98,8 +98,13 @@
                     :aspectRatio="1"
                     :imageUrl="editingGear?.photo?.url"
                     :isLoading="isSaving"
-                    @file-selected="(file) => (newPhotoFile = file)"
-                    @file-removed="() => (newPhotoFile = null)"
+                    :compressorOptions="{
+                        width: constants.LIMIT.gearPhotoWidth,
+                        height: constants.LIMIT.gearPhotoHeight,
+                        resize: 'cover',
+                    }"
+                    @file-compressed="(file) => (compressedPhotoFile = file)"
+                    @file-removed="() => (compressedPhotoFile = null)"
                 />
             </FormField>
             <HintInfo v-if="props.hint" :description="props.hint" size="sm" />
@@ -193,7 +198,7 @@ watch(isOpen, (newValue) => {
             editingGear.value?.category ||
             defaultGearCategory.value ||
             initialFormState.category;
-        newPhotoFile.value = null;
+        compressedPhotoFile.value = null;
         vuelidate.value.$reset();
     }
 });
@@ -201,7 +206,7 @@ watch(isOpen, (newValue) => {
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
-const newPhotoFile = ref<File | null>(null);
+const compressedPhotoFile = ref<Blob | null>(null);
 const { uploadFile } = useStorage();
 const onSubmit = async () => {
     const valid = await vuelidate.value.$validate();
@@ -217,28 +222,13 @@ const onSubmit = async () => {
 
     try {
         isSaving.value = true;
-        let formattedPhotoFile: Blob | null = null;
-
-        // format image to jpeg
-        if (newPhotoFile.value) {
-            const formattedFile = await fileUtils.formatImageToJpeg(
-                newPhotoFile.value,
-                {
-                    maxWidth: constants.LIMIT.gearPhotoWidth,
-                    maxHeight: constants.LIMIT.gearPhotoHeight,
-                },
-            );
-            if (formattedFile) {
-                formattedPhotoFile = formattedFile;
-            }
-        }
 
         if (editingGear.value) {
             // upload gear photo first
-            if (formattedPhotoFile) {
+            if (compressedPhotoFile.value) {
                 const result = await uploadFile({
                     path: `${constants.STORAGE_PATH.GEAR}/${editingGear.value.id}`,
-                    file: formattedPhotoFile,
+                    file: compressedPhotoFile.value,
                 });
                 if (result) {
                     gearData.photo = {
@@ -264,10 +254,10 @@ const onSubmit = async () => {
                 throw new Error('Failed to add gear');
             }
             // upload gear photo
-            if (formattedPhotoFile) {
+            if (compressedPhotoFile.value) {
                 const result = await uploadFile({
                     path: `${constants.STORAGE_PATH.GEAR}/${newGear.id}`,
-                    file: formattedPhotoFile,
+                    file: compressedPhotoFile.value,
                 });
                 if (result) {
                     const photo = {

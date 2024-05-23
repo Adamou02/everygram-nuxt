@@ -44,11 +44,14 @@ const LIMIT = {
     maxWeight: 100000,
     minNameLength: 1,
     maxNameLength: 100,
-    imageWidth: 1920,
-    imageHeight: 1080,
     importLimit: 200,
-    gearPhotoWidth: 200,
-    gearPhotoHeight: 200,
+    // square
+    gearPhotoWidth: 1200,
+    gearPhotoHeight: 1200,
+    // 16:9
+    tripBannerImageWidth: 1600,
+    tripBannerImageHeight: 900,
+    jpgQuality: 0.7,
 };
 
 const STORAGE_PATH = {

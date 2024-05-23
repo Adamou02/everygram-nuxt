@@ -24,4 +24,4 @@ $border-styles: (
 ) !default;
 
 @include border-class('border', $border-directions, $border-scales);
-@include style-class('border-style', $border-styles, true);
+@include style-class('border-style', $border-styles, true, true);
