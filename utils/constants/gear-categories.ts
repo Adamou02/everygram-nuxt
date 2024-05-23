@@ -59,4 +59,11 @@ const GEAR_CATEGORY_KEYS: GearCategory[] = [
     'others',
 ];
 
-export { GEAR_CATEGORIES, GEAR_CATEGORY_KEYS };
+const WEARABLE_GEAR_CATEGORY_KEYS: GearCategory[] = [
+    'clothing',
+    'accessories',
+    'electronics',
+    'others',
+];
+
+export { GEAR_CATEGORIES, GEAR_CATEGORY_KEYS, WEARABLE_GEAR_CATEGORY_KEYS };

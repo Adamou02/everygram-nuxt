@@ -227,7 +227,7 @@
                                     creatingGearType = 'wornGears';
                                     onCreateGear({
                                         categories:
-                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                            constants.WEARABLE_GEAR_CATEGORY_KEYS,
                                     });
                                 },
                             },
@@ -254,7 +254,7 @@
                                     creatingGearType = 'wornGears';
                                     onCreateGear({
                                         categories:
-                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                            constants.WEARABLE_GEAR_CATEGORY_KEYS,
                                     });
                                 },
                             },
@@ -275,7 +275,7 @@
                                     onCreateGear({
                                         category,
                                         categories:
-                                            constants.WEARABLE_GEAR_CATEGORIES,
+                                            constants.WEARABLE_GEAR_CATEGORY_KEYS,
                                     });
                                 },
                             },
@@ -330,7 +330,7 @@
         "
         :categories="
             selectingGearType === 'wornGears'
-                ? constants.WEARABLE_GEAR_CATEGORIES
+                ? constants.WEARABLE_GEAR_CATEGORY_KEYS
                 : undefined
         "
         :no-gear-hint="

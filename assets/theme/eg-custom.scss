@@ -52,6 +52,13 @@ img {
     }
 }
 
+.p-datatable-left-no-padding {
+    th:first-child,
+    td:first-child {
+        padding-left: 0;
+    }
+}
+
 .p-selectbutton--stretch {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));

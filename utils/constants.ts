@@ -1,6 +1,7 @@
 import {
     GEAR_CATEGORIES,
     GEAR_CATEGORY_KEYS,
+    WEARABLE_GEAR_CATEGORY_KEYS,
 } from './constants/gear-categories';
 import {
     CONSUMABLE_CATEGORIES,
@@ -35,13 +36,6 @@ const EMPTY_TRIP_DATA: Omit<Trip, 'id'> = {
     wornGears: {},
     consumables: {},
 };
-
-const WEARABLE_GEAR_CATEGORIES: GearCategory[] = [
-    'clothing',
-    'accessories',
-    'electronics',
-    'others',
-];
 
 const LOCALES = ['en', 'zh-tw'];
 
@@ -81,7 +75,7 @@ export default {
     GEAR_BRAND_KEYS,
     EMPTY_GEAR_DATA,
     EMPTY_TRIP_DATA,
-    WEARABLE_GEAR_CATEGORIES,
+    WEARABLE_GEAR_CATEGORY_KEYS,
     LOCALES,
     LIMIT,
     TRIP_DATE_MODE,

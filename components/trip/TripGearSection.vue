@@ -19,7 +19,6 @@
                 :category="category"
                 type="gear"
                 :weight="gearWeightByCategory[category]"
-                class="p-2 lg:p-0"
             >
                 <template #actions>
                     <slot name="category-actions" :category="category" />

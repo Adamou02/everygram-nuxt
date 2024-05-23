@@ -4,12 +4,15 @@
         dataKey="id"
         :edit-mode="props.readonly ? undefined : 'cell'"
         @cell-edit-complete="(e) => emit('gear-cell-edit-complete', e)"
-        class="p-datatable-hide-thead"
+        class="p-datatable-hide-thead p-datatable-left-no-padding"
     >
         <!-- desktop -->
         <PrimeColumn field="photo" :header="$t('LABEL_PHOTO')" class="w-3rem">
             <template #body="{ data }">
-                <GearPhoto class="w-3rem h-3rem" :gear="data" />
+                <GearPhoto
+                    class="w-3rem h-3rem lg:w-4rem lg:h-4rem"
+                    :gear="data"
+                />
             </template>
         </PrimeColumn>
         <PrimeColumn
