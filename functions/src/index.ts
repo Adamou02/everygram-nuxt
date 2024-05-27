@@ -1,13 +1,20 @@
-import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import {
     onDocumentDeleted,
     onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
-import type { Gear, GearWithQuantity, Trip, TripShare } from '../types/types';
+import type { Trip } from '../types/types';
 import { setGlobalOptions } from 'firebase-functions/v2';
-import * as _ from 'lodash';
+import _ from 'lodash';
+import serviceAccount from './everygram-firebase-adminsdk.json';
+
+import { publishTrip, unpublishTrip } from './trip-publish-unpublish';
+import {
+    generateThumbnails,
+    GEAR_THUMBNAIL_SIZES,
+    TRIP_THUMBNAIL_SIZES,
+} from './generate-thumbnails';
 
 // Set the maximum instances to 10 for all functions
 // To fix Error: Error generating the service identity for eventarc.googleapis.com.
@@ -17,124 +24,11 @@ setGlobalOptions({
     timeoutSeconds: 60,
 });
 
-admin.initializeApp();
-
-const publishTrip = async (tripId: string) => {
-    // get trip data from firestore
-    const tripDocRef = admin.firestore().collection('trip').doc(tripId);
-    const tripDoc = await tripDocRef.get();
-    if (!tripDoc.exists) {
-        logger.error('Trip does not exist.');
-        return;
-    }
-    const trip = tripDoc.data() as Trip;
-
-    // get owner user Uid
-    const ownerUid = Object.entries(trip.role).find(
-        ([uid, role]) => role === 'owner',
-    )?.[0];
-    if (!ownerUid) {
-        logger.error('Owner not found.');
-        return;
-    }
-
-    // get owner user data
-    const owner = await admin.auth().getUser(ownerUid);
-    if (!owner) {
-        logger.error('Owner not found.');
-        return;
-    }
-
-    // get owner's user gears
-    const ownerGearsSnapshot = await admin
-        .firestore()
-        .collection('userGears')
-        .doc(ownerUid)
-        .get();
-    const userGearsData = ownerGearsSnapshot.data();
-    if (!userGearsData) {
-        logger.error('Owner gears not found.');
-        return;
-    }
-    const gearMap = userGearsData.gears as Record<string, Gear>;
-
-    // combine user's gears with trip's gears and worn gears = gears with quantity
-    const tripShareGears: Record<string, GearWithQuantity> = Object.entries(
-        trip.gears,
-    ).reduce(
-        (acc, [gearId, tripGear]) => {
-            if (!gearMap[gearId]) {
-                return acc;
-            }
-            acc[gearId] = {
-                ...gearMap[gearId],
-                quantity: tripGear.quantity,
-            };
-            return acc;
-        },
-        {} as Record<string, GearWithQuantity>,
-    );
-    const tripShareWornGears: Record<string, GearWithQuantity> = Object.entries(
-        trip.wornGears,
-    ).reduce(
-        (acc, [gearId, tripGear]) => {
-            if (!gearMap[gearId]) {
-                return acc;
-            }
-            acc[gearId] = {
-                ...gearMap[gearId],
-                quantity: tripGear.quantity,
-            };
-            return acc;
-        },
-        {} as Record<string, GearWithQuantity>,
-    );
-
-    // calculate weights
-    const baseWeight = Object.values(tripShareGears).reduce(
-        (acc, gear) => acc + gear.weight * gear.quantity,
-        0,
-    );
-    const consumablesWeight = _.sumBy(
-        _.values(trip.consumables),
-        (consumable) => +consumable.weight || 0,
-    );
-    const packWeight = baseWeight + consumablesWeight;
-    const wornWeight = Object.values(tripShareWornGears).reduce(
-        (acc, gear) => acc + gear.weight * gear.quantity,
-        0,
-    );
-
-    // build trip share data
-    const tripShare: TripShare = {
-        ...trip,
-        gears: tripShareGears,
-        wornGears: tripShareWornGears,
-        owner: {
-            displayName: owner.displayName || '',
-            photoURL: owner.photoURL || '',
-        },
-        baseWeight,
-        consumablesWeight,
-        packWeight,
-        wornWeight,
-    };
-
-    // write trip share data to firestore in tripShare collection
-    const tripShareCollectionRef = admin.firestore().collection('tripShare');
-    const tripShareDocRef = tripShareCollectionRef.doc(tripId);
-    await tripShareDocRef.set({
-        ...tripShare,
-        tripShareCreated: FieldValue.serverTimestamp(),
-    });
-};
-
-const unpublishTrip = async (tripId: string) => {
-    // delete trip share data from firestore
-    const tripShareCollectionRef = admin.firestore().collection('tripShare');
-    const tripShareDocRef = tripShareCollectionRef.doc(tripId);
-    await tripShareDocRef.delete();
-};
+// set credential for admin SDK
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    storageBucket: 'everygram.appspot.com',
+});
 
 export const onGearUpdated = onDocumentUpdated(
     'gear/{gearId}',
@@ -179,22 +73,78 @@ export const onGearUpdated = onDocumentUpdated(
             return Promise.all(allPublishes);
         })();
 
-        // 2. when gear photo is updated, delete the old photo by old photo file name
-        const deleteOldPhotoPromise = (async () => {
+        // 2. when gear photo is updated
+        const updatePhotoPromise = (async () => {
+            const subPromises = [];
             const newPhotoFileName = newGear?.photo?.fileName;
             const oldPhotoFileName = oldGear?.photo?.fileName;
-            if (newPhotoFileName !== oldPhotoFileName) {
-                if (oldPhotoFileName) {
-                    const oldFilePath = `gear/${gearId}/${oldPhotoFileName}`;
-                    await admin.storage().bucket().file(oldFilePath).delete();
-                }
+
+            if (newPhotoFileName === oldPhotoFileName) {
+                return;
             }
+
+            // 2.1. delete the old photo and thumbnails
+            if (oldPhotoFileName) {
+                const oldPhotoPath = `gear/${gearId}/${oldPhotoFileName}`;
+                subPromises.push(
+                    admin.storage().bucket().deleteFiles({
+                        prefix: oldPhotoPath,
+                    }),
+                );
+            }
+
+            // 2.2. generate new thumbnails and save to gear
+            if (newPhotoFileName) {
+                subPromises.push(
+                    (async () => {
+                        // 2.2.1. generate thumbnails
+                        const generatedThumbnails = await generateThumbnails({
+                            imagePath: `gear/${gearId}/${newPhotoFileName}`,
+                            targetPath: `gear/${gearId}/${newPhotoFileName}`,
+                            sizes: GEAR_THUMBNAIL_SIZES,
+                        });
+                        if (!generatedThumbnails) {
+                            return;
+                        }
+
+                        // 2.2.2. use transaction to update gear with thumbnails and userGears with thumbnails
+                        await admin
+                            .firestore()
+                            .runTransaction(async (transaction) => {
+                                // Get references to the documents
+                                const gearDocRef = admin
+                                    .firestore()
+                                    .collection('gear')
+                                    .doc(gearId);
+                                const userGearsDocRef = admin
+                                    .firestore()
+                                    .collection('userGears')
+                                    .doc(Object.entries(newGear.role)[0][0]);
+                                // Read the documents
+                                const [gearDoc, userGearsDoc] =
+                                    await Promise.all([
+                                        transaction.get(gearDocRef),
+                                        transaction.get(userGearsDocRef),
+                                    ]);
+                                if (!gearDoc.exists || !userGearsDoc.exists) {
+                                    return;
+                                }
+                                // Perform the updates
+                                transaction.update(gearDocRef, {
+                                    'photo.thumbnails': generatedThumbnails,
+                                });
+                                transaction.update(userGearsDocRef, {
+                                    [`gears.${gearId}.photo.thumbnails`]:
+                                        generatedThumbnails,
+                                });
+                            });
+                    })(),
+                );
+            }
+            return Promise.all(subPromises);
         })();
 
-        return Promise.all([
-            publishTripShareAgainPromise,
-            deleteOldPhotoPromise,
-        ]);
+        return Promise.all([publishTripShareAgainPromise, updatePhotoPromise]);
     },
 );
 
@@ -282,24 +232,56 @@ export const onTripUpdated = onDocumentUpdated(
             }
         })();
 
-        // 2. when trip banner image is updated, delete the old image by old banner image file name
-        const deleteOldBannerImagePromise = (async () => {
-            if (
-                newTrip?.bannerImage?.fileName !==
-                oldTrip?.bannerImage?.fileName
-            ) {
-                if (oldTrip?.bannerImage?.fileName) {
-                    const oldFileName = oldTrip.bannerImage.fileName;
-                    const oldFilePath = `trip/${tripId}/${oldFileName}`;
-                    await admin.storage().bucket().file(oldFilePath).delete();
-                }
+        // 2. when trip banner image is updated
+        const updateBannerImagePromise = (async () => {
+            const subPromises = [];
+            const newBannerImageFileName = newTrip?.bannerImage?.fileName;
+            const oldBannerImageFileName = oldTrip?.bannerImage?.fileName;
+
+            if (newBannerImageFileName === oldBannerImageFileName) {
+                return;
             }
+
+            // 2.1. delete the old banner image and thumbnails
+            if (oldBannerImageFileName) {
+                const oldBannerImagePath = `trip/${tripId}/${oldBannerImageFileName}`;
+                subPromises.push(
+                    admin.storage().bucket().deleteFiles({
+                        prefix: oldBannerImagePath,
+                    }),
+                );
+            }
+
+            // 2.2. generate new thumbnails and save to trip
+            if (newBannerImageFileName) {
+                subPromises.push(
+                    (async () => {
+                        // 2.2.1. generate thumbnails
+                        const generatedThumbnails = await generateThumbnails({
+                            imagePath: `trip/${tripId}/${newBannerImageFileName}`,
+                            targetPath: `trip/${tripId}/${newBannerImageFileName}`,
+                            sizes: TRIP_THUMBNAIL_SIZES,
+                        });
+                        if (!generatedThumbnails) {
+                            return;
+                        }
+
+                        // 2.2.2. update trip with thumbnails
+                        await admin
+                            .firestore()
+                            .collection('trip')
+                            .doc(tripId)
+                            .update({
+                                'bannerImage.thumbnails': generatedThumbnails,
+                            });
+                    })(),
+                );
+            }
+
+            await Promise.all(subPromises);
         })();
 
-        return Promise.all([
-            updateTripSharePromise,
-            deleteOldBannerImagePromise,
-        ]);
+        return Promise.all([updateTripSharePromise, updateBannerImagePromise]);
     },
 );
 

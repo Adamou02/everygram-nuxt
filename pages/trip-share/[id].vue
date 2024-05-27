@@ -165,7 +165,7 @@ useSeoMeta({
     description: metaDescription,
     ogDescription: metaDescription,
     ogImage: tripShare?.bannerImage
-        ? tripShare.bannerImage.url
+        ? tripShare.bannerImage.thumbnails?.md.url || tripShare.bannerImage.url
         : defaultBannerImageUrl,
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',
 });

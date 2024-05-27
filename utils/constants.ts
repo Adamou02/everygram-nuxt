@@ -46,8 +46,8 @@ const LIMIT = {
     maxNameLength: 100,
     importLimit: 200,
     // square
-    gearPhotoWidth: 1200,
-    gearPhotoHeight: 1200,
+    gearPhotoWidth: 1280,
+    gearPhotoHeight: 1280,
     // 16:9
     tripBannerImageWidth: 1600,
     tripBannerImageHeight: 900,

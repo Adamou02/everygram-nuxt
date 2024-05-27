@@ -6,7 +6,8 @@
             <img
                 :src="
                     trip.bannerImage
-                        ? trip.bannerImage.url
+                        ? trip.bannerImage.thumbnails?.lg.url ||
+                          trip.bannerImage.url
                         : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH
                 "
                 alt="Trip Banner Image"

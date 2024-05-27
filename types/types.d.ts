@@ -16,6 +16,12 @@ declare global {
         fileName: string;
     };
 
+    type ThumbnailSize = 'xs' | 'sm' | 'md' | 'lg';
+
+    type StorageImage = StorageFile & {
+        thumbnails?: Record<ThumbnailSize, StorageFile>;
+    };
+
     type GearRole = 'owner' | 'co-owner';
     type GearCategory =
         | 'accessories'
@@ -47,7 +53,7 @@ declare global {
             | 'other';
         created?: Timestamp;
         updated?: Timestamp;
-        photo?: StorageFile;
+        photo?: StorageImage;
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };
@@ -75,7 +81,7 @@ declare global {
         wornGears: Record<string, TripGear>;
         consumables: Record<string, Consumable>;
         isPublished?: boolean;
-        bannerImage?: StorageFile;
+        bannerImage?: StorageImage;
     };
     type EditingTrip = Partial<Trip>;
 
@@ -146,5 +152,11 @@ declare global {
         width?: number;
         height?: number;
         resize?: 'none' | 'cover' | 'contain';
+    };
+
+    type ThumbnailOption = {
+        width: number;
+        height: number;
+        name: ThumbnailSize;
     };
 }

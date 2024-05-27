@@ -5,7 +5,7 @@
         <div
             class="trip-card__image relative"
             :style="{
-                backgroundImage: `url('${trip.bannerImage ? trip.bannerImage.url : constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH}')`,
+                backgroundImage: `url('${trip.bannerImage ? trip.bannerImage.thumbnails?.sm.url || trip.bannerImage.url : constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH}')`,
             }"
         >
             <div

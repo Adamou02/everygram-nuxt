@@ -4,12 +4,12 @@ import {
     doc,
     getDoc,
     updateDoc,
-    deleteDoc,
     onSnapshot,
     serverTimestamp,
     writeBatch,
     setDoc,
     deleteField,
+    runTransaction,
 } from 'firebase/firestore';
 import type { DocumentReference } from 'firebase/firestore';
 
@@ -182,26 +182,35 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
-            const gearRef = doc(db, 'gear', id);
             delete gearData.id;
 
-            // update gear data
-            const updateGearPromise = updateDoc(gearRef, {
-                ...gearData,
-                updated: serverTimestamp(),
-            });
+            // use transaction to update gear data and userGears document
+            await runTransaction(db, async (transaction) => {
+                const gearRef = doc(db, 'gear', id);
+                const userGearsDocRef = doc(db, 'userGears', userId);
 
-            // update userGears document
-            const userGearsDocRef = doc(db, 'userGears', userId);
-            const updateUserGearsPromise = updateDoc(userGearsDocRef, {
-                [`gears.${id}`]: {
-                    ...gearMap.value[id],
+                // Read the documents
+                const [gearDocSnap, userGearsDocSnap] = await Promise.all([
+                    transaction.get(gearRef),
+                    transaction.get(userGearsDocRef),
+                ]);
+                if (!gearDocSnap.exists || !userGearsDocSnap.exists) {
+                    throw new Error('Document does not exist');
+                }
+                // update gear data
+                transaction.update(gearRef, {
                     ...gearData,
                     updated: serverTimestamp(),
-                },
+                });
+                // update userGears document
+                transaction.update(userGearsDocRef, {
+                    [`gears.${id}`]: {
+                        ...gearMap.value[id],
+                        ...gearData,
+                        updated: serverTimestamp(),
+                    },
+                });
             });
-
-            await Promise.all([updateGearPromise, updateUserGearsPromise]);
         } catch (error) {
             console.error(error);
             throw error;
@@ -214,20 +223,27 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
-            // delete gear from gear collection
-            const gearRef = doc(db, 'gear', id);
-            const deleteGearPromise = deleteDoc(gearRef);
+            // use transaction to delete gear data and userGears document
+            await runTransaction(db, async (transaction) => {
+                const gearRef = doc(db, 'gear', id);
+                const userGearsDocRef = doc(db, 'userGears', userId);
 
-            // delete gear from userGears document
-            const userGearsDocRef = doc(db, 'userGears', userId);
-            const deleteGearInUserGearsPromise = updateDoc(userGearsDocRef, {
-                [`gears.${id}`]: deleteField(),
+                // Read the documents
+                const [gearDocSnap, userGearsDocSnap] = await Promise.all([
+                    transaction.get(gearRef),
+                    transaction.get(userGearsDocRef),
+                ]);
+                if (!gearDocSnap.exists || !userGearsDocSnap.exists) {
+                    throw new Error('Document does not exist');
+                }
+
+                // delete gear data
+                transaction.delete(gearRef);
+                // delete userGears document
+                transaction.update(userGearsDocRef, {
+                    [`gears.${id}`]: deleteField(),
+                });
             });
-
-            await Promise.all([
-                deleteGearPromise,
-                deleteGearInUserGearsPromise,
-            ]);
         } catch (error) {
             console.error(error);
             throw error;

@@ -15,6 +15,12 @@ export type StorageFile = {
     fileName: string;
 };
 
+export type ThumbnailSize = 'xs' | 'sm' | 'md' | 'lg';
+
+export type StorageImage = StorageFile & {
+    thumbnails?: Record<ThumbnailSize, StorageFile>;
+};
+
 export type GearRole = 'owner' | 'co-owner';
 export type GearCategory =
     | 'accessories'
@@ -46,7 +52,7 @@ export type Gear = {
         | 'other';
     created?: Timestamp;
     updated?: Timestamp;
-    photo?: StorageFile;
+    photo?: StorageImage;
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };
@@ -74,7 +80,7 @@ export type Trip = {
     wornGears: Record<string, TripGear>;
     consumables: Record<string, Consumable>;
     isPublished?: boolean;
-    bannerImage?: StorageFile;
+    bannerImage?: StorageImage;
 };
 export type EditingTrip = Partial<Trip>;
 
@@ -118,3 +124,9 @@ export type WeightBarChartItem = {
 
 export type GearBrand = 'mont-bell' | 'patagonia' | 'arcteryx';
 export type BrandData = { name: string; originalName?: string };
+
+export type ThumbnailOption = {
+    width: number;
+    height: number;
+    name: ThumbnailSize;
+};
