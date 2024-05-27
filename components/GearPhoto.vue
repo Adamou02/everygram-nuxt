@@ -27,7 +27,7 @@
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
             @drop.prevent="onDrop"
-            @click="!displayImageUrl && openFilePicker"
+            @click="!displayImageUrl && openFilePicker()"
         >
             <input
                 type="file"
