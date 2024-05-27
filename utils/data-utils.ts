@@ -91,6 +91,21 @@ const formatTripDate = (trip: Trip | TripShare): string => {
     return '';
 };
 
+const getTripBannerImageUrl = (
+    trip: Trip | TripShare,
+    size: ThumbnailSize,
+): string => {
+    return trip.bannerImage
+        ? trip.bannerImage.thumbnails?.[size].url || trip.bannerImage.url
+        : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
+};
+
+const getGearPhotoUrl = (gear: Gear, size: ThumbnailSize): string => {
+    return gear.photo
+        ? gear.photo.thumbnails?.[size].url || gear.photo.url
+        : '';
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -104,4 +119,6 @@ export default {
     formatDateString,
     getDaysBetweenDates,
     formatTripDate,
+    getTripBannerImageUrl,
+    getGearPhotoUrl,
 };

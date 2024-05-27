@@ -67,6 +67,13 @@ const TRIP_DATE_MODE: Record<string, TripDateMode> = {
 const DEFAULT_TRIP_BANNER_IMAGE_PATH = '/image/illustration/illu-mountains.jpg';
 const SITE_DOMAIN = 'https://everygram.app';
 
+const BREAK_POINTS = {
+    sm: 576,
+    md: 768,
+    lg: 992,
+    xl: 120,
+};
+
 export default {
     ROLES,
     COLORS,
@@ -86,4 +93,5 @@ export default {
     SITE_DOMAIN,
     ANALYTICS_EVENTS,
     STORAGE_PATH,
+    BREAK_POINTS,
 };

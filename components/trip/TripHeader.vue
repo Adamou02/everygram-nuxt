@@ -3,15 +3,13 @@
         <div
             class="trip-header__banner w-full border-round-md overflow-hidden relative"
         >
-            <img
-                :src="
-                    trip.bannerImage
-                        ? trip.bannerImage.thumbnails?.lg.url ||
-                          trip.bannerImage.url
-                        : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH
-                "
-                alt="Trip Banner Image"
-            />
+            <picture>
+                <source
+                    :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
+                    :srcset="desktopBannerImage"
+                />
+                <img :src="mobileBannerImage" alt="Trip Banner Image" />
+            </picture>
             <div class="absolute bottom-0 right-0 p-3">
                 <slot name="banner-actions" />
             </div>
@@ -38,6 +36,12 @@ const props = defineProps<{
     trip: Trip | TripShare;
 }>();
 const formattedDate = computed(() => dataUtils.formatTripDate(props.trip));
+const mobileBannerImage = computed(() =>
+    dataUtils.getTripBannerImageUrl(props.trip, 'sm'),
+);
+const desktopBannerImage = computed(() =>
+    dataUtils.getTripBannerImageUrl(props.trip, 'lg'),
+);
 </script>
 
 <style lang="scss">

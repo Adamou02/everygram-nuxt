@@ -91,10 +91,7 @@ const gearCategoryIcon = computed(
     () => constants.GEAR_CATEGORIES[props.gear.category].icon,
 );
 const displayImageUrl = computed(
-    () =>
-        selectedFilePath.value ||
-        props.gear.photo?.thumbnails?.xs.url ||
-        props.gear.photo?.url,
+    () => selectedFilePath.value || dataUtils.getGearPhotoUrl(props.gear, 'xs'),
 );
 </script>
 
