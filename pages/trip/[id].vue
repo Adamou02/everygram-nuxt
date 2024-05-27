@@ -102,7 +102,7 @@
                         class="lg:hidden"
                     />
                 </template>
-                <template #category-actions="{ category }">
+                <!-- <template #category-actions="{ category }">
                     <ActionButtonsGroup
                         type="icon"
                         class="hide-in-mobile"
@@ -117,7 +117,7 @@
                             },
                         ]"
                     />
-                </template>
+                </template> -->
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"
@@ -171,7 +171,7 @@
                         class="lg:hidden"
                     />
                 </template>
-                <template #category-actions="{ category }">
+                <!-- <template #category-actions="{ category }">
                     <ActionButtonsGroup
                         type="icon"
                         class="hide-in-mobile"
@@ -186,7 +186,7 @@
                             },
                         ]"
                     />
-                </template>
+                </template> -->
                 <template #category-body="{ consumables }">
                     <ConsumableDataTable
                         :consumables="consumables"
@@ -262,7 +262,7 @@
                         class="lg:hidden"
                     />
                 </template>
-                <template #category-actions="{ category }">
+                <!-- <template #category-actions="{ category }">
                     <ActionButtonsGroup
                         type="icon"
                         class="hide-in-mobile"
@@ -281,7 +281,7 @@
                             },
                         ]"
                     />
-                </template>
+                </template> -->
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"
