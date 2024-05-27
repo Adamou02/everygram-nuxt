@@ -5,8 +5,9 @@
             {
                 'gear-photo--empty surface-100 border-2 border-100 hover:border-dashed hover:border-400 cursor-pointer':
                     !displayImageUrl,
-                'opacity-80 border-dashed border-400': isHovering,
-                'opacity-50': isCompressing || isLoading,
+                'opacity-50': isHovering || isCompressing || isLoading,
+                // show dashed border when hovering on empty gear photo
+                'border-dashed border-400': isHovering && !displayImageUrl,
             },
         ]"
         :style="{
@@ -22,12 +23,11 @@
         >
         <!-- invisible image uploader -->
         <div
-            v-if="!displayImageUrl"
             class="gear-photo__image-uploader absolute top-0 left-0 right-0 bottom-0"
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
             @drop.prevent="onDrop"
-            @click="openFilePicker"
+            @click="!displayImageUrl && openFilePicker"
         >
             <input
                 type="file"
