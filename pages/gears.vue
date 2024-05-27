@@ -29,7 +29,7 @@
         </SectionTitleBar>
         <div class="grid">
             <!-- sidebar -->
-            <div class="hide-in-mobile col-2">
+            <div class="hide-in-mobile col-3">
                 <div
                     class="flex flex-column gap-2 align-items-start sticky z-1"
                     style="top: var(--app-header-height)"
@@ -40,7 +40,7 @@
                             ...emptyGearCategories,
                         ]"
                         :key="category"
-                        :label="gearCategoryToLabel(category)"
+                        :label="`${gearCategoryToLabel(category)} (${gearsGroupByCategory[category]?.length || 0})`"
                         text
                         :class="[
                             'text-color text-left w-full',
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <!-- main -->
-            <div class="col-12 lg:col-10">
+            <div class="col-12 lg:col-9">
                 <div class="flex flex-column gap-5">
                     <SectionPanel
                         v-for="category in [
