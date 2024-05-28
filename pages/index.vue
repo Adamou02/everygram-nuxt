@@ -12,7 +12,10 @@
     </div>
     <div class="key-features">
         <HomeTriangleConnectLine />
-        <HomeKeyFeature image-src="/image/home-key-feature-1.jpg">
+        <HomeKeyFeature
+            :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_1')"
+            :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_1_M')"
+        >
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_1_TITLE">
                     <template #keyword>
@@ -27,7 +30,11 @@
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine reverse />
-        <HomeKeyFeature image-src="/image/home-key-feature-2.jpg" reverse>
+        <HomeKeyFeature
+            :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_2')"
+            :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_2_M')"
+            reverse
+        >
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_2_TITLE">
                     <template #keyword>
@@ -42,7 +49,10 @@
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine />
-        <HomeKeyFeature image-src="/image/home-key-feature-3.jpg">
+        <HomeKeyFeature
+            :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_3')"
+            :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_3_M')"
+        >
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_3_TITLE">
                     <template #keyword>
@@ -77,7 +87,16 @@
             <h2 class="text-2xl lg:text-4xl">
                 {{ $t('LABEL_ALL_DEVICES_COMPATIBLE') }}
             </h2>
-            <img src="/image/compatible-devices.jpg" />
+            <picture>
+                <source
+                    :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
+                    :srcset="$t('IMAGE_URL_COMPATIBLE_DEVICES')"
+                />
+                <img
+                    :src="$t('IMAGE_URL_COMPATIBLE_DEVICES_M')"
+                    alt="All Devices Compatible"
+                />
+            </picture>
         </div>
         <AppFooter />
     </div>
@@ -143,7 +162,7 @@ useSeoMeta({
     ogTitle: i18n.t('META_HOME_TITLE'),
     description: i18n.t('META_HOME_DESCRIPTION'),
     ogDescription: i18n.t('META_HOME_DESCRIPTION'),
-    ogImage: constants.SITE_DOMAIN + '/image/og-image.jpg',
+    ogImage: constants.SITE_DOMAIN + '/image/home-og-image.jpg',
     robots: 'index, follow',
     themeColor: '#9d8b73',
 });

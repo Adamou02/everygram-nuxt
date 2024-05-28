@@ -12,7 +12,7 @@
                     <div
                         class="key-feature__label flex align-items-center gap-2 text-sm p-2 border-round-md mb-3"
                     >
-                        <img src="/image/feature-stars.svg" />
+                        <img src="/image/key-feature-stars.svg" />
                         <span class="text-sm">KEY FEATURE</span>
                     </div>
                     <h2 class="text-3xl lg:text-5xl mb-5">
@@ -25,10 +25,19 @@
             </div>
             <!-- image -->
             <div :class="['col-12 lg:col-6', { 'lg:col-offset-1': !reverse }]">
-                <div
-                    class="key-feature__img"
-                    :style="{ 'background-image': `url(${props.imageSrc})` }"
-                ></div>
+                <div class="key-feature__img p-3 lg:p-0">
+                    <picture>
+                        <source
+                            :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
+                            :srcset="props.imageSrc"
+                        />
+                        <img
+                            :src="props.imageSrcMobile"
+                            class="border-round-xl"
+                            alt="Key Feature Image"
+                        />
+                    </picture>
+                </div>
             </div>
         </div>
     </div>
@@ -38,6 +47,7 @@
 const props = defineProps<{
     reverse?: boolean;
     imageSrc: string;
+    imageSrcMobile: string;
 }>();
 </script>
 
@@ -50,14 +60,17 @@ const props = defineProps<{
     max-width: var(--max-page-width);
     margin: auto;
     &__img {
-        height: 400px;
-        background-position: right;
-        background-repeat: no-repeat;
-        background-size: contain;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
         @media (min-width: $lg) {
-            background-position: left;
-            height: 600px;
-            background-size: auto 100%;
+            height: 620px;
+            img {
+                object-fit: cover;
+                object-position: left;
+            }
         }
     }
     &__label {
@@ -68,9 +81,10 @@ const props = defineProps<{
 
 .key-feature {
     &--reverse &__img {
-        background-position: left;
         @media (min-width: $lg) {
-            background-position: right;
+            img {
+                object-position: right;
+            }
         }
     }
 }

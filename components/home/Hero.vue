@@ -56,13 +56,13 @@ const emit = defineEmits<{
     background-color: $eg-c-primary;
     height: 600px;
     &__img {
-        background-image: url(/image/illustration/home-hero-1x.jpg);
+        background-image: url(/image/home-hero-1x.jpg);
         background-position: bottom center;
         background-size: cover;
         background-repeat: no-repeat;
 
         @media (min-width: $lg) {
-            background-image: url(/image/illustration/home-hero-2x.jpg);
+            background-image: url(/image/home-hero-2x.jpg);
             background-position: left center;
         }
     }

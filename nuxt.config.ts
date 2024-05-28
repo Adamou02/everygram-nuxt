@@ -18,7 +18,7 @@ export default defineNuxtConfig({
                 // material icons
                 {
                     rel: 'stylesheet',
-                    href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400',
+                    href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300',
                 },
                 {
                     rel: 'preconnect',
