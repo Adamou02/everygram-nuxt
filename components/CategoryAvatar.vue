@@ -36,7 +36,7 @@ const props = defineProps<{
     &--medium {
         width: 2.2rem;
         height: 2.2rem;
-        --icon-size: 1.4rem;
+        --icon-size: 1.2rem;
     }
     &--large {
         width: 3rem;
