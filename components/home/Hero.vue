@@ -65,6 +65,7 @@ const emit = defineEmits<{
 
         @media (min-width: $lg) {
             background-image: url(/image/home-hero-2x.jpg);
+            background-size: contain;
             background-position: left center;
         }
     }
