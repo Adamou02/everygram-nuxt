@@ -1,47 +1,47 @@
 const GEAR_CATEGORIES: Record<GearCategory, CategoryData> = {
     accessories: {
         icon: 'atr',
-        color: '#999999',
+        color: '#A795B9',
     },
     packs: {
         icon: 'backpack',
-        color: '#304869',
+        color: '#7C909B',
     },
     clothing: {
         icon: 'apparel',
-        color: '#EFA33D',
+        color: '#C78954',
     },
     cooking: {
         icon: 'skillet',
-        color: '#CC4545',
+        color: '#B18688',
     },
     electronics: {
         icon: 'devices_other',
-        color: '#E1BA51',
+        color: '#D2C47C',
     },
     photography: {
         icon: 'photo_camera',
-        color: '#8BB683',
+        color: '#739965',
     },
     hydration: {
         icon: 'water_bottle',
-        color: '#2C67BA',
+        color: '#7CB0C1',
     },
     shelter: {
         icon: 'camping',
-        color: '#9D8B73',
+        color: '#A48D77',
     },
     sleeping: {
         icon: 'airline_seat_flat',
-        color: '#B68383',
+        color: '#6B77A2',
     },
     tools: {
         icon: 'hardware',
-        color: '#6E7A6C',
+        color: '#848A7A',
     },
     others: {
         icon: 'more_horiz',
-        color: '#A7A4A2',
+        color: '#BDC1C3',
     },
 };
 

@@ -1,27 +1,27 @@
 const CONSUMABLE_CATEGORIES: Record<ConsumableCategory, CategoryData> = {
     food: {
         icon: 'restaurant',
-        color: '#DCB279',
+        color: '#A7A4A2',
     },
     drinks: {
         icon: 'water_drop',
-        color: '#89A2C5',
+        color: '#A7A4A2',
     },
     fuel: {
         icon: 'local_fire_department',
-        color: '#DC755E',
+        color: '#A7A4A2',
     },
     cosmetics: {
         icon: 'health_and_beauty',
-        color: '#E8DD6C',
+        color: '#A7A4A2',
     },
     sanitary: {
         icon: 'clean_hands',
-        color: '#93C589',
+        color: '#A7A4A2',
     },
     medical: {
         icon: 'medical_services',
-        color: '#B68383',
+        color: '#A7A4A2',
     },
     others: {
         icon: 'more_horiz',
