@@ -3,10 +3,7 @@
         :class="[
             'app-header top-0 w-full',
             {
-                sticky,
-                fixed,
-                absolute,
-                'bg-white border-bottom-1 border-200': !transparent,
+                'bg-white border-bottom-1 border-200': !colorReverse,
             },
         ]"
     >
@@ -41,10 +38,6 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    sticky?: boolean;
-    fixed?: boolean;
-    absolute?: boolean;
-    transparent?: boolean;
     colorReverse?: boolean;
 }>();
 const userStore = useUserStore();

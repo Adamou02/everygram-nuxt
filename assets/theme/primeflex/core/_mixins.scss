@@ -34,7 +34,8 @@
             @media screen and (min-width: #{$val}) {
                 .#{$key + $separator} {
                     @each $key, $val in $map {
-                        &#{$prefix}#{$key} {
+                        // double selector to increase responsive specificity
+                        &#{$prefix}#{$key}#{&}#{$prefix}#{$key} {
                             #{$prop}: #{$val} !important;
                         }
                     }
@@ -42,19 +43,22 @@
                     @if ($states) {
                         @each $key, $val in $map {
                             &focus#{$separator} {
-                                &#{$prefix}#{$key}:focus {
+                                // double selector to increase responsive specificity
+                                &#{$prefix}#{$key}#{&}#{$prefix}#{$key}:focus {
                                     #{$prop}: #{$val} !important;
                                 }
                             }
 
                             &hover#{$separator} {
-                                &#{$prefix}#{$key}:hover {
+                                // double selector to increase responsive specificity
+                                &#{$prefix}#{$key}#{&}#{$prefix}#{$key}:hover {
                                     #{$prop}: #{$val} !important;
                                 }
                             }
 
                             &active#{$separator} {
-                                &#{$prefix}#{$key}:active {
+                                // double selector to increase responsive specificity
+                                &#{$prefix}#{$key}#{&}#{$prefix}#{$key}:active {
                                     #{$prop}: #{$val} !important;
                                 }
                             }

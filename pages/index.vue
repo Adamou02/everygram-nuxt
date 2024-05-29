@@ -1,5 +1,5 @@
 <template>
-    <AppHeader transparent absolute color-reverse />
+    <AppHeader class="bg-primary lg:bg-transparent lg:absolute" color-reverse />
     <HomeHero ref="heroRef" @see-key-features="onSeeFeatures" />
     <div class="intro" ref="introRef">
         <HomeTriangleLine />

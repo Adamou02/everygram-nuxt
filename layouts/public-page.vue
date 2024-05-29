@@ -1,5 +1,5 @@
 <template>
-    <AppHeader sticky />
+    <AppHeader class="sticky" />
     <div class="page-container">
         <slot />
     </div>

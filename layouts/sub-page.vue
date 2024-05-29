@@ -1,5 +1,5 @@
 <template>
-    <AppHeader sticky>
+    <AppHeader class="sticky">
         <template #left>
             <NuxtLink :to="backButton.parent">
                 <PrimeButton
