@@ -3,7 +3,7 @@
     <HomeHero ref="heroRef" @see-key-features="onSeeFeatures" />
     <div class="intro" ref="introRef">
         <HomeTriangleLine />
-        <HomeBrandIconSection>
+        <HomeBrandIconSection class="intro-description">
             <p class="text-700">
                 {{ $t('HOME_INTRO_DESCRIPTION') }}
             </p>
@@ -15,6 +15,7 @@
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_1')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_1_M')"
+            class="key-feature-1"
         >
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_1_TITLE">
@@ -33,6 +34,7 @@
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_2')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_2_M')"
+            class="key-feature-2"
             reverse
         >
             <template #title>
@@ -52,6 +54,7 @@
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_3')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_3_M')"
+            class="key-feature-3"
         >
             <template #title>
                 <i18n-t keypath="HOME_KEY_FEATURE_3_TITLE">
@@ -87,7 +90,7 @@
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine reverse />
-        <HomeBrandIconSection>
+        <HomeBrandIconSection class="are-you-ready">
             <h3 class="mb-2">{{ $t('HOME_READY_TITLE') }}</h3>
             <p class="text-700 mb-4">
                 {{
@@ -198,5 +201,28 @@ useSeoMeta({
 }
 .key-features {
     background-color: $eg-brown-100;
+}
+
+// deco images
+@media (min-width: $lg) {
+    .intro-description {
+        background:
+            url(/image/deco-poles.png) no-repeat 40px center / 100px,
+            url(/image/deco-silverware.png) no-repeat right 40px center / 100px;
+    }
+    .key-feature-1 {
+        background: url(/image/deco-merinohat.png) no-repeat left bottom 120px /
+            120px;
+    }
+    .key-feature-2 {
+        background: url(/image/deco-sacks.png) no-repeat right top 120px / 120px;
+    }
+    .key-feature-3 {
+        background: url(/image/deco-hat.png) no-repeat left bottom 80px / 120px;
+    }
+    .are-you-ready {
+        background: url(/image/deco-socks.png) no-repeat right 120px bottom /
+            120px;
+    }
 }
 </style>
