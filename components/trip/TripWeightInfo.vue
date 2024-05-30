@@ -15,24 +15,26 @@
                 </div>
             </h3>
             <WeightBarChart :items="backpackWeightItems" :showLabel="true" />
-            <div
-                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
-            >
-                <div>
-                    {{ $t('LABEL_BASE_WEIGHT') }}
+            <div class="flex flex-column gap-1">
+                <div
+                    class="flex justify-content-between surface-100 text-sm px-3 py-2 border-round-top-md"
+                >
+                    <div>
+                        {{ $t('LABEL_BASE_WEIGHT') }}
+                    </div>
+                    <div>
+                        {{ formatWeight(gearsWeight) }}
+                    </div>
                 </div>
-                <div>
-                    {{ formatWeight(gearsWeight) }}
-                </div>
-            </div>
-            <div
-                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
-            >
-                <div>
-                    {{ $t('LABEL_CONSUMABLES') }}
-                </div>
-                <div>
-                    {{ formatWeight(consumablesWeight) }}
+                <div
+                    class="flex justify-content-between surface-100 text-sm px-3 py-2 border-round-bottom-md"
+                >
+                    <div>
+                        {{ $t('LABEL_CONSUMABLES') }}
+                    </div>
+                    <div>
+                        {{ formatWeight(consumablesWeight) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,7 +43,7 @@
             class="flex flex-column gap-3 p-3 bg-white border-round-bottom-md border-top-solid border-top-1 border-200"
         >
             <div
-                class="flex justify-content-between surface-200 px-3 py-2 border-round-md"
+                class="flex justify-content-between surface-100 text-sm px-3 py-2 border-round-md"
             >
                 <div>
                     {{ $t('LABEL_WORN_GEARS') }}

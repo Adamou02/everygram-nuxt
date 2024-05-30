@@ -12,7 +12,9 @@
                     :category="category as GearCategory"
                     size="medium"
                 />
-                <h3>{{ gearCategoryToLabel(category as GearCategory) }}</h3>
+                <h3 class="text-lg">
+                    {{ gearCategoryToLabel(category as GearCategory) }}
+                </h3>
             </template>
             <template v-if="type === 'consumable'">
                 <ConsumableCategoryAvatar
