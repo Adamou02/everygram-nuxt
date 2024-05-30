@@ -15,14 +15,12 @@ export const GEAR_THUMBNAIL_SIZES: ThumbnailOption[] = [
     { width: 128, height: 128, name: 'xs' },
     { width: 360, height: 360, name: 'sm' },
     { width: 720, height: 720, name: 'md' },
-    { width: 1280, height: 1280, name: 'lg' },
 ];
 
 export const TRIP_THUMBNAIL_SIZES: ThumbnailOption[] = [
     { width: 320, height: 180, name: 'xs' },
     { width: 640, height: 360, name: 'sm' },
     { width: 1280, height: 720, name: 'md' },
-    { width: 1600, height: 900, name: 'lg' },
 ];
 
 export const generateThumbnails = async ({

@@ -16,7 +16,7 @@ declare global {
         fileName: string;
     };
 
-    type ThumbnailSize = 'xs' | 'sm' | 'md' | 'lg';
+    type ThumbnailSize = 'xs' | 'sm' | 'md';
 
     type StorageImage = StorageFile & {
         thumbnails?: Record<ThumbnailSize, StorageFile>;

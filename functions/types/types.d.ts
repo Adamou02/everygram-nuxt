@@ -15,7 +15,7 @@ export type StorageFile = {
     fileName: string;
 };
 
-export type ThumbnailSize = 'xs' | 'sm' | 'md' | 'lg';
+export type ThumbnailSize = 'xs' | 'sm' | 'md';
 
 export type StorageImage = StorageFile & {
     thumbnails?: Record<ThumbnailSize, StorageFile>;
