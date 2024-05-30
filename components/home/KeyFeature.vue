@@ -15,10 +15,10 @@
                         <img src="/image/key-feature-stars.svg" />
                         <span class="text-sm">KEY FEATURE</span>
                     </div>
-                    <h2 class="text-3xl lg:text-5xl mb-5">
+                    <h2 class="text-3xl lg:text-5xl mb-4">
                         <slot name="title" />
                     </h2>
-                    <p class="text-700 text-lg line-height-3">
+                    <p class="text-700 text-lg line-height-3 w-full">
                         <slot name="description" />
                     </p>
                 </div>

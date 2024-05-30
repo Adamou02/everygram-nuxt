@@ -64,6 +64,26 @@
             </template>
             <template #description>
                 {{ $t('HOME_KEY_FEATURE_3_DESCRIPTION') }}
+                <NuxtLink
+                    v-if="$i18n.locale === 'zh-tw'"
+                    to="/trip-share/68wdPrCDnUbGJ17a53Mp"
+                    class="block mt-5 text-center lg:text-left"
+                    @click="
+                        () =>
+                            analyticsUtils.log(
+                                constants.ANALYTICS_EVENTS
+                                    .CLICK_TRIP_SHARE_EXAMPLE_BUTTON,
+                            )
+                    "
+                >
+                    <PrimeButton
+                        :label="$t('ACTION_SEE_TRIP_SHARE_EXAMPLE')"
+                        icon="pi pi-arrow-right"
+                        icon-pos="right"
+                        severity="secondary"
+                        outlined
+                    />
+                </NuxtLink>
             </template>
         </HomeKeyFeature>
         <HomeTriangleConnectLine reverse />
