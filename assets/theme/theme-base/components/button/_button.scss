@@ -207,6 +207,7 @@
         }
 
         &.p-button-rounded {
+            padding: 0;
             border-radius: 50%;
             height: $buttonIconOnlyWidth;
         }
@@ -227,6 +228,13 @@
 
         .p-button-icon {
             // @include scaledFontSize($primeIconFontSize, $scaleLG);
+        }
+
+        &.p-button-icon-only {
+            width: $buttonLgIconOnlyWidth;
+            &.p-button-rounded {
+                height: $buttonLgIconOnlyWidth;
+            }
         }
     }
 

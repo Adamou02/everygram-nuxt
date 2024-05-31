@@ -40,7 +40,6 @@
             >
                 <PrimeSelectButton
                     v-model="formState.dateMode"
-                    severity="secondary"
                     :options="dateModeOptions"
                     optionLabel="label"
                     optionValue="value"
@@ -78,6 +77,7 @@
             <PrimeButton
                 :label="$t('ACTION_CANCEL')"
                 text
+                rounded
                 severity="secondary"
                 :disabled="isSaving"
                 @click="
@@ -88,6 +88,7 @@
                 "
             />
             <PrimeButton
+                rounded
                 :label="editingTrip ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 :loading="isSaving"
                 @click="onSubmit()"

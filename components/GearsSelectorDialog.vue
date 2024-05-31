@@ -20,6 +20,7 @@
                     <NuxtLink to="/gears">
                         <PrimeButton
                             :label="$t('ACTION_CREATE_GEAR_IN_GEARS')"
+                            rounded
                             outlined
                             icon="pi pi-arrow-right"
                             icon-pos="right"
@@ -58,10 +59,12 @@
                         <PrimeButton
                             :label="$t('ACTION_CANCEL')"
                             text
+                            rounded
                             severity="secondary"
                             @click="$emit('cancel')"
                         />
                         <PrimeButton
+                            rounded
                             :label="$t('ACTION_ADD')"
                             :disabled="!selectedGears.length"
                             @click="onSubmit()"

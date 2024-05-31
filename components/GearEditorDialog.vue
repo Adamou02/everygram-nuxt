@@ -113,6 +113,7 @@
             <PrimeButton
                 :label="$t('ACTION_CANCEL')"
                 text
+                rounded
                 severity="secondary"
                 :disabled="isSaving"
                 @click="
@@ -124,6 +125,7 @@
             />
             <PrimeButton
                 :label="editingGear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
+                rounded
                 :loading="isSaving"
                 @click="onSubmit"
             />

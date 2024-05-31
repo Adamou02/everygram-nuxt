@@ -34,6 +34,7 @@
                     icon="pi pi-arrow-right"
                     icon-pos="right"
                     class="w-full"
+                    rounded
                 />
             </NuxtLink>
         </template>
@@ -89,7 +90,11 @@
         <template #actions>
             <!-- back to home -->
             <NuxtLink to="/">
-                <PrimeButton :label="$t('ACTION_BACK_TO_HOME')" />
+                <PrimeButton
+                    rounded
+                    size="large"
+                    :label="$t('ACTION_BACK_TO_HOME')"
+                />
             </NuxtLink>
         </template>
     </EmptyState>

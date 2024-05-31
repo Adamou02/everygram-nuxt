@@ -18,11 +18,13 @@
             </PrimeInputGroup>
             <div class="flex flex-column lg:flex-row-reverse gap-2">
                 <PrimeButton
+                    rounded
                     :label="$t('ACTION_VIEW_SHARED_TRIP_PAGE')"
                     class="w-full"
                     @click="() => onViewSharedTrip()"
                 />
                 <PrimeButton
+                    rounded
                     :label="$t('ACTION_UNPUBLISH')"
                     class="w-full"
                     outlined
@@ -35,6 +37,7 @@
                 {{ $t('INFO_PUBLISH_TO_WEB_DESC') }}
             </p>
             <PrimeButton
+                rounded
                 :label="$t('ACTION_PUBLISH')"
                 class="w-full"
                 @click="() => publishTrip(trip)"

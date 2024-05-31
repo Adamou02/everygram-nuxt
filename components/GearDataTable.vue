@@ -97,7 +97,6 @@
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
-                    rounded
                     :items="
                         _filter([
                             actions.includes('edit') && {

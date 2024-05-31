@@ -37,7 +37,7 @@
                             )
                     "
                 >
-                    <PrimeButton link>
+                    <PrimeButton rounded text>
                         {{ $t('ACTION_FEEDBACK') }}
                     </PrimeButton>
                 </NuxtLink>

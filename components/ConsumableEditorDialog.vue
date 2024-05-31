@@ -101,6 +101,7 @@
             <PrimeButton
                 :label="$t('ACTION_CANCEL')"
                 text
+                rounded
                 severity="secondary"
                 :disabled="isSaving"
                 @click="
@@ -111,6 +112,7 @@
                 "
             />
             <PrimeButton
+                rounded
                 :label="
                     editingConsumable ? $t('ACTION_SAVE') : $t('ACTION_CREATE')
                 "

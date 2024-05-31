@@ -1,5 +1,6 @@
 <template>
     <PrimeButton
+        rounded
         icon="pi pi-image"
         icon-pos="left"
         :label="label || $t('ACTION_UPLOAD_PHOTO')"

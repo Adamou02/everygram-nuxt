@@ -3,8 +3,8 @@
         <div class="hidden lg:block">
             <PrimeButton
                 type="button"
+                rounded
                 :text="text"
-                :rounded="rounded"
                 :outlined="outlined"
                 :raised="raised"
                 :severity="severity"
@@ -27,8 +27,8 @@
         <div class="lg:hidden">
             <PrimeButton
                 type="button"
+                rounded
                 :text="text"
-                :rounded="rounded"
                 :outlined="outlined"
                 :raised="raised"
                 :severity="severity"
@@ -53,7 +53,6 @@
 const props = defineProps<{
     trip: Trip;
     text?: boolean;
-    rounded?: boolean;
     outlined?: boolean;
     raised?: boolean;
     severity?: string;

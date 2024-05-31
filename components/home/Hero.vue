@@ -55,7 +55,7 @@ const emit = defineEmits<{
 @import '~/assets/theme/_eg-colors.scss';
 
 .hero {
-    background-color: $eg-c-primary;
+    background-color: $eg-c-brand;
     height: 600px;
     &__img {
         background-image: url(/image/home-hero-1x.jpg);

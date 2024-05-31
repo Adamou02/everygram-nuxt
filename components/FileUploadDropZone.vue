@@ -22,6 +22,8 @@
             <PrimeButton
                 :label="buttonLabel || $t('ACTION_UPLOAD_FILE')"
                 icon="pi pi-upload"
+                rounded
+                outlined
                 :loading="isLoading"
                 :disabled="isLoading"
             />

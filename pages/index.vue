@@ -1,5 +1,8 @@
 <template>
-    <AppHeader class="bg-primary lg:bg-transparent lg:absolute" color-reverse />
+    <AppHeader
+        class="app-header--home lg:bg-transparent lg:absolute"
+        color-reverse
+    />
     <HomeHero ref="heroRef" @see-key-features="onSeeFeatures" />
     <div class="intro" ref="introRef">
         <HomeTriangleLine />
@@ -197,6 +200,9 @@ useSeoMeta({
 @import '~/assets/theme/primeflex/core/_variables.scss';
 @import '~/assets/theme/_eg-colors.scss';
 
+.app-header--home {
+    background-color: $eg-c-brand;
+}
 .intro {
     background-color: $eg-brown-200;
 }

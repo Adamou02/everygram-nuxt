@@ -6,6 +6,7 @@
         aria-haspopup="true"
         aria-controls="user-mobile-menu"
         text
+        rounded
     />
     <PrimeSidebar v-model:visible="isOpen" position="right">
         <template #header>

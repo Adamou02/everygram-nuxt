@@ -70,7 +70,6 @@
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
-                    rounded
                     :items="[
                         {
                             icon: 'pi pi-pencil',

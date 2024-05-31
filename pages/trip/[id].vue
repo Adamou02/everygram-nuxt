@@ -4,11 +4,7 @@
         <template #mobile-actions>
             <div class="flex">
                 <TripShareButton text rounded :trip="trip" />
-                <MoreActionsMenuButton
-                    text
-                    rounded
-                    :items="moreActionsMenuItems"
-                />
+                <MoreActionsMenuButton text :items="moreActionsMenuItems" />
             </div>
         </template>
     </SubPageAppHeader>
@@ -92,7 +88,6 @@
                     <MoreActionsMenuButton
                         severity="secondary"
                         text
-                        rounded
                         icon="pi-plus"
                         :items="[
                             {
@@ -224,7 +219,6 @@
                     <MoreActionsMenuButton
                         severity="secondary"
                         text
-                        rounded
                         icon="pi-plus"
                         :items="[
                             {

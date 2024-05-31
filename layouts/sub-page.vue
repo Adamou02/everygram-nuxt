@@ -6,6 +6,7 @@
                     icon="pi pi-arrow-left"
                     :label="backButton.label"
                     text
+                    rounded
                 />
             </NuxtLink>
         </template>

@@ -45,6 +45,8 @@
                     >
                         <PrimeButton
                             :label="$t('ACTION_DOWNLOAD_GEARS_TEMPLATE')"
+                            outlined
+                            rounded
                             icon="pi pi-download"
                         />
                     </a>
@@ -114,6 +116,7 @@
                         v-if="activeStep > 0"
                         :label="$t('ACTION_BACK')"
                         outlined
+                        rounded
                         icon="pi pi-arrow-left"
                         @click="activeStep = activeStep - 1"
                     />
@@ -124,6 +127,7 @@
                         :label="$t('ACTION_NEXT')"
                         icon="pi pi-arrow-right"
                         iconPos="right"
+                        rounded
                         :disabled="activeStep === 1 && !importedGearRows.length"
                         @click="activeStep = activeStep + 1"
                     />
@@ -137,6 +141,7 @@
                             )
                         "
                         icon="pi pi-download"
+                        rounded
                         :loading="isImporting"
                         :disabled="!selectedGears.length || isImporting"
                         @click="onImportGears"
