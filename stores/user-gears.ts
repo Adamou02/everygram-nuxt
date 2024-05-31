@@ -8,6 +8,9 @@ import {
     serverTimestamp,
     writeBatch,
     setDoc,
+    getDocs,
+    query,
+    where,
     deleteField,
     runTransaction,
 } from 'firebase/firestore';
@@ -37,9 +40,26 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
             const docData = doc.data();
             if (!doc.exists || !docData) {
+                // get all user's gears
+                const gearDocs = await getDocs(
+                    query(
+                        gearCollectionRef,
+                        where(`role.${userId}`, '==', constants.ROLES.OWNER),
+                    ),
+                );
+                const userGears: UserGears = {};
+                gearDocs.forEach((gearDoc) => {
+                    const gearData = gearDoc.data();
+                    const gearId = gearDoc.id;
+                    userGears[gearId] = {
+                        ...constants.EMPTY_GEAR_DATA,
+                        ...gearData,
+                        id: gearId,
+                    };
+                });
                 // create initial userGears document
-                setDoc(userGearsDocRef, {
-                    gears: {},
+                await setDoc(userGearsDocRef, {
+                    gears: userGears,
                 });
                 return;
             }
