@@ -32,7 +32,7 @@
             </template>
             <template v-if="weight !== undefined">
                 <DashedLine />
-                <div class="text-600">
+                <div class="text-color-light">
                     {{ formatWeight(weight) }}
                 </div>
             </template>

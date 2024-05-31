@@ -3,7 +3,7 @@
     <PageLoading v-if="isFetchingGears" />
     <div v-else-if="gears.length" class="flex flex-column gap-5">
         <SectionTitleBar>
-            <div class="text-600">
+            <div class="text-color-light">
                 {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
             </div>
             <div class="flex align-items-center gap-2">

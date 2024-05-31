@@ -13,11 +13,11 @@ $fontWeight: normal;
 
 /// Primary text color
 /// @group general
-$textColor: #495057;
+$textColor: $eg-c-text;
 
 /// Secondary text color
 /// @group general
-$textSecondaryColor: #6c757d;
+$textSecondaryColor: $eg-c-text-light;
 
 /// Background of a highlighted item
 /// @group general

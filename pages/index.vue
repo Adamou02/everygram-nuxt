@@ -7,7 +7,7 @@
     <div class="intro" ref="introRef">
         <HomeTriangleLine />
         <HomeBrandIconSection class="intro-description">
-            <p class="text-700">
+            <p class="text-color-light">
                 {{ $t('HOME_INTRO_DESCRIPTION') }}
             </p>
         </HomeBrandIconSection>
@@ -95,7 +95,7 @@
         <HomeTriangleConnectLine />
         <HomeBrandIconSection class="are-you-ready">
             <h3 class="mb-2">{{ $t('HOME_READY_TITLE') }}</h3>
-            <p class="text-700 mb-4">
+            <p class="text-color-light mb-4">
                 {{
                     user
                         ? $t('HOME_READY_DESCRIPTION')
@@ -204,10 +204,10 @@ useSeoMeta({
     background-color: $eg-c-brand;
 }
 .intro {
-    background-color: $eg-brown-200;
+    background-color: $eg-c-brown-200;
 }
 .key-features {
-    background-color: $eg-brown-100;
+    background-color: $eg-c-brown-100;
 }
 
 // deco images

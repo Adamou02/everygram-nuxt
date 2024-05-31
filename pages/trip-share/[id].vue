@@ -5,7 +5,7 @@
                 <template #actions>
                     <div class="flex align-items-center gap-1">
                         <UserLabel :user="tripShare.owner" />
-                        <div class="text-600">
+                        <div class="text-color-lighter">
                             {{ $t('INFO_CREATED_THIS_TRIP') }}
                         </div>
                     </div>

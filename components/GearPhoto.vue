@@ -1,9 +1,9 @@
 <template>
     <div
         :class="[
-            'gear-photo flex align-items-center justify-content-center border-round-md text-400 relative',
+            'gear-photo flex align-items-center justify-content-center border-round-md relative',
             {
-                'gear-photo--empty surface-100 border-2 border-100':
+                'gear-photo--empty surface-100 text-color-lightest border-2 border-100':
                     !displayImageUrl,
                 'hover:border-dashed hover:border-400 cursor-pointer':
                     !readonly && !displayImageUrl,

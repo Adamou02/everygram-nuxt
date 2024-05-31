@@ -1,4 +1,5 @@
 @import './eg-colors';
+@import '~/assets/theme/themes/mytheme/_variables.scss';
 @import '~/assets/theme/primeflex/core/_variables.scss';
 
 /* custom CSS properties */
@@ -20,6 +21,7 @@ body {
     letter-spacing: 0.5px;
     margin: 0;
     background-color: var(--app-background-color);
+    color: $textColor;
 }
 
 h1,

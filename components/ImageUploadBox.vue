@@ -1,7 +1,7 @@
 <template>
     <div
         :class="[
-            'image-upload-box  border-round-md text-400 flex align-items-center justify-content-center cursor-pointer relative',
+            'image-upload-box  border-round-md text-color-lightest flex align-items-center justify-content-center cursor-pointer relative',
             {
                 'border-dashed border-2 border-400': !displayImageUrl,
                 'border-solid border-1 border-300': displayImageUrl,

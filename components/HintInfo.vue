@@ -1,7 +1,7 @@
 <template>
     <div
         :class="[
-            'flex gap-2 align-items-start text-600',
+            'flex gap-2 align-items-start text-color-light',
             {
                 'text-xs': props.size === 'xs',
                 'text-sm': props.size === 'sm',

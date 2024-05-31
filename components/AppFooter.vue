@@ -18,7 +18,7 @@
             <div class="app-footer__hr-line"></div>
         </div>
         <div class="app-footer__content">
-            <div class="text-600">
+            <div class="text-color-light">
                 <small
                     >Copyright &copy; {{ currentYear }}
                     {{ $t('APP_NAME') }}</small

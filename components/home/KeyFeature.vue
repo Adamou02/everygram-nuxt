@@ -9,16 +9,16 @@
                 <div
                     class="h-full flex flex-column justify-content-center align-items-start p-3 lg:p-0"
                 >
-                    <div
-                        class="key-feature__label flex align-items-center gap-2 text-sm p-2 border-round-md mb-3"
+                    <PrimeTag
+                        class="p-tag-primary-light flex align-items-center gap-2 p-2 mb-3"
                     >
                         <img src="/image/key-feature-stars.svg" />
                         <span class="text-sm">KEY FEATURE</span>
-                    </div>
+                    </PrimeTag>
                     <h2 class="text-3xl lg:text-5xl mb-4">
                         <slot name="title" />
                     </h2>
-                    <p class="text-700 text-lg line-height-3 w-full">
+                    <p class="text-color-light text-lg line-height-3 w-full">
                         <slot name="description" />
                     </p>
                 </div>
@@ -73,10 +73,6 @@ const props = defineProps<{
                 object-position: left;
             }
         }
-    }
-    &__label {
-        color: $eg-brown-700;
-        background-color: $eg-brown-300;
     }
 }
 

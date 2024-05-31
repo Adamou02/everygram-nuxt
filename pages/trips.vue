@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-column gap-5">
         <SectionTitleBar v-if="isFetchingTrips || trips.length > 0">
-            <div class="text-600">
+            <div class="text-color-light">
                 {{ $t('INFO_TRIP_NUM', { num: trips.length }, trips.length) }}
             </div>
             <PrimeButton

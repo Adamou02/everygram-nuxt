@@ -1,59 +1,58 @@
 // base colors - brown
-$eg-brown-800: #41332a;
-$eg-brown-700: #544236;
-$eg-brown-600: #6c5647;
-$eg-brown-500: #7e6e58;
-$eg-brown-400: #9d8b73;
-$eg-brown-300: #d5cdc3;
-$eg-brown-200: #eeebe7;
-$eg-brown-100: #fbfaf9;
+$eg-c-brown-800: #41332a;
+$eg-c-brown-700: #544236;
+$eg-c-brown-600: #6c5647;
+$eg-c-brown-500: #7e6e58;
+$eg-c-brown-400: #9d8b73;
+$eg-c-brown-300: #d5cdc3;
+$eg-c-brown-200: #eeebe7;
+$eg-c-brown-100: #fbfaf9;
 
 // base colors - blue
-$eg-blue-800: #2a3441;
-$eg-blue-700: #364454;
-$eg-blue-600: #47586c;
-$eg-blue-500: #5e7087;
-$eg-blue-400: #8192a7;
-$eg-blue-300: #b7c1cc;
-$eg-blue-200: #e7eaee;
-$eg-blue-100: #f9fafb;
+$eg-c-blue-800: #2a3441;
+$eg-c-blue-700: #364454;
+$eg-c-blue-600: #47586c;
+$eg-c-blue-500: #5e7087;
+$eg-c-blue-400: #8192a7;
+$eg-c-blue-300: #b7c1cc;
+$eg-c-blue-200: #e7eaee;
+$eg-c-blue-100: #f9fafb;
+
+// base colors - gray
+$eg-c-gray-800: #333333;
+$eg-c-gray-700: #666666;
+$eg-c-gray-600: #999999;
+$eg-c-gray-500: #cccccc;
+$eg-c-gray-400: #e0e0e0;
+$eg-c-gray-300: #e8e8e8;
+$eg-c-gray-200: #ededed;
+$eg-c-gray-100: #f5f5f5;
 
 $eg-c-bright: #ffffff;
 
 // functional colors
-$eg-c-brand: $eg-brown-400;
+$eg-c-brand: $eg-c-brown-400;
 
-$eg-c-primary: $eg-brown-500;
-$eg-c-primary-dark: $eg-brown-600;
-$eg-c-primary-darker: $eg-brown-800;
-$eg-c-primary-light: $eg-brown-300;
-$eg-c-primary-lighter: $eg-brown-200;
-$eg-c-primary-lightest: $eg-brown-100;
+$eg-c-primary: $eg-c-brown-500;
+$eg-c-primary-dark: $eg-c-brown-600;
+$eg-c-primary-darker: $eg-c-brown-800;
+$eg-c-primary-light: $eg-c-brown-300;
+$eg-c-primary-lighter: $eg-c-brown-200;
+$eg-c-primary-lightest: $eg-c-brown-100;
 $eg-c-on-primary: $eg-c-bright;
 
-$eg-c-secondary: $eg-blue-500;
-$eg-c-secondary-dark: $eg-blue-600;
-$eg-c-secondary-darker: $eg-blue-800;
-$eg-c-secondary-light: $eg-blue-300;
-$eg-c-secondary-lighter: $eg-blue-200;
-$eg-c-secondary-lightest: $eg-blue-100;
+$eg-c-secondary: $eg-c-blue-500;
+$eg-c-secondary-dark: $eg-c-blue-600;
+$eg-c-secondary-darker: $eg-c-blue-800;
+$eg-c-secondary-light: $eg-c-blue-300;
+$eg-c-secondary-lighter: $eg-c-blue-200;
+$eg-c-secondary-lightest: $eg-c-blue-100;
 $eg-c-on-secondary: $eg-c-bright;
 
-$eg-c-success: #48a735;
-$eg-c-danger: #cf4526;
-$eg-c-warning: #ffa100;
-
-$eg-c-gray-900: black;
-$eg-c-gray-800: rgba(0, 0, 0, 0.8);
-$eg-c-gray-700: rgba(0, 0, 0, 0.7);
-$eg-c-gray-600: rgba(0, 0, 0, 0.6);
-$eg-c-gray-500: rgba(0, 0, 0, 0.5);
-$eg-c-gray-400: rgba(0, 0, 0, 0.4);
-$eg-c-gray-300: rgba(0, 0, 0, 0.3);
-$eg-c-gray-200: rgba(0, 0, 0, 0.2);
-$eg-c-gray-100: rgba(0, 0, 0, 0.1);
-$eg-c-gray-50: rgba(0, 0, 0, 0.05);
-$eg-c-gray-40: rgba(0, 0, 0, 0.04);
+$eg-c-text: $eg-c-gray-800;
+$eg-c-text-light: $eg-c-gray-700;
+$eg-c-text-lighter: $eg-c-gray-600;
+$eg-c-text-lightest: $eg-c-gray-500;
 
 $eg-c-background: #f2f3f2;
 

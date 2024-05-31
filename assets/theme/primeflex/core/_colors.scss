@@ -79,8 +79,14 @@ $custom-properties: (
     'text-color': (
         'color': var(--text-color),
     ),
-    'text-color-secondary': (
-        'color': var(--text-color-secondary),
+    'text-color-light': (
+        'color': var(--text-color-light),
+    ),
+    'text-color-lighter': (
+        'color': var(--text-color-lighter),
+    ),
+    'text-color-lightest': (
+        'color': var(--text-color-lightest),
     ),
     'surface-ground': (
         'background-color': var(--surface-ground),

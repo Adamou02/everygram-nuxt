@@ -51,7 +51,7 @@
                         <span
                             v-if="item.subItems"
                             :class="[
-                                'pi text-xs text-600',
+                                'pi text-xs text-color-light',
                                 {
                                     'pi-chevron-up': itemsToggle[index],
                                     'pi-chevron-down': !itemsToggle[index],
@@ -61,7 +61,7 @@
                     </div>
                     <DashedLine />
                     <div>{{ formatWeight(item.weight) }}</div>
-                    <div class="w-2rem text-600 text-right">
+                    <div class="w-2rem text-color-light text-right">
                         {{
                             _round(
                                 (totalWeight ? item.weight / totalWeight : 0) *
@@ -73,7 +73,7 @@
                 <!-- sub items -->
                 <div
                     v-if="item.subItems && itemsToggle[index]"
-                    class="flex flex-column gap-1 mt-1 ml-3 text-600"
+                    class="flex flex-column gap-1 mt-1 ml-3 text-color-light"
                 >
                     <div
                         v-for="subItem in item.subItems"
@@ -83,7 +83,7 @@
                         <div>{{ subItem.label }}</div>
                         <DashedLine />
                         <div>{{ formatWeight(subItem.weight) }}</div>
-                        <div class="w-2rem text-600 text-right">
+                        <div class="w-2rem text-color-light text-right">
                             {{
                                 _round(
                                     (totalWeight

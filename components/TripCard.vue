@@ -20,7 +20,7 @@
             <h3 class="text-lg text-color mb-2 text-ellipsis">
                 {{ trip.title }}
             </h3>
-            <div class="text-600 mb-3 text-ellipsis">
+            <div class="text-color-light mb-3 text-ellipsis">
                 <template v-if="trip.startDate">
                     {{ trip.startDate }}
                     <template v-if="trip.dateMode === 'multi'">
