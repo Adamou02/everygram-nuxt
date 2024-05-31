@@ -29,7 +29,6 @@
                                 severity="contrast"
                                 rounded
                                 outlined
-                                size="large"
                                 :label="$t('ACTION_SEE_KEY_FEATURES')"
                                 icon="pi pi-arrow-down"
                                 icon-pos="left"

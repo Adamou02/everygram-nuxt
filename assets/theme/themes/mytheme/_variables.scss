@@ -4,6 +4,8 @@
 $primaryColor: $eg-c-primary;
 $primaryDarkColor: $eg-c-primary-dark;
 $primaryDarkerColor: $eg-c-primary-dark;
+$primaryLightColor: $eg-c-primary-light;
+$primaryLighterColor: $eg-c-primary-lighter;
 $primaryTextColor: $eg-c-on-primary;
 
 $secondaryColor: $eg-c-secondary;
@@ -14,7 +16,11 @@ $secondaryTextColor: $eg-c-on-secondary;
 $contrastColor: $eg-c-bright;
 $contrastDarkColor: $eg-c-primary-lightest;
 $contrastDarkerColor: $eg-c-primary-lighter;
+$secondaryLightColor: $eg-c-secondary-light;
+$secondaryLighterColor: $eg-c-secondary-lighter;
 $contrastTextColor: $eg-c-primary;
+
+$inputBorderColor: $eg-c-gray-200;
 
 $colors: (
     'blue': #2196f3,

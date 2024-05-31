@@ -20,7 +20,7 @@ $inputIconColor: $textColor;
 
 /// Border of an input field
 /// @group form
-$inputBorder: 1px solid #ced4da;
+$inputBorder: 1px solid #{$inputBorderColor};
 
 /// Border of an input field in hover state
 /// @group form
@@ -32,7 +32,6 @@ $inputFocusBorderColor: $primaryColor;
 
 /// Color of an input field in invalid state
 /// @group form
-// $inputErrorBorderColor: #ced4da #ced4da #ced4da $errorColor;
 $inputErrorBorderColor: $errorColor;
 
 /// Text color of a placeholder
@@ -169,7 +168,7 @@ $checkboxHeight: 20px;
 
 /// Border of a checkbox
 /// @group form
-$checkboxBorder: 2px solid #ced4da;
+$checkboxBorder: 2px solid #{$inputBorderColor};
 
 /// Size of a checkbox icon
 /// @group form
@@ -209,7 +208,7 @@ $radiobuttonHeight: 20px;
 
 /// Border of a radiobutton
 /// @group form
-$radiobuttonBorder: 2px solid #ced4da;
+$radiobuttonBorder: 2px solid #{$inputBorderColor};
 
 /// Font size of a radiobutton icon
 /// @group form
@@ -417,7 +416,7 @@ $calendarCellDateHoverBg: #e9ecef;
 
 /// Background of a calendar date cell indicating today
 /// @group form
-$calendarCellDateTodayBg: #ced4da;
+$calendarCellDateTodayBg: $inputBorderColor;
 
 /// Border color of a calendar date cell indicating today
 /// @group form
@@ -481,7 +480,7 @@ $inputSwitchSliderPadding: 0.25rem;
 
 /// Background color of an inputswitch slider when unselected
 /// @group form
-$inputSwitchSliderOffBg: #ced4da;
+$inputSwitchSliderOffBg: $inputBorderColor;
 
 /// Background color of an inputswitch handle when unselected
 /// @group form

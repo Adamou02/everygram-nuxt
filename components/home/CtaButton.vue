@@ -6,7 +6,6 @@
             icon-pos="right"
             :severity="severity"
             rounded
-            size="large"
             :loading="isSigningIn"
             @click="
                 () => {
@@ -26,7 +25,6 @@
                 icon-pos="right"
                 :severity="severity"
                 rounded
-                size="large"
                 :label="$t('ACTION_START_USING_EVERYGRAM')"
             />
         </NuxtLink>

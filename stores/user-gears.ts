@@ -39,7 +39,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         const userGearsDocRef = doc(db, 'userGears', userId);
         unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
             const docData = doc.data();
-            if (!doc.exists || !docData) {
+            if (!doc.exists || !docData || isEmpty(docData.gears)) {
                 // get all user's gears
                 const gearDocs = await getDocs(
                     query(

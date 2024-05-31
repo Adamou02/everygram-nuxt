@@ -11,7 +11,6 @@
                     severity="secondary"
                     rounded
                     outlined
-                    size="large"
                     :label="$t('ACTION_IMPORT_GEARS')"
                     icon="pi pi-file-arrow-up"
                     class="hide-in-mobile"
@@ -21,7 +20,6 @@
                     severity="secondary"
                     rounded
                     outlined
-                    size="large"
                     icon="pi pi-file-arrow-up"
                     @click="isOpenImportGearsDialog = true"
                     class="lg:hidden"
@@ -29,7 +27,6 @@
                 <PrimeButton
                     severity="secondary"
                     rounded
-                    size="large"
                     :label="$t('ACTION_CREATE_GEAR')"
                     icon="pi pi-plus"
                     @click="() => onCreateGear()"
@@ -143,7 +140,6 @@
                 <PrimeButton
                     severity="secondary"
                     rounded
-                    size="large"
                     :label="$t('ACTION_CREATE_GEAR')"
                     icon="pi pi-plus"
                     @click="() => onCreateGear()"
@@ -152,7 +148,6 @@
                     severity="secondary"
                     rounded
                     outlined
-                    size="large"
                     :label="$t('ACTION_IMPORT_GEARS')"
                     icon="pi pi-file-arrow-up"
                     @click="isOpenImportGearsDialog = true"

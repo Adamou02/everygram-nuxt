@@ -90,11 +90,7 @@
         <template #actions>
             <!-- back to home -->
             <NuxtLink to="/">
-                <PrimeButton
-                    rounded
-                    size="large"
-                    :label="$t('ACTION_BACK_TO_HOME')"
-                />
+                <PrimeButton rounded :label="$t('ACTION_BACK_TO_HOME')" />
             </NuxtLink>
         </template>
     </EmptyState>

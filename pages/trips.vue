@@ -7,7 +7,6 @@
             <PrimeButton
                 severity="secondary"
                 rounded
-                size="large"
                 :label="$t('ACTION_CREATE_TRIP')"
                 icon="pi pi-plus"
                 @click="onCreateTrip"
@@ -43,7 +42,6 @@
                 <PrimeButton
                     severity="secondary"
                     rounded
-                    size="large"
                     :label="$t('ACTION_CREATE_TRIP')"
                     icon="pi pi-plus"
                     @click="onCreateTrip"

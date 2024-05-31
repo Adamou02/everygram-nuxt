@@ -55,7 +55,7 @@
                         |
                         {{ formatWeight(weightOfSelectedGears) }}
                     </div>
-                    <div>
+                    <div class="flex flex-row flex-wrap gap-2">
                         <PrimeButton
                             :label="$t('ACTION_CANCEL')"
                             text
