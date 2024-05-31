@@ -3,11 +3,15 @@
         :class="[
             'gear-photo flex align-items-center justify-content-center border-round-md text-400 relative',
             {
-                'gear-photo--empty surface-100 border-2 border-100 hover:border-dashed hover:border-400 cursor-pointer':
+                'gear-photo--empty surface-100 border-2 border-100':
                     !displayImageUrl,
-                'opacity-50': isHovering || isCompressing || isLoading,
+                'hover:border-dashed hover:border-400 cursor-pointer':
+                    !readonly && !displayImageUrl,
+                'opacity-50':
+                    !readonly && (isHovering || isCompressing || isLoading),
                 // show dashed border when hovering on empty gear photo
-                'border-dashed border-400': isHovering && !displayImageUrl,
+                'border-dashed border-400':
+                    !readonly && isHovering && !displayImageUrl,
             },
         ]"
     >
@@ -18,13 +22,12 @@
             class="gear-photo__img"
             loading="lazy"
         />
-        <span
-            v-if="!displayImageUrl"
-            class="material-symbols-outlined text-2xl"
-            >{{ gearCategoryIcon }}</span
-        >
+        <span v-else class="material-symbols-outlined text-2xl">{{
+            gearCategoryIcon
+        }}</span>
         <!-- invisible image uploader -->
         <div
+            v-if="!readonly"
             class="gear-photo__image-uploader absolute top-0 left-0 right-0 bottom-0"
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
@@ -45,6 +48,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     gear: Gear;
+    readonly?: boolean;
 }>();
 const isLoading = ref(false);
 const userGearsStore = useUserGearsStore();
