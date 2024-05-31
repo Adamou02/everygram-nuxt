@@ -3,7 +3,7 @@
         <NuxtLink to="/trips">
             <PrimeButton
                 :class="[
-                    'user-nav-buttons__button',
+                    'user-nav-buttons__button border-round-md',
                     {
                         'user-nav-buttons__button--active':
                             $route.name === 'trips' ||
@@ -23,7 +23,7 @@
         <NuxtLink to="/gears">
             <PrimeButton
                 :class="[
-                    'user-nav-buttons__button',
+                    'user-nav-buttons__button border-round-md',
                     {
                         'user-nav-buttons__button--active':
                             $route.name === 'gears',
@@ -44,7 +44,7 @@
 @import '~/assets/theme/themes/mytheme/_variables.scss';
 .user-nav-buttons {
     &__button--active {
-        background-color: rgba($buttonBg, $textButtonActiveBgOpacity);
+        background-color: $eg-c-primary-lighter;
     }
 }
 </style>

@@ -37,7 +37,7 @@
             <!-- sidebar -->
             <div class="hidden md:block md:col-3 lg:col-2">
                 <div
-                    class="flex flex-column gap-2 align-items-start sticky z-1"
+                    class="flex flex-column gap-1 align-items-start sticky z-1"
                     style="top: var(--app-header-height)"
                 >
                     <PrimeButton
@@ -48,6 +48,7 @@
                         :key="category"
                         :label="`${gearCategoryToLabel(category)} (${gearsGroupByCategory[category]?.length || 0})`"
                         text
+                        size="small"
                         :class="[
                             'text-color text-left w-full',
                             { 'opacity-50': !gearsGroupByCategory[category] },
