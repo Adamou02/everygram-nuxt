@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-column align-items-center gap-2 px-4 py-6">
+    <div class="flex flex-column align-items-center gap-2 px-4 py-8">
         <img src="/image/brand-icon.svg" width="80" alt="Brand Icon" />
         <div class="text-center text-lg line-height-3 content">
             <slot />

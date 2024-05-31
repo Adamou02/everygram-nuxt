@@ -14,7 +14,7 @@
         <HomeTriangleLine />
     </div>
     <div class="key-features">
-        <HomeTriangleConnectLine />
+        <HomeTriangleConnectLine reverse />
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_1')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_1_M')"
@@ -33,7 +33,7 @@
                 {{ $t('HOME_KEY_FEATURE_1_DESCRIPTION') }}
             </template>
         </HomeKeyFeature>
-        <HomeTriangleConnectLine reverse />
+        <HomeTriangleConnectLine />
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_2')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_2_M')"
@@ -53,7 +53,7 @@
                 {{ $t('HOME_KEY_FEATURE_2_DESCRIPTION') }}
             </template>
         </HomeKeyFeature>
-        <HomeTriangleConnectLine />
+        <HomeTriangleConnectLine reverse />
         <HomeKeyFeature
             :image-src="$t('IMAGE_URL_HOME_KEY_FEATURE_3')"
             :image-src-mobile="$t('IMAGE_URL_HOME_KEY_FEATURE_3_M')"
@@ -92,7 +92,7 @@
                 </NuxtLink>
             </template>
         </HomeKeyFeature>
-        <HomeTriangleConnectLine reverse />
+        <HomeTriangleConnectLine />
         <HomeBrandIconSection class="are-you-ready">
             <h3 class="mb-2">{{ $t('HOME_READY_TITLE') }}</h3>
             <p class="text-700 mb-4">
@@ -108,7 +108,7 @@
     </div>
     <div class="bg-white">
         <div
-            class="container flex flex-column align-items-center gap-6 text-center px-3 py-7"
+            class="container flex flex-column align-items-center gap-6 text-center px-3 py-8"
         >
             <h2 class="text-2xl lg:text-4xl">
                 {{ $t('LABEL_ALL_DEVICES_COMPATIBLE') }}
