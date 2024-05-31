@@ -10,12 +10,14 @@
                 'border-dashed border-400': isHovering && !displayImageUrl,
             },
         ]"
-        :style="{
-            backgroundImage: displayImageUrl
-                ? `url(${displayImageUrl})`
-                : 'none',
-        }"
     >
+        <img
+            v-if="displayImageUrl"
+            :src="displayImageUrl"
+            :alt="gear.name"
+            class="gear-photo__img"
+            loading="lazy"
+        />
         <span
             v-if="!displayImageUrl"
             class="material-symbols-outlined text-2xl"
@@ -97,8 +99,11 @@ const displayImageUrl = computed(
 
 <style scoped lang="scss">
 .gear-photo {
-    background-position: center;
-    background-size: cover;
+    &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     // not support image uploader on mobile devices
     @media not (hover: hover) {

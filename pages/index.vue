@@ -118,6 +118,7 @@
                 <img
                     :src="$t('IMAGE_URL_COMPATIBLE_DEVICES_M')"
                     alt="All Devices Compatible"
+                    loading="lazy"
                 />
             </picture>
         </div>

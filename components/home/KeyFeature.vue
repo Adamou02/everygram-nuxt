@@ -35,6 +35,7 @@
                             :src="props.imageSrcMobile"
                             class="border-round-xl"
                             alt="Key Feature Image"
+                            loading="lazy"
                         />
                     </picture>
                 </div>
