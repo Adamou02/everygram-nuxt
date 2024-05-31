@@ -40,7 +40,7 @@ const mobileBannerImage = computed(() =>
     dataUtils.getTripBannerImageUrl(props.trip, 'sm'),
 );
 const desktopBannerImage = computed(() =>
-    dataUtils.getTripBannerImageUrl(props.trip, 'lg'),
+    dataUtils.getTripBannerImageUrl(props.trip),
 );
 </script>
 

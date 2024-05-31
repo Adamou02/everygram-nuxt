@@ -217,18 +217,18 @@
         // @include scaledFontSize($fontSize, $scaleSM);
         @include scaledPadding($buttonPadding, $scaleSM);
 
-        .p-button-icon {
-            // @include scaledFontSize($primeIconFontSize, $scaleSM);
-        }
+        // .p-button-icon {
+        //     @include scaledFontSize($primeIconFontSize, $scaleSM);
+        // }
     }
 
     &.p-button-lg {
         // @include scaledFontSize($fontSize, $scaleLG);
         @include scaledPadding($buttonPadding, $scaleLG);
 
-        .p-button-icon {
-            // @include scaledFontSize($primeIconFontSize, $scaleLG);
-        }
+        // .p-button-icon {
+        //     @include scaledFontSize($primeIconFontSize, $scaleLG);
+        // }
 
         &.p-button-icon-only {
             width: $buttonLgIconOnlyWidth;

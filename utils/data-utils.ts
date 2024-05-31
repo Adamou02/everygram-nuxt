@@ -96,10 +96,11 @@ const formatTripDate = (trip: Trip | TripShare): string => {
 
 const getTripBannerImageUrl = (
     trip: Trip | TripShare,
-    size: ThumbnailSize,
+    size?: ThumbnailSize,
 ): string => {
     return trip.bannerImage
-        ? trip.bannerImage.thumbnails?.[size].url || trip.bannerImage.url
+        ? (size && trip.bannerImage.thumbnails?.[size].url) ||
+              trip.bannerImage.url
         : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
 };
 
