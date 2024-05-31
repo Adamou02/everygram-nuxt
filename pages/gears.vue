@@ -90,7 +90,7 @@
                             <CategoryHeader
                                 :category="category"
                                 type="gear"
-                                class="p-3 bg-white border-round-md"
+                                class="p-3 border-round-md"
                                 sticky
                             >
                                 <template #actions>

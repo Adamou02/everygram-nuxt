@@ -2,7 +2,7 @@
     <div
         :class="[
             'category-header flex align-items-center gap-3',
-            { 'sticky z-1': sticky },
+            { 'surface-glass sticky z-1': sticky },
         ]"
     >
         <div class="flex-1 flex align-items-center gap-3">

@@ -97,6 +97,11 @@ img {
     }
 }
 
+.surface-glass {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(6px);
+}
+
 .container {
     max-width: var(--max-page-width);
     margin: auto;
