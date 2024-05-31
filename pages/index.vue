@@ -107,23 +107,25 @@
         <HomeTriangleLine />
     </div>
     <div class="bg-white">
-        <div
-            class="container flex flex-column align-items-center gap-6 text-center px-3 py-8"
-        >
-            <h2 class="text-2xl lg:text-4xl">
-                {{ $t('LABEL_ALL_DEVICES_COMPATIBLE') }}
-            </h2>
-            <picture>
-                <source
-                    :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
-                    :srcset="$t('IMAGE_URL_COMPATIBLE_DEVICES')"
-                />
-                <img
-                    :src="$t('IMAGE_URL_COMPATIBLE_DEVICES_M')"
-                    alt="All Devices Compatible"
-                    loading="lazy"
-                />
-            </picture>
+        <div class="container">
+            <div class="grid py-8">
+                <div class="col-12 lg:col-offset-1 lg:col-10">
+                    <h2 class="text-2xl lg:text-4xl text-center mb-6">
+                        {{ $t('LABEL_ALL_DEVICES_COMPATIBLE') }}
+                    </h2>
+                    <picture>
+                        <source
+                            :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
+                            :srcset="$t('IMAGE_URL_COMPATIBLE_DEVICES')"
+                        />
+                        <img
+                            :src="$t('IMAGE_URL_COMPATIBLE_DEVICES_M')"
+                            alt="All Devices Compatible"
+                            loading="lazy"
+                        />
+                    </picture>
+                </div>
+            </div>
         </div>
         <AppFooter />
     </div>

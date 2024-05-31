@@ -15,9 +15,7 @@
 
 /* reset & normalize */
 body {
-    font-family: 'Lato', 'SF Pro', 'SF Pro Display', 'Helvetica Neue',
-        'Helvetica', 'PingFang TC', 'Noto Sans TC', 'Arial', 'Microsoft YaHei',
-        sans-serif;
+    font-family: var(--font-family);
     letter-spacing: 0.5px;
     margin: 0;
     background-color: var(--app-background-color);
