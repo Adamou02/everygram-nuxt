@@ -48,10 +48,7 @@ $buttonActiveBorderColor: $primaryDarkerColor;
 
 /// Shadow of a raised button
 /// @group button
-$raisedButtonShadow:
-    0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+$raisedButtonShadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.08);
 
 /// Border radius of a rounded button
 /// @group button
@@ -119,7 +116,7 @@ $secondaryButtonActiveBorderColor: $secondaryDarkerColor;
 
 /// Box shadow of a secondary button in focused state
 /// @group button
-$secondaryButtonFocusShadow: 0 0 0 0.2rem lighten($secondaryButtonBg, 35%);
+$secondaryButtonFocusShadow: 0 0 0 0.1rem lighten($secondaryButtonBg, 35%);
 
 /// Background of an info button
 /// @group button
@@ -159,7 +156,7 @@ $infoButtonActiveBorderColor: #0288d1;
 
 /// Box shadow of an info button in focused state
 /// @group button
-$infoButtonFocusShadow: 0 0 0 0.2rem lighten($infoButtonBg, 35%);
+$infoButtonFocusShadow: 0 0 0 0.1rem lighten($infoButtonBg, 35%);
 
 /// Background of a success button
 /// @group button
@@ -199,7 +196,7 @@ $successButtonActiveBorderColor: #388e3c;
 
 /// Box shadow of a success button in focused state
 /// @group button
-$successButtonFocusShadow: 0 0 0 0.2rem lighten($successButtonBg, 35%);
+$successButtonFocusShadow: 0 0 0 0.1rem lighten($successButtonBg, 35%);
 
 /// Background of a warning button
 /// @group button
@@ -239,7 +236,7 @@ $warningButtonActiveBorderColor: #ffa000;
 
 /// Box shadow of a warning button in focused state
 /// @group button
-$warningButtonFocusShadow: 0 0 0 0.2rem lighten($warningButtonBg, 35%);
+$warningButtonFocusShadow: 0 0 0 0.1rem lighten($warningButtonBg, 35%);
 
 /// Background of a help button
 /// @group button
@@ -319,7 +316,7 @@ $dangerButtonActiveBorderColor: #d32f2f;
 
 /// Box shadow of a danger button in focused state
 /// @group button
-$dangerButtonFocusShadow: 0 0 0 0.2rem lighten($dangerButtonBg, 35%);
+$dangerButtonFocusShadow: 0 0 0 0.1rem lighten($dangerButtonBg, 35%);
 
 /// Background of a contrast button
 /// @group button
@@ -359,7 +356,7 @@ $contrastButtonActiveBorderColor: $contrastDarkerColor;
 
 /// Box shadow of a contrast button in focused state
 /// @group button
-$contrastButtonFocusShadow: 0 0 0 0.2rem lighten($contrastButtonBg, 35%);
+$contrastButtonFocusShadow: 0 0 0 0.1rem lighten($contrastButtonBg, 35%);
 
 /// Text color of a link button
 /// @group button
@@ -376,6 +373,14 @@ $linkButtonTextHoverDecoration: underline;
 /// Box shadow of a link button in focused state
 /// @group button
 $linkButtonFocusShadow: 0 0 0 0.2rem $focusOutlineColor;
+
+/// Text color of a secondary link button
+/// @group button
+$secondaryLinkButtonColor: $secondaryDarkerColor;
+
+/// Text color of a secondary link button in hover state
+/// @group button
+$secondaryLinkButtonHoverColor: $secondaryDarkerColor;
 
 /// Background of a toggle button
 /// @group button

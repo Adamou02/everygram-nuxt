@@ -6,6 +6,8 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
+                :raised="raised"
+                :severity="severity"
                 :icon="`pi ${icon || 'pi-ellipsis-v'}`"
                 aria-haspopup="true"
                 :aria-controls="menuId"
@@ -24,6 +26,8 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
+                :raised="raised"
+                :severity="severity"
                 :icon="`pi ${icon || 'pi-ellipsis-v'}`"
                 aria-haspopup="true"
                 @click="isOpenBottomMenu = true"
@@ -46,6 +50,8 @@ const props = defineProps<{
     text?: boolean;
     rounded?: boolean;
     outlined?: boolean;
+    raised?: boolean;
+    severity?: string;
 }>();
 
 // desktop menu

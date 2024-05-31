@@ -68,7 +68,6 @@
             <template #description>
                 {{ $t('HOME_KEY_FEATURE_3_DESCRIPTION') }}
                 <NuxtLink
-                    v-if="$i18n.locale === 'zh-tw'"
                     to="/trip-share/68wdPrCDnUbGJ17a53Mp"
                     class="block mt-5 text-center lg:text-left"
                     @click="
@@ -85,6 +84,7 @@
                         icon-pos="right"
                         severity="secondary"
                         outlined
+                        rounded
                     />
                 </NuxtLink>
             </template>

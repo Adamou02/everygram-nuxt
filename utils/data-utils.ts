@@ -43,13 +43,16 @@ const getTripWornGearsWeight = (
 const getTripConsumablessWeight = (trip: Trip): number =>
     _sum(_map(trip.consumables || [], (consumable) => +consumable.weight || 0));
 
+const getTripBaseWeight = (trip: Trip, gearMap: Record<string, Gear>): number =>
+    getTripGearsWeight(trip, gearMap) + getTripConsumablessWeight(trip);
+
 const getTripWeightTotal = (
     trip: Trip,
     gearMap: Record<string, Gear>,
 ): number =>
-    (getTripGearsWeight(trip, gearMap) || 0) +
-    (getTripWornGearsWeight(trip, gearMap) || 0) +
-    (getTripConsumablessWeight(trip) || 0);
+    getTripGearsWeight(trip, gearMap) +
+    getTripWornGearsWeight(trip, gearMap) +
+    getTripConsumablessWeight(trip);
 
 const getGearsInTrip = (trip: Trip, gearMap: Record<string, Gear>) => {
     return _filter(_map(trip.gears, (gear) => gearMap[gear.id]));
@@ -112,6 +115,7 @@ export default {
     getTripGearsWeight,
     getTripWornGearsWeight,
     getTripConsumablessWeight,
+    getTripBaseWeight,
     getTripWeightTotal,
     getGearsInTrip,
     getWornGearsInTrip,

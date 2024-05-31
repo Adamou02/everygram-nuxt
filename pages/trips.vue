@@ -5,6 +5,9 @@
                 {{ $t('INFO_TRIP_NUM', { num: trips.length }, trips.length) }}
             </div>
             <PrimeButton
+                severity="secondary"
+                rounded
+                size="large"
                 :label="$t('ACTION_CREATE_TRIP')"
                 icon="pi pi-plus"
                 @click="onCreateTrip"
@@ -38,6 +41,9 @@
         >
             <template #actions>
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    size="large"
                     :label="$t('ACTION_CREATE_TRIP')"
                     icon="pi pi-plus"
                     @click="onCreateTrip"

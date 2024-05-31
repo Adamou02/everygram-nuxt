@@ -43,6 +43,8 @@ img {
 }
 
 /* prime components customization */
+
+// data table
 .p-datatable-hide-thead {
     thead {
         display: none;
@@ -59,13 +61,21 @@ img {
     }
 }
 
+// select button
 .p-selectbutton--stretch {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 }
 
+// input number
 .p-inputnumber.text-right .p-inputtext {
     text-align: right !important;
+}
+
+// tag
+.p-tag-primary-light {
+    background-color: $eg-c-primary-lighter;
+    color: $eg-c-primary-dark;
 }
 
 .material-symbols-outlined {

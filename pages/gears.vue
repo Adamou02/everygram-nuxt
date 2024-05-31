@@ -8,19 +8,28 @@
             </div>
             <div class="flex align-items-center gap-2">
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    outlined
+                    size="large"
                     :label="$t('ACTION_IMPORT_GEARS')"
                     icon="pi pi-file-arrow-up"
                     class="hide-in-mobile"
                     @click="isOpenImportGearsDialog = true"
-                    outlined
                 />
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    outlined
+                    size="large"
                     icon="pi pi-file-arrow-up"
                     @click="isOpenImportGearsDialog = true"
                     class="lg:hidden"
-                    outlined
                 />
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    size="large"
                     :label="$t('ACTION_CREATE_GEAR')"
                     icon="pi pi-plus"
                     @click="() => onCreateGear()"
@@ -89,6 +98,7 @@
                             >
                                 <template #actions>
                                     <ActionButtonsGroup
+                                        text
                                         type="icon"
                                         :actions="[
                                             {
@@ -131,15 +141,21 @@
                 class="flex flex-column lg:flex-row-reverse align-items-stretch lg:align-items-center gap-2"
             >
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    size="large"
                     :label="$t('ACTION_CREATE_GEAR')"
                     icon="pi pi-plus"
                     @click="() => onCreateGear()"
                 />
                 <PrimeButton
+                    severity="secondary"
+                    rounded
+                    outlined
+                    size="large"
                     :label="$t('ACTION_IMPORT_GEARS')"
                     icon="pi pi-file-arrow-up"
                     @click="isOpenImportGearsDialog = true"
-                    outlined
                 />
             </div>
         </template>

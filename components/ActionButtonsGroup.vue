@@ -4,9 +4,11 @@
             v-for="(action, index) in props.actions"
             :key="index"
             :icon="action.icon"
-            :outlined="type === 'text'"
-            :text="type === 'icon'"
-            :rounded="type === 'icon'"
+            :severity="severity"
+            :outlined="outlined"
+            :text="text"
+            :raised="raised"
+            :rounded="rounded"
             :label="type === 'text' ? action.label : undefined"
             :aria-label="action.label"
             v-tooltip.top="
@@ -29,5 +31,10 @@ const props = defineProps<{
         onClick: () => void;
     }[];
     type: 'icon' | 'text';
+    text?: boolean;
+    rounded?: boolean;
+    outlined?: boolean;
+    raised?: boolean;
+    severity?: string;
 }>();
 </script>

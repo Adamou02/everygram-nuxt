@@ -222,11 +222,11 @@
     }
 
     &.p-button-lg {
-        @include scaledFontSize($fontSize, $scaleLG);
+        // @include scaledFontSize($fontSize, $scaleLG);
         @include scaledPadding($buttonPadding, $scaleLG);
 
         .p-button-icon {
-            @include scaledFontSize($primeIconFontSize, $scaleLG);
+            // @include scaledFontSize($primeIconFontSize, $scaleLG);
         }
     }
 
@@ -706,5 +706,17 @@
         background: transparent;
         color: $linkButtonColor;
         border-color: transparent;
+    }
+
+    &.p-button-secondary {
+        color: $secondaryLinkButtonColor;
+
+        &:not(:disabled):hover {
+            color: $secondaryLinkButtonHoverColor;
+        }
+
+        &:not(:disabled):active {
+            color: $secondaryLinkButtonColor;
+        }
     }
 }

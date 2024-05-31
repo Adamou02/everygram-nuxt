@@ -3,8 +3,12 @@
     <SubPageAppHeader v-if="trip">
         <template #mobile-actions>
             <div class="flex">
-                <TripShareButton text :trip="trip" />
-                <MoreActionsMenuButton text :items="moreActionsMenuItems" />
+                <TripShareButton text rounded :trip="trip" />
+                <MoreActionsMenuButton
+                    text
+                    rounded
+                    :items="moreActionsMenuItems"
+                />
             </div>
         </template>
     </SubPageAppHeader>
@@ -19,6 +23,7 @@
                                 ? $t('ACTION_CHANGE_PHOTO')
                                 : $t('ACTION_UPLOAD_PHOTO')
                         "
+                        severity="contrast"
                         @upload-complete="onUploadBannerImage"
                     />
                 </template>
@@ -34,9 +39,14 @@
                             </div>
                         </div>
                         <div class="flex gap-2 hide-in-mobile">
-                            <TripShareButton :trip="trip" />
+                            <TripShareButton
+                                :trip="trip"
+                                severity="contrast"
+                                raised
+                            />
                             <MoreActionsMenuButton
-                                outlined
+                                severity="contrast"
+                                raised
                                 :items="moreActionsMenuItems"
                             />
                         </div>
@@ -56,6 +66,8 @@
             <TripGearSection :title="$t('LABEL_BASE')" :gears="gearsInTrip">
                 <template #header-actions>
                     <ActionButtonsGroup
+                        severity="secondary"
+                        text
                         type="text"
                         :actions="[
                             {
@@ -78,6 +90,7 @@
                         class="hide-in-mobile"
                     />
                     <MoreActionsMenuButton
+                        severity="secondary"
                         text
                         rounded
                         icon="pi-plus"
@@ -102,22 +115,6 @@
                         class="lg:hidden"
                     />
                 </template>
-                <!-- <template #category-actions="{ category }">
-                    <ActionButtonsGroup
-                        type="icon"
-                        class="hide-in-mobile"
-                        :actions="[
-                            {
-                                icon: 'pi pi-plus',
-                                label: $t('ACTION_CREATE_GEAR'),
-                                onClick: () => {
-                                    creatingGearType = 'gears';
-                                    onCreateGear({ category });
-                                },
-                            },
-                        ]"
-                    />
-                </template> -->
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"
@@ -149,6 +146,8 @@
             >
                 <template #header-actions>
                     <ActionButtonsGroup
+                        severity="secondary"
+                        text
                         type="text"
                         :actions="[
                             {
@@ -160,6 +159,8 @@
                         class="hide-in-mobile"
                     />
                     <ActionButtonsGroup
+                        severity="secondary"
+                        text
                         type="icon"
                         :actions="[
                             {
@@ -171,22 +172,6 @@
                         class="lg:hidden"
                     />
                 </template>
-                <!-- <template #category-actions="{ category }">
-                    <ActionButtonsGroup
-                        type="icon"
-                        class="hide-in-mobile"
-                        :actions="[
-                            {
-                                icon: 'pi pi-plus',
-                                label: $t('ACTION_CREATE_CONSUMABLE'),
-                                onClick: () =>
-                                    onCreateConsumable({
-                                        category,
-                                    }),
-                            },
-                        ]"
-                    />
-                </template> -->
                 <template #category-body="{ consumables }">
                     <ConsumableDataTable
                         :consumables="consumables"
@@ -210,6 +195,8 @@
             >
                 <template #header-actions>
                     <ActionButtonsGroup
+                        severity="secondary"
+                        text
                         type="text"
                         :actions="[
                             {
@@ -235,6 +222,7 @@
                         class="hide-in-mobile"
                     />
                     <MoreActionsMenuButton
+                        severity="secondary"
                         text
                         rounded
                         icon="pi-plus"
@@ -262,26 +250,6 @@
                         class="lg:hidden"
                     />
                 </template>
-                <!-- <template #category-actions="{ category }">
-                    <ActionButtonsGroup
-                        type="icon"
-                        class="hide-in-mobile"
-                        :actions="[
-                            {
-                                icon: 'pi pi-plus',
-                                label: $t('ACTION_CREATE_GEAR'),
-                                onClick: () => {
-                                    creatingGearType = 'wornGears';
-                                    onCreateGear({
-                                        category,
-                                        categories:
-                                            constants.WEARABLE_GEAR_CATEGORY_KEYS,
-                                    });
-                                },
-                            },
-                        ]"
-                    />
-                </template> -->
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"

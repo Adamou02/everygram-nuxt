@@ -5,6 +5,7 @@
         :label="label || $t('ACTION_UPLOAD_PHOTO')"
         :loading="isUploading || isCompressing"
         :disabled="isUploading || isCompressing"
+        :severity="severity"
         @dragover.prevent="onDragOver"
         @dragleave.prevent="onDragLeave"
         @drop.prevent="onDrop"
@@ -23,6 +24,7 @@
 const props = defineProps<{
     path: string;
     label?: string;
+    severity?: string;
 }>();
 
 const emit = defineEmits<{

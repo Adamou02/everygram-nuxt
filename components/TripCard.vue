@@ -32,9 +32,9 @@
                 </template>
             </div>
             <PrimeTag
-                severity="secondary"
+                class="p-tag-primary-light"
                 :value="
-                    formatWeight(dataUtils.getTripWeightTotal(trip, gearMap))
+                    formatWeight(dataUtils.getTripBaseWeight(trip, gearMap))
                 "
             />
         </div>

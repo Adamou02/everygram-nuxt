@@ -27,11 +27,11 @@
         </div>
 
         <!-- labels -->
-        <div v-if="showLabel" class="flex flex-column gap-0">
+        <div v-if="showLabel" class="flex flex-column gap-1">
             <div v-for="(item, index) in sortedItems" :key="item.label">
                 <div
                     :class="[
-                        'flex gap-2 align-items-center py-2',
+                        'flex gap-2 align-items-center py-1',
                         { 'cursor-pointer': item.subItems },
                     ]"
                     @click="itemsToggle[index] = !itemsToggle[index]"
@@ -70,13 +70,14 @@
                         }}%
                     </div>
                 </div>
+                <!-- sub items -->
                 <div
                     v-if="item.subItems && itemsToggle[index]"
-                    class="flex flex-column gap-2 mt-1 mb-2 ml-3 text-600"
+                    class="flex flex-column gap-1 mt-1 ml-3 text-600"
                 >
                     <div
                         v-for="subItem in item.subItems"
-                        class="flex gap-2 align-items-center"
+                        class="flex gap-2 align-items-center py-1"
                         :key="subItem.label"
                     >
                         <div>{{ subItem.label }}</div>

@@ -6,6 +6,8 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
+                :raised="raised"
+                :severity="severity"
                 :label="$t('ACTION_SHARE')"
                 @click="toggle"
             >
@@ -28,6 +30,8 @@
                 :text="text"
                 :rounded="rounded"
                 :outlined="outlined"
+                :raised="raised"
+                :severity="severity"
                 aria-haspopup="true"
                 @click="isOpenBottomMenu = true"
             >
@@ -51,6 +55,8 @@ const props = defineProps<{
     text?: boolean;
     rounded?: boolean;
     outlined?: boolean;
+    raised?: boolean;
+    severity?: string;
 }>();
 
 // desktop overlay panel
