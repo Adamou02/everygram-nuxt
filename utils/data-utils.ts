@@ -104,9 +104,9 @@ const getTripBannerImageUrl = (
         : constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
 };
 
-const getGearPhotoUrl = (gear: Gear, size: ThumbnailSize): string => {
+const getGearPhotoUrl = (gear: Gear, size?: ThumbnailSize): string => {
     return gear.photo
-        ? gear.photo.thumbnails?.[size].url || gear.photo.url
+        ? (size && gear.photo.thumbnails?.[size].url) || gear.photo.url
         : '';
 };
 

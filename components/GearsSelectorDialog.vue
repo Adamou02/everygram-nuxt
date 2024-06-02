@@ -99,7 +99,6 @@ const gearsInCategories = computed(() =>
         (gear) => !props.categories || props.categories.includes(gear.category),
     ),
 );
-console.log('gearsInCategories', gearsInCategories.value);
 const selectableGears = computed<Gear[]>(() =>
     _sortBy(
         gearsInCategories.value.filter(
