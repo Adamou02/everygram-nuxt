@@ -120,10 +120,18 @@ const emit = defineEmits<{
 const userTripsStore = useUserTripsStore();
 const { trips } = storeToRefs(userTripsStore);
 const i18n = useI18n();
-const dateModeOptions = ref<{ label: string; value: TripDateMode }[]>([
-    { label: i18n.t('LABEL_ONE_DAY'), value: constants.TRIP_DATE_MODE.single },
-    { label: i18n.t('LABEL_MULTI_DAY'), value: constants.TRIP_DATE_MODE.multi },
-]);
+const dateModeOptions = computed<{ label: string; value: TripDateMode }[]>(
+    () => [
+        {
+            label: i18n.t('LABEL_ONE_DAY'),
+            value: constants.TRIP_DATE_MODE.single,
+        },
+        {
+            label: i18n.t('LABEL_MULTI_DAY'),
+            value: constants.TRIP_DATE_MODE.multi,
+        },
+    ],
+);
 
 // form state and validation rules
 const initialFormState = {
