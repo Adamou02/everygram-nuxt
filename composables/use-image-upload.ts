@@ -35,6 +35,13 @@ export default function (
         if (!file) {
             return;
         }
+        const isImageSupported = await fileUtils.supportsImage(
+            selectedFilePath.value,
+        );
+        if (!isImageSupported) {
+            console.error('image format is not supported');
+            return;
+        }
         try {
             isCompressing.value = true;
             compressedFile.value = await new Promise<Blob>((resolve) => {

@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-function parseCsv(file: File): Promise<string[][]> {
+const parseCsv = (file: File): Promise<string[][]> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
@@ -30,8 +30,18 @@ function parseCsv(file: File): Promise<string[][]> {
 
         reader.readAsText(file);
     });
-}
+};
+
+const supportsImage = async (imgSrc: string) => {
+    return new Promise<boolean>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = imgSrc;
+    });
+};
 
 export default {
     parseCsv,
+    supportsImage,
 };
