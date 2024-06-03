@@ -220,6 +220,13 @@
         // .p-button-icon {
         //     @include scaledFontSize($primeIconFontSize, $scaleSM);
         // }
+
+        &.p-button-icon-only {
+            width: $buttonSmIconOnlyWidth;
+            &.p-button-rounded {
+                height: $buttonSmIconOnlyWidth;
+            }
+        }
     }
 
     &.p-button-lg {

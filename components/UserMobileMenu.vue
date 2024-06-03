@@ -7,6 +7,7 @@
         aria-controls="user-mobile-menu"
         text
         rounded
+        size="small"
     />
     <PrimeSidebar v-model:visible="isOpen" position="right">
         <template #header>

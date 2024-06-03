@@ -2,9 +2,13 @@
 <template>
     <SubPageAppHeader v-if="trip">
         <template #mobile-actions>
-            <div class="flex">
-                <TripShareButton text rounded :trip="trip" />
-                <MoreActionsMenuButton text :items="moreActionsMenuItems" />
+            <div class="flex gap-2">
+                <TripShareButton text rounded size="small" :trip="trip" />
+                <MoreActionsMenuButton
+                    text
+                    size="small"
+                    :items="moreActionsMenuItems"
+                />
             </div>
         </template>
     </SubPageAppHeader>

@@ -7,6 +7,7 @@
                     :label="backButton.label"
                     text
                     rounded
+                    size="small"
                 />
             </NuxtLink>
         </template>

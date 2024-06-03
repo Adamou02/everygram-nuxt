@@ -8,6 +8,7 @@
                 :outlined="outlined"
                 :raised="raised"
                 :severity="severity"
+                :size="size"
                 :label="$t('ACTION_SHARE')"
                 @click="toggle"
             >
@@ -32,6 +33,7 @@
                 :outlined="outlined"
                 :raised="raised"
                 :severity="severity"
+                :size="size"
                 aria-haspopup="true"
                 @click="isOpenBottomMenu = true"
             >
@@ -56,6 +58,7 @@ const props = defineProps<{
     outlined?: boolean;
     raised?: boolean;
     severity?: string;
+    size?: 'small' | 'large';
 }>();
 
 // desktop overlay panel
