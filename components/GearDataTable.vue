@@ -79,7 +79,7 @@
             :header="$t('LABEL_NAME')"
             class="lg:hidden"
         />
-        <PrimeColumn class="text-right w-7rem lg:hidden">
+        <PrimeColumn class="text-right lg:hidden">
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
                 <template v-if="hasQuantity && data.quantity > 1">
