@@ -32,6 +32,7 @@
     "ACTION_REMOVE": "移除",
     "ACTION_RESET_PASSWORD": "重設密碼",
     "ACTION_SAVE": "儲存",
+    "ACTION_SEARCH_BY_NAME": "搜尋名稱",
     "ACTION_SEE_KEY_FEATURES": "了解功能特色",
     "ACTION_SEE_TRIP_SHARE_EXAMPLE": "參考行程分享範例",
     "ACTION_SELECT_A_CATEGORY": "選擇分類",

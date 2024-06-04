@@ -5,8 +5,9 @@
             :header="$t('ACTION_SELECT_GEARS')"
             modal
             @update:visible="(value: boolean) => !value && $emit('cancel')"
-            class="w-full mx-2 lg:w-auto"
-            :pt="{ content: { class: 'p-0 lg:px-4 lg:py-3' } }"
+            class="w-full h-full mx-2"
+            style="max-width: 800px"
+            :pt="{ content: { class: 'p-0 flex-1' } }"
         >
             <EmptyState
                 v-if="!selectableGears.length"

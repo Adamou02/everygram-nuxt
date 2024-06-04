@@ -32,6 +32,7 @@
     "ACTION_REMOVE": "Remove",
     "ACTION_RESET_PASSWORD": "Reset Password",
     "ACTION_SAVE": "Save",
+    "ACTION_SEARCH_BY_NAME": "Search by Name",
     "ACTION_SEE_KEY_FEATURES": "See Key Features",
     "ACTION_SEE_TRIP_SHARE_EXAMPLE": "See Share Trip Example",
     "ACTION_SELECT_A_CATEGORY": "Select a Category",
