@@ -96,7 +96,7 @@
                 <ImageUploadBox
                     :width="120"
                     :aspectRatio="1"
-                    :imageUrl="editingGear?.photo?.url"
+                    :imageUrl="gearPhotoUrl"
                     :isLoading="isSaving"
                     :compressorOptions="{
                         width: constants.LIMIT.gearPhotoWidth,
@@ -208,6 +208,9 @@ watch(isOpen, (newValue) => {
 const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
+const gearPhotoUrl = computed(() =>
+    editingGear.value ? dataUtils.getGearPhotoUrl(editingGear.value, 'xs') : '',
+);
 const compressedPhotoFile = ref<Blob | null>(null);
 const { uploadFile } = useStorage();
 const onSubmit = async () => {
