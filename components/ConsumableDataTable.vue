@@ -25,7 +25,7 @@
             field="weight"
             :header="$t('LABEL_WEIGHT')"
             :class="[
-                'text-right w-8rem hide-in-mobile',
+                'text-right w-8rem white-space-nowrap hide-in-mobile',
                 { 'hover:surface-50': !props.readonly },
             ]"
         >
@@ -55,7 +55,7 @@
         <PrimeColumn
             field="weight"
             :header="$t('LABEL_WEIGHT')"
-            class="w-5rem text-right lg:hidden"
+            class="text-right white-space-nowrap lg:hidden"
         >
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}

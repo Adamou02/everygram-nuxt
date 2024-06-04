@@ -34,7 +34,7 @@
             field="weight"
             :header="$t('LABEL_WEIGHT')"
             :class="[
-                'text-right w-8rem hide-in-mobile',
+                'text-right white-space-nowrap w-8rem hide-in-mobile',
                 { 'hover:surface-50': !props.readonly },
             ]"
         >
@@ -79,7 +79,7 @@
             :header="$t('LABEL_NAME')"
             class="lg:hidden"
         />
-        <PrimeColumn class="text-right lg:hidden">
+        <PrimeColumn class="text-right white-space-nowrap lg:hidden">
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
                 <template v-if="hasQuantity && data.quantity > 1">
