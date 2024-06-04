@@ -2,7 +2,7 @@
     <NuxtLayout>
         <NuxtPage />
     </NuxtLayout>
-    <PrimeToast position="bottom-right" />
+    <PrimeToast position="top-center" />
     <PrimeConfirmDialog />
 </template>
 

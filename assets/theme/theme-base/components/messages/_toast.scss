@@ -1,6 +1,6 @@
 // core
 .p-toast {
-    width: 25rem;
+    width: 20rem;
     white-space: pre-line;
     word-break: break-word;
 }
@@ -113,7 +113,7 @@
                 font-weight: $toastTitleFontWeight;
             }
 
-            .p-toast-detail {
+            .p-toast-detail:not(:empty) {
                 margin: $toastDetailMargin;
             }
         }
