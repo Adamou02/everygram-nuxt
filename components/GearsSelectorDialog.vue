@@ -29,16 +29,26 @@
                     </NuxtLink>
                 </template>
             </EmptyState>
-            <GearSelectDataTable
-                v-else
-                :show-photo="true"
-                :selectableGears="selectableGears"
-                :selectedGears="selectedGears"
-                dataKey="id"
-                @update="
-                    (newSelectedGears) => (selectedGears = newSelectedGears)
-                "
-            />
+            <template v-else>
+                <PrimeIconField class="m-2 lg:m-3" iconPosition="left">
+                    <PrimeInputIcon class="pi pi-search" />
+                    <PrimeInputText
+                        v-model="filters.name.value"
+                        :placeholder="$t('ACTION_SEARCH_BY_NAME')"
+                        class="w-full"
+                    />
+                </PrimeIconField>
+                <GearSelectDataTable
+                    :show-photo="true"
+                    :selectableGears="selectableGears"
+                    :selectedGears="selectedGears"
+                    :filters="filters"
+                    dataKey="id"
+                    @update="
+                        (newSelectedGears) => (selectedGears = newSelectedGears)
+                    "
+                />
+            </template>
             <template v-if="selectableGears.length" #footer>
                 <div
                     class="flex justify-content-between align-items-center gap-3 w-full"
@@ -79,6 +89,7 @@
 
 <script setup lang="ts">
 import GearSelectDataTable from './GearSelectDataTable.vue';
+import { FilterMatchMode } from 'primevue/api';
 
 const props = defineProps<{
     isOpen: boolean;
@@ -122,6 +133,10 @@ watch(
         }
     },
 );
+
+const filters = ref({
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
 
 const onSubmit = () => {
     emit(
