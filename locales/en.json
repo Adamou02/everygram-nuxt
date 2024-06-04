@@ -61,6 +61,7 @@
     "ENTITY_CONSUMABLE": "Consumable",
     "ENTITY_GEAR": "Gear",
     "ENTITY_TRIP": "Trip",
+    "ERROR_IMAGE_FORMAT_NOT_SUPPORTED": "Image format not supported",
     "FEEDBACK_CONSUMABLE_DELETED": "@:ENTITY_CONSUMABLE deleted",
     "FEEDBACK_GEAR_DELETED": "@:ENTITY_GEAR deleted",
     "FEEDBACK_TRIP_DELETED": "@:ENTITY_TRIP deleted",

@@ -20,7 +20,7 @@
             </PrimeButton>
             <PrimeOverlayPanel
                 ref="overlayPanel"
-                class="border-round-lg p-2 w-25rem"
+                class="border-round-lg p-2 w-30rem"
             >
                 <TripShareContent :trip="trip" />
             </PrimeOverlayPanel>

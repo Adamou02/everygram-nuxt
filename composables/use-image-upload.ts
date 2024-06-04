@@ -24,6 +24,8 @@ export default function (
     });
     const compressedFile = ref<Blob | null>(null);
     const isCompressing = ref(false);
+    const toast = useToast();
+    const i18n = useI18n();
 
     watch(selectedFile, (file) => {
         if (file) {
@@ -40,6 +42,11 @@ export default function (
         );
         if (!isImageSupported) {
             console.error('image format is not supported');
+            toast.add({
+                severity: 'error',
+                summary: i18n.t('ERROR_IMAGE_FORMAT_NOT_SUPPORTED'),
+                life: 300000,
+            });
             return;
         }
         try {
