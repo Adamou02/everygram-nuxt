@@ -116,29 +116,18 @@
             </div>
         </template>
     </PrimeSidebar>
-    <BottomSheetMenu
-        :menuItems="localeMenuItems"
+    <LocaleMenuBottomSheet
         :isOpen="isOpenLocaleMenu"
         @close="isOpenLocaleMenu = false"
     />
 </template>
 
 <script setup>
-const { localeToLabel, getCurrentLocale, setLocale } = useLangUtils();
+const { localeToLabel, getCurrentLocale } = useLangUtils();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const isOpen = ref(false);
 const isOpenLocaleMenu = ref(false);
-
-const localeMenuItems = computed(() =>
-    constants.LOCALES.map((locale) => ({
-        label: localeToLabel(locale),
-        command: () => {
-            setLocale(locale);
-            isOpenLocaleMenu.value = false;
-        },
-    })),
-);
 
 const onSignOut = async () => {
     await userStore.signOutUser();

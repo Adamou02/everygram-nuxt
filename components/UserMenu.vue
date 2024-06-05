@@ -13,8 +13,7 @@
         </div>
     </PrimeButton>
     <PrimeMenu ref="menu" id="user-menu" :model="items" :popup="true" />
-    <DialogMenu
-        :menuItems="localeMenuItems"
+    <LocaleMenuDialog
         :isOpen="isOpenLocaleMenu"
         @close="isOpenLocaleMenu = false"
     />
@@ -50,13 +49,4 @@ const items = computed(() => [
 ]);
 
 const isOpenLocaleMenu = ref(false);
-const localeMenuItems = ref(
-    constants.LOCALES.map((locale) => ({
-        label: localeToLabel(locale),
-        command: () => {
-            setLocale(locale);
-            isOpenLocaleMenu.value = false;
-        },
-    })),
-);
 </script>

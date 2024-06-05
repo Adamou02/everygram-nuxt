@@ -2,7 +2,27 @@
     <AppHeader
         class="app-header--home lg:bg-transparent lg:absolute"
         color-reverse
-    />
+    >
+        <template #actions>
+            <PrimeButton
+                icon="pi pi-language"
+                severity="contrast"
+                :label="localeToLabel(getCurrentLocale())"
+                text
+                @click="isOpenLocaleMenuDialog = true"
+            />
+        </template>
+        <template #mobile-actions>
+            <PrimeButton
+                icon="pi pi-language"
+                severity="contrast"
+                :label="localeToLabel(getCurrentLocale())"
+                text
+                size="small"
+                @click="isOpenLocaleMenuBottomSheet = true"
+            />
+        </template>
+    </AppHeader>
     <HomeHero ref="heroRef" @see-key-features="onSeeFeatures" />
     <div class="intro" ref="introRef">
         <HomeTriangleLine />
@@ -129,6 +149,14 @@
         </div>
         <AppFooter />
     </div>
+    <LocaleMenuDialog
+        :isOpen="isOpenLocaleMenuDialog"
+        @close="isOpenLocaleMenuDialog = false"
+    />
+    <LocaleMenuBottomSheet
+        :isOpen="isOpenLocaleMenuBottomSheet"
+        @close="isOpenLocaleMenuBottomSheet = false"
+    />
 </template>
 
 <script setup lang="ts">
@@ -140,6 +168,9 @@ const { user } = storeToRefs(userStore);
 const heroRef = ref<InstanceType<typeof HomeHero> | null>(null);
 const heroIntersectionObserver = ref<IntersectionObserver | null>(null);
 const introRef = ref<HTMLElement | null>(null);
+const { localeToLabel, getCurrentLocale } = useLangUtils();
+const isOpenLocaleMenuDialog = ref(false);
+const isOpenLocaleMenuBottomSheet = ref(false);
 
 const onSeeFeatures = () => {
     if (introRef.value) {
