@@ -103,8 +103,7 @@ img {
 .container {
     max-width: var(--max-page-width);
     margin: auto;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 0.75rem 1rem;
     @media (min-width: $lg) {
         padding-left: 24px;
         padding-right: 24px;
@@ -115,7 +114,7 @@ img {
     max-width: var(--max-page-width);
     min-height: 100vh;
     margin: auto;
-    padding: 16px;
+    padding: 1rem;
 
     @media (min-width: $lg) {
         padding: 24px;

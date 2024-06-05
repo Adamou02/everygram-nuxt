@@ -4,11 +4,9 @@
             class="hero__img absolute top-0 right-0 left-0 bottom-50 lg:left-50 lg:bottom-0"
         ></div>
         <div class="container h-full">
-            <div
-                class="grid grid-nogutter h-full align-items-end lg:align-items-stretch"
-            >
+            <div class="grid h-full align-items-end lg:align-items-stretch">
                 <div
-                    class="col-11 col-offset-1 lg:col-4 lg:h-full"
+                    class="col-10 col-offset-1 lg:col-4 lg:h-full"
                     style="height: 50%"
                 >
                     <div

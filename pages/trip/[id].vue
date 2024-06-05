@@ -283,6 +283,7 @@
         <template #actions>
             <PrimeButton
                 :label="$t('ACTION_BACK_TO_TRIPS')"
+                rounded
                 @click="$router.push('/trips')"
             />
         </template>
