@@ -61,6 +61,7 @@ const onClickBrandIcon = () => {
 @import '~/assets/theme/primeflex/core/_variables.scss';
 
 .app-footer {
+    height: var(--app-footer-height);
     &__hr {
         display: grid;
         grid-template-columns: 1fr auto 1fr;

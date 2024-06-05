@@ -5,8 +5,10 @@
 /* custom CSS properties */
 :root {
     --app-header-height: 48px;
+    --app-footer-height: 145px;
     @media (min-width: $lg) {
         --app-header-height: 60px;
+        --app-footer-height: 120px;
     }
 
     --app-background-color: #{$eg-c-background};
@@ -112,7 +114,9 @@ img {
 
 .page-container {
     max-width: var(--max-page-width);
-    min-height: 100vh;
+    min-height: calc(
+        100vh - var(--app-header-height) - var(--app-footer-height)
+    );
     margin: auto;
     padding: 1rem;
 
