@@ -1,7 +1,7 @@
 <template>
     <div
         :class="[
-            'gear-photo flex align-items-center justify-content-center border-round-md relative',
+            'gear-photo flex align-items-center justify-content-center border-round-md overflow-hidden relative',
             {
                 'gear-photo--empty surface-100 text-color-lightest border-2 border-100':
                     !displayImageUrl,
