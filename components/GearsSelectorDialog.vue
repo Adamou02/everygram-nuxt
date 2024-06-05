@@ -53,7 +53,7 @@
                 <div
                     class="flex justify-content-between align-items-center gap-3 w-full"
                 >
-                    <div>
+                    <div class="flex-1">
                         {{
                             $t(
                                 'INFO_SELECTED_GEAR_NUM',
@@ -64,9 +64,11 @@
                             )
                         }}
                         |
-                        {{ formatWeight(weightOfSelectedGears) }}
+                        <span class="white-space-nowrap">
+                            {{ formatWeight(weightOfSelectedGears) }}
+                        </span>
                     </div>
-                    <div class="flex flex-row flex-wrap gap-2">
+                    <div class="flex flex-row gap-2">
                         <PrimeButton
                             :label="$t('ACTION_CANCEL')"
                             text
