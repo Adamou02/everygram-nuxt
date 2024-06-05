@@ -132,7 +132,7 @@
         v-else
         :title="$t('INFO_NO_USER_GEARS')"
         :description="$t('INFO_NO_USER_GEARS_DESC')"
-        image-src="/image/illustration/illu-adventure.svg"
+        image-src="/image/empty-gear.jpg"
     >
         <template #actions>
             <div

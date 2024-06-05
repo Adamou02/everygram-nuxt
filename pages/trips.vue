@@ -36,7 +36,7 @@
             v-if="!isFetchingTrips && trips.length === 0"
             :title="$t('INFO_NO_USER_TRIPS')"
             :description="$t('INFO_NO_USER_TRIPS_DESC')"
-            image-src="/image/illustration/illu-mountain-1.svg"
+            image-src="/image/empty-trip.jpg"
         >
             <template #actions>
                 <PrimeButton

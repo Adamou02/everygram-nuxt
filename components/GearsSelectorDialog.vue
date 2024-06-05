@@ -15,7 +15,7 @@
                 :description="
                     gearsInCategories.length ? noSelectableHint : noGearHint
                 "
-                image-src="/image/illustration/illu-adventure.svg"
+                image-src="/image/empty-gear-select.jpg"
             >
                 <template v-if="!gears.length" #actions>
                     <NuxtLink to="/gears">
