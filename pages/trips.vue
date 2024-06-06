@@ -26,7 +26,7 @@
                 </div>
                 <div
                     v-else
-                    v-for="trip in trips"
+                    v-for="trip in sortedTrips"
                     class="col-12 md:col-6 lg:col-3"
                     :key="trip.id"
                 >
@@ -66,6 +66,34 @@ const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const { onCreateTrip } = useEditTrip();
 const i18n = useI18n();
+const sortedTrips = computed(() =>
+    trips.value.sort((a, b) => {
+        // trip without start date (new trip) comes first
+        if (!a.startDate && b.startDate) {
+            return -1;
+        }
+        if (a.startDate && !b.startDate) {
+            return 1;
+        }
+        if (a.startDate && b.startDate) {
+            return (
+                new Date(b.startDate).getTime() -
+                new Date(a.startDate).getTime()
+            );
+        }
+        // trip without created date (newly created) comes first
+        if (!a.created && b.created) {
+            return -1;
+        }
+        if (a.created && !b.created) {
+            return 1;
+        }
+        if (a.created && b.created) {
+            return b.created.seconds - a.created.seconds;
+        }
+        return 0;
+    }),
+);
 
 onMounted(() => {
     analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_TRIPS_PAGE);
