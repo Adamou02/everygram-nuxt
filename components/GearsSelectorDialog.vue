@@ -30,14 +30,28 @@
                 </template>
             </EmptyState>
             <template v-else>
-                <PrimeIconField class="m-2 lg:m-3" iconPosition="left">
-                    <PrimeInputIcon class="pi pi-search" />
-                    <PrimeInputText
-                        v-model="filters.name.value"
-                        :placeholder="$t('ACTION_SEARCH_BY_NAME')"
-                        class="w-full"
-                    />
-                </PrimeIconField>
+                <div class="bg-white sticky top-0 z-1 p-2 lg:p-3">
+                    <PrimeIconField iconPosition="left">
+                        <PrimeInputIcon class="pi pi-search" />
+                        <PrimeInputText
+                            v-model="filters.name.value"
+                            ref="filterNameInput"
+                            :placeholder="$t('ACTION_SEARCH_BY_NAME')"
+                            class="w-full"
+                        />
+                        <PrimeButton
+                            v-if="filters.name.value"
+                            icon="pi pi-times"
+                            severity="secondary"
+                            text
+                            rounded
+                            size="small"
+                            aria-label="clear"
+                            class="absolute z-1 right-0 top-0"
+                            @click="onClickClearButton"
+                        />
+                    </PrimeIconField>
+                </div>
                 <GearSelectDataTable
                     :show-photo="true"
                     :selectableGears="selectableGears"
@@ -90,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import PrimeInputText from 'primevue/inputtext';
 import GearSelectDataTable from './GearSelectDataTable.vue';
 import { FilterMatchMode } from 'primevue/api';
 
@@ -132,6 +147,7 @@ watch(
     (isOpen) => {
         if (isOpen) {
             selectedGears.value = [];
+            filters.value.name.value = null;
         }
     },
 );
@@ -139,7 +155,12 @@ watch(
 const filters = ref({
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
-
+const filterNameInput = ref<InstanceType<typeof PrimeInputText> | null>(null);
+const onClickClearButton = () => {
+    filters.value.name.value = null;
+    // @ts-ignore
+    filterNameInput.value?.$el.focus();
+};
 const onSubmit = () => {
     emit(
         'complete',
