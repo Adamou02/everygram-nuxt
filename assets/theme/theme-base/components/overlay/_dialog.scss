@@ -130,7 +130,7 @@
 
 // theme
 .p-dialog {
-    border-radius: $borderRadius;
+    border-radius: $dialogBorderRadius;
     box-shadow: $overlayContainerShadow;
     border: $overlayContentBorder;
 
@@ -139,8 +139,8 @@
         background: $dialogHeaderBg;
         color: $dialogHeaderTextColor;
         padding: $dialogHeaderPadding;
-        border-top-right-radius: $borderRadius;
-        border-top-left-radius: $borderRadius;
+        border-top-right-radius: $dialogBorderRadius;
+        border-top-left-radius: $dialogBorderRadius;
 
         .p-dialog-title {
             font-weight: $dialogHeaderFontWeight;
@@ -163,8 +163,8 @@
         padding: $dialogContentPadding;
 
         &:last-of-type {
-            border-bottom-right-radius: $borderRadius;
-            border-bottom-left-radius: $borderRadius;
+            border-bottom-right-radius: $dialogBorderRadius;
+            border-bottom-left-radius: $dialogBorderRadius;
         }
     }
 
@@ -176,8 +176,8 @@
         display: flex;
         justify-content: flex-end;
         gap: $inlineSpacing;
-        border-bottom-right-radius: $borderRadius;
-        border-bottom-left-radius: $borderRadius;
+        border-bottom-right-radius: $dialogBorderRadius;
+        border-bottom-left-radius: $dialogBorderRadius;
     }
 
     &.p-confirm-dialog {
