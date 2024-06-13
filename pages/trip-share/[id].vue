@@ -41,6 +41,11 @@
         <template #main>
             <!-- base gears -->
             <TripGearSection :title="$t('LABEL_BASE')" :gears="gearsInTrip">
+                <template #header-actions>
+                    <div class="text-lg font-bold">
+                        {{ formatWeight(gearsWeight) }}
+                    </div>
+                </template>
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"
@@ -56,6 +61,11 @@
                 :title="$t('LABEL_CONSUMABLES')"
                 :consumables="consumablesInTrip"
             >
+                <template #header-actions>
+                    <div class="text-lg font-bold">
+                        {{ formatWeight(consumablesWeight) }}
+                    </div>
+                </template>
                 <template #category-body="{ consumables }">
                     <ConsumableDataTable
                         :consumables="consumables"
@@ -70,6 +80,11 @@
                 :title="$t('LABEL_WORN_GEARS')"
                 :gears="wornGearsInTrip"
             >
+                <template #header-actions>
+                    <div class="text-lg font-bold">
+                        {{ formatWeight(wornGearsWeight) }}
+                    </div>
+                </template>
                 <template #category-body="{ gears }">
                     <GearDataTable
                         :gears="gears"
@@ -122,6 +137,10 @@ const gearsWeight = _sumBy(
 const consumablesWeight = _sumBy(
     consumablesInTrip,
     (consumable) => +consumable.weight || 0,
+);
+const wornGearsWeight = _sumBy(
+    wornGearsInTrip,
+    (gear) => (+gear.weight || 0) * gear.quantity,
 );
 
 // SEO and meta
