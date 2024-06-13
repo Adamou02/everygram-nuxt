@@ -53,19 +53,23 @@ const { user } = storeToRefs(userStore);
     display: grid;
     align-items: center;
     padding: 0 16px;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
     z-index: 1100; // higher than dropdown menu, lower than modal
 
+    &__logo {
+        vertical-align: middle;
+    }
     &__left {
         display: flex;
         align-items: center;
         justify-content: flex-start;
     }
-    &__navigation,
     &__actions {
         display: none;
     }
     &__navigation {
+        display: flex;
         justify-content: center;
     }
     &__actions {
@@ -79,11 +83,9 @@ const { user } = storeToRefs(userStore);
     @media (min-width: $lg) {
         padding: 0 40px;
         grid-template-columns: 300px 1fr 300px;
-        gap: 16px;
         &__mobile-actions {
             display: none;
         }
-        &__navigation,
         &__actions {
             display: flex;
         }

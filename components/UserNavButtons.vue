@@ -3,7 +3,9 @@
         <NuxtLink to="/trips">
             <PrimeButton
                 :class="[
-                    'user-nav-buttons__button border-round-md',
+                    'user-nav-buttons__button border-round-md ',
+                    'py-1 px-2 lg:py-2 lg:px-3',
+                    'text-sm lg:text-base',
                     {
                         'user-nav-buttons__button--active':
                             $route.name === 'trips' ||
@@ -23,7 +25,9 @@
         <NuxtLink to="/gears">
             <PrimeButton
                 :class="[
-                    'user-nav-buttons__button border-round-md',
+                    'user-nav-buttons__button border-round-md ',
+                    'py-1 px-2 lg:py-2 lg:px-3',
+                    'text-sm lg:text-base',
                     {
                         'user-nav-buttons__button--active':
                             $route.name === 'gears',
