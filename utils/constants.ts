@@ -52,6 +52,8 @@ const LIMIT = {
     tripBannerImageWidth: 1600,
     tripBannerImageHeight: 900,
     jpgQuality: 0.7,
+    minQuantity: 1,
+    maxQuantity: 100,
 };
 
 const STORAGE_PATH = {

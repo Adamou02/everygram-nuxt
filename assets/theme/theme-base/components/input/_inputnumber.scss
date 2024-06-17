@@ -3,11 +3,21 @@
     display: inline-flex;
 }
 
-.p-inputnumber-button {
+.p-inputnumber .p-inputnumber-button {
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+    background: $inputBg;
+    border-color: $inputBorderColor !important;
+    color: $plainButtonTextColor !important;
+
+    &:not(.p-disabled):hover {
+        background: $plainButtonHoverBgColor;
+    }
+    &:not(.p-disabled):active {
+        background: $plainButtonActiveBgColor;
+    }
 }
 
 .p-inputnumber-buttons-stacked .p-button.p-inputnumber-button .p-button-label,
@@ -51,6 +61,7 @@
     order: 3;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    border-left: 0 none;
 }
 
 .p-inputnumber-buttons-horizontal .p-inputnumber-input {
@@ -62,6 +73,7 @@
     order: 1;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    border-right: 0 none;
 }
 
 .p-inputnumber-buttons-vertical {

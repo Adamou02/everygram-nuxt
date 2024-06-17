@@ -3,7 +3,7 @@
         :value="sortedGears"
         dataKey="id"
         :edit-mode="props.readonly ? undefined : 'cell'"
-        @cell-edit-complete="(e) => emit('gear-cell-edit-complete', e)"
+        @cell-edit-complete="(e: any) => emit('gear-cell-edit-complete', e)"
         class="p-datatable-hide-thead p-datatable-left-no-padding"
     >
         <!-- desktop -->
@@ -67,7 +67,8 @@
             <template #editor="{ data, field }">
                 <PrimeInputNumber
                     v-model="data[field]"
-                    :min="1"
+                    :min="constants.LIMIT.minQuantity"
+                    :max="constants.LIMIT.maxQuantity"
                     class="w-3rem text-right"
                 />
             </template>
@@ -106,6 +107,14 @@
                                     emit('gear-edit', data);
                                 },
                             },
+                            actions.includes('edit-qty') &&
+                                hasQuantity && {
+                                    icon: 'pi pi-sort',
+                                    label: $t('ACTION_EDIT_QUANTITY'),
+                                    command: () => {
+                                        emit('gear-edit-quantity', data);
+                                    },
+                                },
                             actions.includes('remove') && {
                                 icon: 'pi pi-times',
                                 label: $t('ACTION_REMOVE_FROM_TRIP'),
@@ -134,7 +143,7 @@ import type { MenuItem } from 'primevue/menuitem';
 const props = defineProps<{
     gears?: (Gear & { quantity?: number })[];
     hasQuantity?: boolean;
-    actions?: ('edit' | 'delete' | 'remove')[];
+    actions?: ('edit' | 'edit-qty' | 'delete' | 'remove')[];
     readonly?: boolean;
 }>();
 
@@ -158,6 +167,7 @@ const emit = defineEmits<{
         },
     ];
     'gear-edit': [gear: Gear];
+    'gear-edit-quantity': [gear: GearWithQuantity];
     'gear-delete': [gear: Gear];
     'gear-remove': [gear: Gear];
 }>();

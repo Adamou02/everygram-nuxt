@@ -118,8 +118,14 @@
                     <GearDataTable
                         :gears="gears"
                         :hasQuantity="true"
-                        :actions="['edit', 'remove']"
+                        :actions="['edit', 'edit-qty', 'remove']"
                         @gear-edit="onEditGear"
+                        @gear-edit-quantity="
+                            (gear: GearWithQuantity) => {
+                                editingQuantityGearType = 'gears';
+                                onEditQuantity(gear);
+                            }
+                        "
                         @gear-remove="
                             (gear: Gear) => onRemoveGear(gear, 'gears')
                         "
@@ -252,8 +258,14 @@
                     <GearDataTable
                         :gears="gears"
                         :hasQuantity="true"
-                        :actions="['edit', 'remove']"
+                        :actions="['edit', 'edit-qty', 'remove']"
                         @gear-edit="onEditGear"
+                        @gear-edit-quantity="
+                            (gear: GearWithQuantity) => {
+                                editingQuantityGearType = 'wornGears';
+                                onEditQuantity(gear);
+                            }
+                        "
                         @gear-remove="
                             (gear: Gear) => onRemoveGear(gear, 'wornGears')
                         "
@@ -321,6 +333,7 @@
         "
         @complete-create="onCompleteCreateGearInTrip"
     />
+    <GearQuantityEditorDialog @complete-edit="onCompleteEditQuantity" />
     <TripInfoEditorDialog />
     <ConsumableEditorDialog :tripId="tripId" />
 </template>
@@ -396,6 +409,25 @@ const onCompleteCreateGearInTrip = (gear: Gear) => {
         tripId,
         [{ id: gear.id, quantity: 1 }],
         creatingGearType.value,
+    );
+};
+
+// for GearQuantityEditor
+const { onEditQuantity, editingGearWithQuantity } = useEditQuantity();
+const editingQuantityGearType = ref<TripGearType>('gears');
+const onCompleteEditQuantity = (quantity: number) => {
+    if (!editingGearWithQuantity.value) {
+        return;
+    }
+    userTripsStore.setGearsToTrip(
+        tripId,
+        [
+            {
+                id: editingGearWithQuantity.value.id,
+                quantity,
+            },
+        ],
+        editingQuantityGearType.value,
     );
 };
 
