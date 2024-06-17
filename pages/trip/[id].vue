@@ -302,11 +302,7 @@
     </EmptyState>
     <GearsSelectorDialog
         :is-open="isSelectingGears"
-        :selected-gear-ids="
-            selectingGearType === 'gears'
-                ? selectedGearIds
-                : selectedWornGearIds
-        "
+        :selected-gear-ids="[...selectedGearIds, ...selectedWornGearIds]"
         :categories="
             selectingGearType === 'wornGears'
                 ? constants.WEARABLE_GEAR_CATEGORY_KEYS
