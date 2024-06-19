@@ -24,6 +24,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const gearMap = ref<UserGears>({});
     const gears = computed(() => Object.values(gearMap.value));
     const isFirstFetching = ref(true);
+    const hasBuiltUserGears = ref(false);
     const unsubscribe = ref<null | (() => void)>(null);
     const isInitialized = ref(false);
 
@@ -39,7 +40,11 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         const userGearsDocRef = doc(db, 'userGears', userId);
         unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
             const docData = doc.data();
-            if (!doc.exists || !docData?.gears) {
+            if (
+                !docData ||
+                (isEmpty(docData.gears) && !hasBuiltUserGears.value)
+            ) {
+                hasBuiltUserGears.value = true;
                 // get all user's gears
                 const gearDocs = await getDocs(
                     query(
@@ -60,6 +65,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 // create initial userGears document
                 await setDoc(userGearsDocRef, {
                     gears: userGears,
+                    created: serverTimestamp(), // to enfirce snapshot change
                 });
                 return;
             }
