@@ -70,6 +70,7 @@
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
+                    size="small"
                     :items="[
                         {
                             icon: 'pi pi-pencil',

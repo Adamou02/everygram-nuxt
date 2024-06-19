@@ -122,7 +122,6 @@ export type WeightBarChartItem = {
     color: string;
 };
 
-export type GearBrand = 'mont-bell' | 'patagonia' | 'arcteryx';
 export type BrandData = { name: string; originalName?: string };
 
 export type ThumbnailOption = {
