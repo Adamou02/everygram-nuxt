@@ -98,6 +98,7 @@
                                     <ActionButtonsGroup
                                         text
                                         type="icon"
+                                        size="small"
                                         :actions="[
                                             {
                                                 icon: 'pi pi-plus',

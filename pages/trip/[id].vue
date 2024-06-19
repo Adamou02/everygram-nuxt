@@ -111,6 +111,7 @@
                                 },
                             },
                         ]"
+                        size="small"
                         class="lg:hidden"
                     />
                 </template>
@@ -174,6 +175,7 @@
                                 onClick: () => onCreateConsumable(),
                             },
                         ]"
+                        size="small"
                         class="lg:hidden"
                     />
                 </template>
@@ -251,6 +253,7 @@
                                 },
                             },
                         ]"
+                        size="small"
                         class="lg:hidden"
                     />
                 </template>

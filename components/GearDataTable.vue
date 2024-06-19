@@ -21,6 +21,16 @@
             :header="$t('LABEL_NAME')"
             :class="['hide-in-mobile', { 'hover:surface-50': !props.readonly }]"
         >
+            <template #body="{ data }">
+                <div class="flex flex-column gap-1">
+                    <div v-if="data.brand" class="text-sm text-color-light">
+                        {{ formatBrand(data.brand) }}
+                    </div>
+                    <div>
+                        {{ data.name }}
+                    </div>
+                </div>
+            </template>
             <template #editor="{ data, field }">
                 <PrimeInputText
                     v-model="data[field]"
@@ -78,9 +88,20 @@
         <PrimeColumn
             field="name"
             :header="$t('LABEL_NAME')"
-            class="lg:hidden"
-        />
-        <PrimeColumn class="text-right white-space-nowrap lg:hidden">
+            class="text-sm lg:hidden"
+        >
+            <template #body="{ data }">
+                <div class="flex flex-column gap-1">
+                    <div v-if="data.brand" class="text-xs text-color-light">
+                        {{ formatBrand(data.brand) }}
+                    </div>
+                    <div class="line-clamp-2">
+                        {{ data.name }}
+                    </div>
+                </div>
+            </template>
+        </PrimeColumn>
+        <PrimeColumn class="text-right white-space-nowrap text-sm lg:hidden">
             <template #body="{ data }">
                 {{ data.weight ? formatWeight(data.weight) : '-' }}
                 <template v-if="hasQuantity && data.quantity > 1">
@@ -98,6 +119,7 @@
             <template #body="{ data }">
                 <MoreActionsMenuButton
                     text
+                    size="small"
                     :items="
                         _filter([
                             actions.includes('edit') && {
@@ -172,5 +194,5 @@ const emit = defineEmits<{
     'gear-remove': [gear: Gear];
 }>();
 
-const { formatWeight } = useLangUtils();
+const { formatWeight, formatBrand } = useLangUtils();
 </script>

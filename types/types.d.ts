@@ -129,7 +129,6 @@ declare global {
         subItems?: WeightBarChartSubItem[];
     };
 
-    type GearBrand = 'mont-bell' | 'patagonia' | 'arcteryx';
     type BrandData = { name: string; originalName?: string };
 
     type EventParamKey =

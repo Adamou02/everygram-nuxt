@@ -48,6 +48,9 @@
                     <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
                 </PrimeInputGroup>
             </FormField>
+            <FormField :label="$t('LABEL_BRAND')">
+                <GearBrandDropdown v-model="formState.brand" class="w-full" />
+            </FormField>
             <FormField :label="$t('LABEL_CATEGORY')">
                 <PrimeDropdown
                     v-model="formState.category"
@@ -169,11 +172,13 @@ const { gearCategoryToLabel } = useLangUtils();
 // form state and validation rules
 const initialFormState = {
     name: '',
+    brand: undefined,
     weight: undefined,
     category: undefined,
 };
 const formState = reactive<{
     name: string;
+    brand: string | undefined;
     weight: number | undefined;
     category: GearCategory | undefined;
 }>({ ...initialFormState });
@@ -195,6 +200,7 @@ const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 watch(isOpen, (newValue) => {
     if (newValue) {
         formState.name = editingGear.value?.name || initialFormState.name;
+        formState.brand = editingGear.value?.brand || initialFormState.brand;
         formState.weight = editingGear.value?.weight || initialFormState.weight;
         formState.category =
             editingGear.value?.category ||
@@ -221,6 +227,7 @@ const onSubmit = async () => {
 
     const gearData: EditingGear = {
         name: formState.name,
+        brand: formState.brand || '',
         weight: formState.weight || 0,
         category: formState.category || 'others',
     };

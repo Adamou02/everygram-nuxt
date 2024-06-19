@@ -21,11 +21,11 @@ $textSecondaryColor: $eg-c-text-light;
 
 /// Background of a highlighted item
 /// @group general
-$highlightBg: $primaryColor;
+$highlightBg: $primaryLighterColor;
 
 /// Text color of a highlighted item
 /// @group general
-$highlightTextColor: $primaryTextColor;
+$highlightTextColor: $primaryDarkColor;
 
 /// Background of a highlighted item in focus state
 /// @group general

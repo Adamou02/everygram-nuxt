@@ -31,6 +31,10 @@ export default function () {
             }
             return weight < 1000 ? weightG : weightKg;
         },
+        formatBrand: (brand: string) =>
+            constants.GEAR_BRANDS[brand]
+                ? constants.GEAR_BRANDS[brand].name
+                : brand,
         gearCategoryToLabel: (category: GearCategory) => {
             if (!constants.GEAR_CATEGORY_KEYS.includes(category)) {
                 return i18n.t('GEAR_CATEGORY_OTHERS');
