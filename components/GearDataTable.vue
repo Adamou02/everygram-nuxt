@@ -22,14 +22,7 @@
             :class="['hide-in-mobile', { 'hover:surface-50': !props.readonly }]"
         >
             <template #body="{ data }">
-                <div class="flex flex-column gap-1">
-                    <div v-if="data.brand" class="text-sm text-color-light">
-                        {{ formatBrand(data.brand) }}
-                    </div>
-                    <div>
-                        {{ data.name }}
-                    </div>
-                </div>
+                <GearNameWithBrand :gear="data" />
             </template>
             <template #editor="{ data, field }">
                 <PrimeInputText
@@ -85,20 +78,9 @@
         </PrimeColumn>
 
         <!-- mobile -->
-        <PrimeColumn
-            field="name"
-            :header="$t('LABEL_NAME')"
-            class="text-sm lg:hidden"
-        >
+        <PrimeColumn field="name" :header="$t('LABEL_NAME')" class="lg:hidden">
             <template #body="{ data }">
-                <div class="flex flex-column gap-1">
-                    <div v-if="data.brand" class="text-xs text-color-light">
-                        {{ formatBrand(data.brand) }}
-                    </div>
-                    <div class="line-clamp-2">
-                        {{ data.name }}
-                    </div>
-                </div>
+                <GearNameWithBrand :gear="data" />
             </template>
         </PrimeColumn>
         <PrimeColumn class="text-right white-space-nowrap text-sm lg:hidden">
@@ -194,5 +176,5 @@ const emit = defineEmits<{
     'gear-remove': [gear: Gear];
 }>();
 
-const { formatWeight, formatBrand } = useLangUtils();
+const { formatWeight } = useLangUtils();
 </script>

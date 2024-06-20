@@ -27,7 +27,11 @@
                 />
             </template>
         </PrimeColumn>
-        <PrimeColumn field="name" :header="$t('LABEL_NAME')" />
+        <PrimeColumn field="name" :header="$t('LABEL_NAME')">
+            <template #body="{ data }">
+                <GearNameWithBrand :gear="data" />
+            </template>
+        </PrimeColumn>
         <PrimeColumn
             field="weight"
             :header="$t('LABEL_WEIGHT')"
