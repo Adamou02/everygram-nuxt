@@ -148,6 +148,7 @@
     "LABEL_CATEGORY": "Category",
     "LABEL_CONSUMABLES_WEIGHT": "Consumables Weight",
     "LABEL_CONSUMABLES": "Consumables",
+    "LABEL_CUSTOM_BRAND": "Custom Brands",
     "LABEL_DESCRIPTION": "Description",
     "LABEL_EMAIL": "Email",
     "LABEL_END_DATE": "End Date",
