@@ -31,10 +31,12 @@ export default function () {
             }
             return weight < 1000 ? weightG : weightKg;
         },
-        formatBrand: (brand: string) =>
-            constants.GEAR_BRANDS[brand]
-                ? constants.GEAR_BRANDS[brand].name
-                : brand,
+        formatBrand: (brand: GearBrand) => {
+            if (brand?.key && constants.GEAR_BRANDS[brand.key]) {
+                return constants.GEAR_BRANDS[brand.key].name;
+            }
+            return brand?.custom || '';
+        },
         gearCategoryToLabel: (category: GearCategory) => {
             if (!constants.GEAR_CATEGORY_KEYS.includes(category)) {
                 return i18n.t('GEAR_CATEGORY_OTHERS');

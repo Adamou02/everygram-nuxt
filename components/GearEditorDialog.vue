@@ -200,7 +200,10 @@ const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 watch(isOpen, (newValue) => {
     if (newValue) {
         formState.name = editingGear.value?.name || initialFormState.name;
-        formState.brand = editingGear.value?.brand || initialFormState.brand;
+        formState.brand =
+            editingGear.value?.brand?.key ||
+            editingGear.value?.brand?.custom ||
+            initialFormState.brand;
         formState.weight = editingGear.value?.weight || initialFormState.weight;
         formState.category =
             editingGear.value?.category ||
@@ -227,7 +230,11 @@ const onSubmit = async () => {
 
     const gearData: EditingGear = {
         name: formState.name,
-        brand: formState.brand || '',
+        brand: formState.brand
+            ? constants.GEAR_BRANDS[formState.brand]
+                ? { key: formState.brand }
+                : { custom: formState.brand }
+            : undefined,
         weight: formState.weight || 0,
         category: formState.category || 'others',
     };

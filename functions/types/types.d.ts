@@ -34,13 +34,17 @@ export type GearCategory =
     | 'sleeping'
     | 'tools'
     | 'others';
+export type GearBrand = {
+    key?: string;
+    custom?: string;
+};
 
 export type Gear = {
     id: string;
     name: string;
     role: Record<string, GearRole>;
     weight: number; // grams
-    brand?: string;
+    brand?: GearBrand;
     category: GearCategory;
     isArchived?: boolean;
     archiveReason?:
