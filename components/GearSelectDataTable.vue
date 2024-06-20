@@ -1,12 +1,13 @@
 <template>
     <PrimeDataTable
         :filters="filters"
+        :globalFilterFields="['name', 'formattedBrand']"
         :selection="selectedGears"
         @update:selection="
             (newSelectedGears: T[]) => $emit('update', newSelectedGears)
         "
         selectionMode="multiple"
-        :value="selectableGears"
+        :value="formattedGears"
         size="large"
         :dataKey="dataKey"
         class="select-none"
@@ -33,14 +34,10 @@
             </template>
         </PrimeColumn>
         <PrimeColumn
-            field="weight"
+            field="formattedWeight"
             :header="$t('LABEL_WEIGHT')"
             class="text-right w-5rem"
-        >
-            <template #body="{ data }">
-                {{ data.weight ? formatWeight(data.weight) : '-' }}
-            </template>
-        </PrimeColumn>
+        />
         <!-- desktop category -->
         <PrimeColumn
             field="category"
@@ -71,7 +68,14 @@
 <script
     setup
     lang="ts"
-    generic="T extends { name: string; weight: number; category: GearCategory }"
+    generic="
+        T extends {
+            name: string;
+            weight: number;
+            category: GearCategory;
+            brand?: GearBrand;
+        }
+    "
 >
 const props = defineProps<{
     selectableGears: T[];
@@ -83,5 +87,12 @@ const props = defineProps<{
 const emit = defineEmits<{
     update: [selectedGears: T[]];
 }>();
-const { gearCategoryToLabel, formatWeight } = useLangUtils();
+const formattedGears = computed(() => {
+    return props.selectableGears.map((gear) => ({
+        ...gear,
+        formattedBrand: gear.brand ? formatBrand(gear.brand) : '',
+        formattedWeight: gear.weight ? formatWeight(gear.weight) : '-',
+    }));
+});
+const { gearCategoryToLabel, formatWeight, formatBrand } = useLangUtils();
 </script>

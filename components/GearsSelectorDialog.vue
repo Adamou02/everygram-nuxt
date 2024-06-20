@@ -34,13 +34,13 @@
                     <PrimeIconField iconPosition="left">
                         <PrimeInputIcon class="pi pi-search" />
                         <PrimeInputText
-                            v-model="filters.name.value"
+                            v-model="filterValue"
                             ref="filterNameInput"
                             :placeholder="$t('ACTION_SEARCH_BY_NAME')"
                             class="w-full"
                         />
                         <PrimeButton
-                            v-if="filters.name.value"
+                            v-if="filterValue"
                             icon="pi pi-times"
                             severity="secondary"
                             text
@@ -141,23 +141,24 @@ const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>
     _sum(selectedGears.value.map((gear) => +gear.weight || 0)),
 );
+const filterValue = ref<string | null>(null);
 
 watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
             selectedGears.value = [];
-            filters.value.name.value = null;
+            filterValue.value = null;
         }
     },
 );
 
-const filters = ref({
-    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
+const filters = computed(() => ({
+    global: { value: filterValue.value, matchMode: FilterMatchMode.CONTAINS },
+}));
 const filterNameInput = ref<InstanceType<typeof PrimeInputText> | null>(null);
 const onClickClearButton = () => {
-    filters.value.name.value = null;
+    filterValue.value = null;
     // @ts-ignore
     filterNameInput.value?.$el.focus();
 };
