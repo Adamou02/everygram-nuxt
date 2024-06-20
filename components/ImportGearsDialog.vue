@@ -215,7 +215,10 @@ const onFileSelected = async (file: File) => {
             return;
         }
 
-        const weight = _toInteger(row[1]);
+        const weight = _round(
+            _toNumber(row[1]),
+            constants.LIMIT.maxFractionDigits,
+        );
         if (
             isNaN(weight) ||
             weight < constants.LIMIT.minWeight ||

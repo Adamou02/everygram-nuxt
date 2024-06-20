@@ -39,7 +39,7 @@
                     <PrimeInputNumber
                         v-model="formState.weight"
                         class="w-full text-right"
-                        integer
+                        :maxFractionDigits="constants.LIMIT.maxFractionDigits"
                         :min="constants.LIMIT.minWeight"
                         :max="constants.LIMIT.maxWeight"
                         :invalid="vuelidate.weight.$error"
@@ -190,7 +190,6 @@ const formRules = {
         maxLength: formValidators.maxLength(constants.LIMIT.maxNameLength),
     },
     weight: {
-        integer: formValidators.integer,
         minValue: formValidators.minValue(constants.LIMIT.minWeight),
         maxValue: formValidators.maxValue(constants.LIMIT.maxWeight),
     },
@@ -230,14 +229,15 @@ const onSubmit = async () => {
 
     const gearData: EditingGear = {
         name: formState.name,
-        brand: formState.brand
-            ? constants.GEAR_BRANDS[formState.brand]
-                ? { key: formState.brand }
-                : { custom: formState.brand }
-            : undefined,
         weight: formState.weight || 0,
         category: formState.category || 'others',
     };
+
+    if (formState.brand) {
+        gearData.brand = constants.GEAR_BRANDS[formState.brand]
+            ? { key: formState.brand }
+            : { custom: formState.brand };
+    }
 
     try {
         isSaving.value = true;

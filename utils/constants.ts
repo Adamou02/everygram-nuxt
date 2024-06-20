@@ -54,6 +54,7 @@ const LIMIT = {
     jpgQuality: 0.7,
     minQuantity: 1,
     maxQuantity: 100,
+    maxFractionDigits: 1,
 };
 
 const STORAGE_PATH = {

@@ -36,7 +36,7 @@
                 <PrimeInputGroup class="w-7rem">
                     <PrimeInputNumber
                         v-model="data[field]"
-                        integer
+                        :maxFractionDigits="constants.LIMIT.maxFractionDigits"
                         :min="constants.LIMIT.minWeight"
                         :max="constants.LIMIT.maxWeight"
                         class="text-right"
