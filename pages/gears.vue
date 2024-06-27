@@ -83,14 +83,7 @@
                             'text-color text-left w-full',
                             { 'opacity-50': !gearsGroupByCategory[category] },
                         ]"
-                        @click="
-                            () => {
-                                sections[index]?.$el.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'start',
-                                });
-                            }
-                        "
+                        @click="scrollToCategory(category)"
                     >
                         <template #icon>
                             <GearCategoryAvatar
@@ -110,7 +103,7 @@
                             ...displayGearCatergories,
                             ...emptyGearCategories,
                         ]"
-                        ref="sections"
+                        :id="`category-section-${category}`"
                         :key="category"
                         :class="{
                             'opacity-50': !gearsGroupByCategory[category],
@@ -197,14 +190,10 @@
 </template>
 
 <script setup lang="ts">
-import type SectionPanel from '~/components/SectionPanel.vue';
-
 definePageMeta({
     middleware: ['auth-guard'],
     layout: 'user-page',
 });
-
-const sections = ref<(InstanceType<typeof SectionPanel> | null)[]>([]);
 
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
@@ -315,6 +304,20 @@ watch(filterValue, () => {
     }
     debouncedUpdateFilteredGears();
 });
+
+// for scroll into view
+const scrollToCategory = (category: string) => {
+    const sectionElement = document.getElementById(
+        `category-section-${category}`,
+    );
+    if (!sectionElement) {
+        return;
+    }
+    sectionElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+    });
+};
 
 const sidebarClass = 'hidden md:block md:col-3 lg:col-2';
 const mainClass = 'col-12 md:col-9 lg:col-10';
