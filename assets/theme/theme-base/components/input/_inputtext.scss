@@ -50,8 +50,8 @@
     }
 
     &.p-inputtext-lg {
-        @include scaledFontSize($inputTextFontSize, $scaleLG);
-        @include scaledPadding($inputPadding, $scaleLG);
+        @include scaledFontSize($inputTextFontSize, $inputTextScaleLG);
+        @include scaledPadding($inputPadding, $inputTextScaleLG);
     }
 }
 
@@ -104,7 +104,7 @@
 
 .p-inputtext-lg {
     .p-inputtext {
-        @include scaledFontSize($inputTextFontSize, $scaleLG);
-        @include scaledPadding($inputPadding, $scaleLG);
+        @include scaledFontSize($inputTextFontSize, $inputTextScaleLG);
+        @include scaledPadding($inputPadding, $inputTextScaleLG);
     }
 }

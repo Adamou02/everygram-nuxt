@@ -57,13 +57,19 @@
                     </div>
                     <SearchTextInput
                         v-model="filterValue"
-                        class="flex-1 md:flex-none"
+                        :placeholder="$t('ACTION_SEARCH_GEARS')"
+                        class="flex-1 md:flex-none surface-200 border-none"
                     />
                 </div>
             </div>
         </div>
         <!-- body -->
-        <div class="grid">
+        <EmptyState
+            v-if="isFiltered && !displayGears.length"
+            :title="$t('INFO_NO_GEARS_FOUND')"
+            image-src="/image/empty-gear.jpg"
+        />
+        <div v-else class="grid">
             <!-- sidebar -->
             <div :class="sidebarClass">
                 <div
@@ -71,10 +77,7 @@
                     style="top: var(--app-header-height)"
                 >
                     <PrimeButton
-                        v-for="(category, index) in [
-                            ...displayGearCatergories,
-                            ...emptyGearCategories,
-                        ]"
+                        v-for="category in displayGearCatergories"
                         :key="category"
                         :label="`${gearCategoryToLabel(category)} (${gearsGroupByCategory[category]?.length || 0})`"
                         text
@@ -99,10 +102,7 @@
             <div :class="mainClass">
                 <div class="flex flex-column gap-5">
                     <SectionPanel
-                        v-for="category in [
-                            ...displayGearCatergories,
-                            ...emptyGearCategories,
-                        ]"
+                        v-for="category in displayGearCatergories"
                         :id="`category-section-${category}`"
                         :key="category"
                         :class="{
@@ -204,7 +204,7 @@ const displayGears = computed(() =>
 const gearsGroupByCategory = computed(() =>
     dataUtils.groupGearsByCategory(displayGears.value),
 );
-const displayGearCatergories = computed(() =>
+const nonEmptyGearCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
         (category) => gearsGroupByCategory.value[category],
     ),
@@ -215,6 +215,11 @@ const emptyGearCategories = computed(() =>
         : constants.GEAR_CATEGORY_KEYS.filter(
               (category) => !gearsGroupByCategory.value[category],
           ),
+);
+const displayGearCatergories = computed(() =>
+    isFiltered.value
+        ? nonEmptyGearCatergories.value
+        : [...nonEmptyGearCatergories.value, ...emptyGearCategories.value],
 );
 const { confirmDeleteDialog } = useUiUitls();
 const { gearCategoryToLabel } = useLangUtils();
@@ -281,12 +286,13 @@ const filterValue = ref<string>('');
 const filteredGears = ref<Gear[]>([]);
 const isFiltered = ref<boolean>(false);
 const debouncedUpdateFilteredGears = _debounce(() => {
-    if (!filterValue.value) {
+    const searchText = filterValue.value.toLocaleLowerCase();
+    if (!searchText) {
         filteredGears.value = gears.value;
         isFiltered.value = false;
         return;
     }
-    const searchText = filterValue.value.toLocaleLowerCase() || '';
+    // filter by gear name or brand
     filteredGears.value = gears.value.filter(
         (gear) =>
             gear.name.toLocaleLowerCase().includes(searchText) ||
@@ -297,8 +303,9 @@ const debouncedUpdateFilteredGears = _debounce(() => {
     );
     isFiltered.value = true;
 }, 500);
-watch(filterValue, () => {
-    if (!filterValue.value) {
+watch(filterValue, (newFilterValue) => {
+    if (!newFilterValue) {
+        // reset immediately when clear filter
         filteredGears.value = gears.value;
         isFiltered.value = false;
     }

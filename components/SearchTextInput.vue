@@ -4,8 +4,10 @@
         <PrimeInputText
             v-model="value"
             ref="filterNameInput"
-            :placeholder="$t('ACTION_SEARCH')"
+            :size="size"
+            :placeholder="placeholder || $t('ACTION_SEARCH')"
             class="w-full"
+            v-bind="$attrs"
         />
         <PrimeButton
             v-if="value"
@@ -15,7 +17,12 @@
             rounded
             size="small"
             aria-label="clear"
-            class="absolute z-1 right-0 top-0"
+            :class="[
+                'absolute z-1 right-0 top-0',
+                {
+                    'mt-1 mr-1': size === 'large',
+                },
+            ]"
             @click="onClickClearButton"
         />
     </PrimeIconField>
@@ -24,7 +31,14 @@
 <script setup lang="ts">
 import PrimeInputText from 'primevue/inputtext';
 
+defineOptions({
+    inheritAttrs: false,
+});
 const value = defineModel<string>({ required: true });
+const props = defineProps<{
+    size?: 'small' | 'large';
+    placeholder?: string;
+}>();
 const filterNameInput = ref<InstanceType<typeof PrimeInputText> | null>(null);
 const onClickClearButton = () => {
     value.value = '';

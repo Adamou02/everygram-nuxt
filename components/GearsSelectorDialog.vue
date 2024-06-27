@@ -121,14 +121,14 @@ const selectedGears = ref<Gear[]>([]);
 const weightOfSelectedGears = computed(() =>
     _sum(selectedGears.value.map((gear) => +gear.weight || 0)),
 );
-const filterValue = ref<string | null>(null);
+const filterValue = ref<string>('');
 
 watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
             selectedGears.value = [];
-            filterValue.value = null;
+            filterValue.value = '';
         }
     },
 );
