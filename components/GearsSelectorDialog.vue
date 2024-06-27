@@ -31,26 +31,7 @@
             </EmptyState>
             <template v-else>
                 <div class="bg-white sticky top-0 z-1 p-2 lg:p-3">
-                    <PrimeIconField iconPosition="left">
-                        <PrimeInputIcon class="pi pi-search" />
-                        <PrimeInputText
-                            v-model="filterValue"
-                            ref="filterNameInput"
-                            :placeholder="$t('ACTION_SEARCH_BY_NAME')"
-                            class="w-full"
-                        />
-                        <PrimeButton
-                            v-if="filterValue"
-                            icon="pi pi-times"
-                            severity="secondary"
-                            text
-                            rounded
-                            size="small"
-                            aria-label="clear"
-                            class="absolute z-1 right-0 top-0"
-                            @click="onClickClearButton"
-                        />
-                    </PrimeIconField>
+                    <SearchTextInput v-model="filterValue" />
                 </div>
                 <GearSelectDataTable
                     :show-photo="true"
@@ -104,7 +85,6 @@
 </template>
 
 <script setup lang="ts">
-import PrimeInputText from 'primevue/inputtext';
 import GearSelectDataTable from './GearSelectDataTable.vue';
 import { FilterMatchMode } from 'primevue/api';
 
@@ -156,12 +136,6 @@ watch(
 const filters = computed(() => ({
     global: { value: filterValue.value, matchMode: FilterMatchMode.CONTAINS },
 }));
-const filterNameInput = ref<InstanceType<typeof PrimeInputText> | null>(null);
-const onClickClearButton = () => {
-    filterValue.value = null;
-    // @ts-ignore
-    filterNameInput.value?.$el.focus();
-};
 const onSubmit = () => {
     emit(
         'complete',

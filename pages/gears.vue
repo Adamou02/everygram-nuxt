@@ -1,41 +1,71 @@
 <!-- a page to list all gear the user has -->
 <template>
     <PageLoading v-if="isFetchingGears" />
-    <div v-else-if="gears.length" class="flex flex-column gap-5">
-        <SectionTitleBar>
-            <div class="text-color-light">
-                {{ $t('INFO_GEAR_NUM', { num: gears.length }, gears.length) }}
-            </div>
-            <div class="flex align-items-center gap-2">
-                <PrimeButton
-                    severity="secondary"
-                    rounded
-                    outlined
-                    :label="$t('ACTION_IMPORT_GEARS')"
-                    icon="pi pi-file-arrow-up"
-                    class="hide-in-mobile"
-                    @click="isOpenImportGearsDialog = true"
-                />
-                <PrimeButton
-                    severity="secondary"
-                    rounded
-                    outlined
-                    icon="pi pi-file-arrow-up"
-                    @click="isOpenImportGearsDialog = true"
-                    class="lg:hidden"
-                />
-                <PrimeButton
-                    severity="secondary"
-                    rounded
-                    :label="$t('ACTION_CREATE_GEAR')"
-                    icon="pi pi-plus"
-                    @click="() => onCreateGear()"
+    <div v-else-if="gears.length" class="flex flex-column gap-2 lg:gap-3">
+        <!-- header -->
+        <div class="grid align-items-center">
+            <!-- left -->
+            <div :class="sidebarClass">
+                <GearNum
+                    :num="displayGears.length"
+                    :isFiltered="isFiltered"
+                    class="px-4"
                 />
             </div>
-        </SectionTitleBar>
+            <!-- right -->
+            <div :class="mainClass">
+                <div
+                    :class="[
+                        'flex flex-column gap-3',
+                        'md:flex-row-reverse md:justify-content-between md:align-items-center',
+                    ]"
+                >
+                    <div
+                        class="flex justify-content-between align-items-center"
+                    >
+                        <GearNum
+                            :num="displayGears.length"
+                            :isFiltered="isFiltered"
+                            class="md:hidden"
+                        />
+                        <div class="flex align-items-center gap-2">
+                            <PrimeButton
+                                severity="secondary"
+                                rounded
+                                outlined
+                                :label="$t('ACTION_IMPORT_GEARS')"
+                                icon="pi pi-file-arrow-up"
+                                class="hide-in-mobile"
+                                @click="isOpenImportGearsDialog = true"
+                            />
+                            <PrimeButton
+                                severity="secondary"
+                                rounded
+                                outlined
+                                icon="pi pi-file-arrow-up"
+                                @click="isOpenImportGearsDialog = true"
+                                class="lg:hidden"
+                            />
+                            <PrimeButton
+                                severity="secondary"
+                                rounded
+                                :label="$t('ACTION_CREATE_GEAR')"
+                                icon="pi pi-plus"
+                                @click="() => onCreateGear()"
+                            />
+                        </div>
+                    </div>
+                    <SearchTextInput
+                        v-model="filterValue"
+                        class="flex-1 md:flex-none"
+                    />
+                </div>
+            </div>
+        </div>
+        <!-- body -->
         <div class="grid">
             <!-- sidebar -->
-            <div class="hidden md:block md:col-3 lg:col-2">
+            <div :class="sidebarClass">
                 <div
                     class="flex flex-column gap-1 align-items-start sticky z-1"
                     style="top: var(--app-header-height)"
@@ -73,7 +103,7 @@
                 </div>
             </div>
             <!-- main -->
-            <div class="col-12 md:col-9 lg:col-10">
+            <div :class="mainClass">
                 <div class="flex flex-column gap-5">
                     <SectionPanel
                         v-for="category in [
@@ -178,8 +208,12 @@ const sections = ref<(InstanceType<typeof SectionPanel> | null)[]>([]);
 
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
+const { formatBrand } = useLangUtils();
+const displayGears = computed(() =>
+    isFiltered.value ? filteredGears.value : gears.value,
+);
 const gearsGroupByCategory = computed(() =>
-    dataUtils.groupGearsByCategory(gears.value),
+    dataUtils.groupGearsByCategory(displayGears.value),
 );
 const displayGearCatergories = computed(() =>
     constants.GEAR_CATEGORY_KEYS.filter(
@@ -187,9 +221,11 @@ const displayGearCatergories = computed(() =>
     ),
 );
 const emptyGearCategories = computed(() =>
-    constants.GEAR_CATEGORY_KEYS.filter(
-        (category) => !gearsGroupByCategory.value[category],
-    ),
+    isFiltered.value
+        ? []
+        : constants.GEAR_CATEGORY_KEYS.filter(
+              (category) => !gearsGroupByCategory.value[category],
+          ),
 );
 const { confirmDeleteDialog } = useUiUitls();
 const { gearCategoryToLabel } = useLangUtils();
@@ -250,6 +286,38 @@ const isOpenImportGearsDialog = ref<boolean>(false);
 onMounted(() => {
     analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_GEARS_PAGE);
 });
+
+// filter
+const filterValue = ref<string>('');
+const filteredGears = ref<Gear[]>([]);
+const isFiltered = ref<boolean>(false);
+const debouncedUpdateFilteredGears = _debounce(() => {
+    if (!filterValue.value) {
+        filteredGears.value = gears.value;
+        isFiltered.value = false;
+        return;
+    }
+    const searchText = filterValue.value.toLocaleLowerCase() || '';
+    filteredGears.value = gears.value.filter(
+        (gear) =>
+            gear.name.toLocaleLowerCase().includes(searchText) ||
+            (gear.brand &&
+                formatBrand(gear.brand)
+                    .toLocaleLowerCase()
+                    .includes(searchText)),
+    );
+    isFiltered.value = true;
+}, 500);
+watch(filterValue, () => {
+    if (!filterValue.value) {
+        filteredGears.value = gears.value;
+        isFiltered.value = false;
+    }
+    debouncedUpdateFilteredGears();
+});
+
+const sidebarClass = 'hidden md:block md:col-3 lg:col-2';
+const mainClass = 'col-12 md:col-9 lg:col-10';
 
 useHead({
     title: i18n.t('PAGE_GEARS'),
