@@ -304,3 +304,5 @@ export const onTripDeleted = onDocumentDeleted(
         return Promise.all([deleteStoragePromise, unpublishTripPromise]);
     },
 );
+
+export { incrementTripShareView } from './increment-tripshare-view';

@@ -114,6 +114,7 @@
 <script setup lang="ts">
 import { getApp } from 'firebase/app';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 definePageMeta({
     layout: 'public-page',
@@ -194,5 +195,43 @@ onMounted(() => {
     analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_TRIP_SHARE_PAGE, {
         trip_id: tripId,
     });
+    incrementTripShareViewIfFirstVisit(tripId);
 });
+
+function incrementTripShareViewIfFirstVisit(tripId: string) {
+    const STORAGE_KEY = 'eg_tripshare_viewed_ids';
+    let viewedIds: Set<string>;
+
+    // try to get viewed trip IDs from localStorage
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        viewedIds = raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch {
+        viewedIds = new Set();
+    }
+
+    if (viewedIds.has(tripId)) {
+        // already viewed
+        return;
+    }
+
+    // increment view count only if this is the first visit
+    try {
+        // Specify the region to match the deployed function
+        const functions = getFunctions(app, 'asia-northeast1');
+        const incrementView = httpsCallable(
+            functions,
+            'incrementTripShareView',
+        );
+        incrementView({ tripId }).then(() => {
+            viewedIds.add(tripId);
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(Array.from(viewedIds)),
+            );
+        });
+    } catch {
+        // ignore error, do not break page
+    }
+}
 </script>

@@ -9,7 +9,8 @@
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
         "prepare": "husky",
-        "prettier": "npx prettier . --write"
+        "prettier": "npx prettier . --write",
+        "deploy-functions": "firebase deploy --only functions"
     },
     "devDependencies": {
         "@nuxt/devtools": "latest",

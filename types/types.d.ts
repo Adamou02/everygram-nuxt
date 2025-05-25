@@ -99,6 +99,7 @@ declare global {
         packWeight: number;
         wornWeight: number;
         tripShareCreated?: Timestamp;
+        viewCount?: number;
     };
 
     type UserInfo = {

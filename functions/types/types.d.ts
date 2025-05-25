@@ -98,6 +98,7 @@ export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
     packWeight: number;
     wornWeight: number;
     tripShareCreated?: Timestamp;
+    viewCount?: number;
 };
 
 export type UserInfo = {
