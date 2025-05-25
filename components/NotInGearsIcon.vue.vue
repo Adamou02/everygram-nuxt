@@ -23,6 +23,7 @@
     vertical-align: sub;
     position: relative;
     color: $eg-c-text-lighter;
+    cursor: default;
 
     > .slash {
         position: absolute;

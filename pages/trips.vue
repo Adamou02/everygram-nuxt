@@ -15,26 +15,22 @@
                     @click="onCreateTrip"
                 />
             </SectionTitleBar>
-            <div class="grid">
-                <div
-                    v-if="isFetchingTrips"
-                    v-for="i in 6"
-                    class="col-12 md:col-6 lg:col-3"
-                    :key="i"
-                >
-                    <TripCardSkeleton />
-                </div>
-                <div
-                    v-else
-                    v-for="trip in sortedTrips"
-                    class="col-12 md:col-6 lg:col-3"
-                    :key="trip.id"
-                >
-                    <NuxtLink :to="`/trip/${trip.id}`">
-                        <TripCard :key="trip.id" :trip="trip" />
-                    </NuxtLink>
-                </div>
-            </div>
+            <TripList
+                :trips="sortedTrips"
+                :isFetching="isFetchingTrips"
+                v-slot="{ trip }"
+            >
+                <NuxtLink :to="`/trip/${trip.id}`">
+                    <TripCard
+                        :key="trip.id"
+                        :trip="trip"
+                        :is-public="trip.isPublished"
+                        :pack-weight="
+                            dataUtils.getTripBaseWeight(trip, gearMap)
+                        "
+                    />
+                </NuxtLink>
+            </TripList>
         </template>
         <EmptyState
             v-else
@@ -62,6 +58,8 @@ definePageMeta({
     layout: 'user-page',
 });
 
+const userGearsStore = useUserGearsStore();
+const { gearMap } = storeToRefs(userGearsStore);
 const userTripsStore = useUserTripsStore();
 const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const { onCreateTrip } = useEditTrip();

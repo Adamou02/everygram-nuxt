@@ -9,7 +9,7 @@
             }"
         >
             <div
-                v-if="trip.isPublished"
+                v-if="props.isPublic"
                 class="trip-card__public-label flex align-items-center gap-1 p-2 absolute top-0 right-0 text-white"
             >
                 <i class="pi pi-globe"></i>
@@ -31,23 +31,30 @@
                     <div class="text-white">-</div>
                 </template>
             </div>
-            <PrimeTag
-                class="p-tag-primary-light"
-                :value="
-                    formatWeight(dataUtils.getTripBaseWeight(trip, gearMap))
-                "
-            />
+            <div class="flex justify-content-between align-items-end gap-2">
+                <PrimeTag
+                    class="p-tag-primary-light flex-shrink-0"
+                    :value="formatWeight(props.packWeight || 0)"
+                />
+                <UserLabel
+                    v-if="props.owner"
+                    :user="props.owner"
+                    avatar-size="xs"
+                    class="text-xs"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
-    trip: Trip;
+    trip: Trip | TripShare;
+    packWeight?: number;
+    isPublic?: boolean;
+    owner?: UserInfo;
 }>();
 
-const userGearsStore = useUserGearsStore();
-const { gearMap } = storeToRefs(userGearsStore);
 const { formatWeight } = useLangUtils();
 
 const days = computed(() => dataUtils.getTripDays(props.trip));

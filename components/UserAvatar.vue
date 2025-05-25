@@ -11,9 +11,19 @@
 <script setup lang="ts">
 const props = defineProps<{
     user: UserInfo;
-    avatarSize?: 'sm' | 'md' | 'lg';
+    avatarSize?: 'xs' | 'sm' | 'md' | 'lg';
 }>();
-const avatarImgSize = computed(() =>
-    props.avatarSize === 'sm' ? 32 : props.avatarSize === 'lg' ? 48 : 40,
-);
+const avatarImgSize = computed(() => {
+    switch (props.avatarSize) {
+        case 'xs':
+            return 24;
+        case 'sm':
+            return 32;
+        case 'lg':
+            return 48;
+        case 'md':
+        default:
+            return 40;
+    }
+});
 </script>

@@ -78,6 +78,8 @@ const BREAK_POINTS = {
     xl: 120,
 };
 
+const PUBLIC_TRIPS_PAGE_SIZE = 24;
+
 export default {
     ROLES,
     COLORS,
@@ -98,4 +100,5 @@ export default {
     ANALYTICS_EVENTS,
     STORAGE_PATH,
     BREAK_POINTS,
+    PUBLIC_TRIPS_PAGE_SIZE,
 };
