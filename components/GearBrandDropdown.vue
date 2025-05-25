@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-const value = defineModel<string>({ required: true });
+const value = defineModel<string | undefined>({ required: true });
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
 const i18n = useI18n();

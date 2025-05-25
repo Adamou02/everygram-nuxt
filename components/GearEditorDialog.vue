@@ -110,7 +110,30 @@
                     @file-removed="() => (compressedPhotoFile = null)"
                 />
             </FormField>
-            <HintInfo v-if="props.hint" :description="props.hint" size="sm" />
+            <!-- Checkbox for adding the new gear to the users gears when creating gear in trip page, checked by default -->
+            <div
+                class="flex align-items-center gap-2"
+                v-if="props.isInTripPage && !editingGear"
+            >
+                <PrimeCheckbox
+                    v-model="formState.addToGears"
+                    inputId="for-one-trip"
+                    binary
+                />
+                <label for="for-one-trip">
+                    {{ $t('LABEL_ADD_TO_GEARS') }}
+                </label>
+            </div>
+            <!-- Hint for editing gear -->
+            <HintInfo
+                v-if="props.isEditing && !editingGear?.isForOneTrip"
+                :description="
+                    props.isInTripPage
+                        ? $t('INFO_EDIT_GEAR_SYNC_TO_GEARS')
+                        : $t('INFO_EDIT_GEAR_SYNC_TO_TRIPS')
+                "
+                size="sm"
+            />
         </template>
         <template #footer>
             <PrimeButton
@@ -140,7 +163,8 @@
 import useVuelidate from '@vuelidate/core';
 
 const props = defineProps<{
-    hint?: string;
+    isEditing?: boolean;
+    isInTripPage?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -175,12 +199,14 @@ const initialFormState = {
     brand: undefined,
     weight: undefined,
     category: undefined,
+    addToGears: true,
 };
 const formState = reactive<{
     name: string;
     brand: string | undefined;
     weight: number | undefined;
     category: GearCategory | undefined;
+    addToGears: boolean;
 }>({ ...initialFormState });
 const formValidators = useFormValidators();
 const formRules = {
@@ -208,6 +234,7 @@ watch(isOpen, (newValue) => {
             editingGear.value?.category ||
             defaultGearCategory.value ||
             initialFormState.category;
+        formState.addToGears = initialFormState.addToGears;
         compressedPhotoFile.value = null;
         vuelidate.value.$reset();
     }
@@ -232,6 +259,11 @@ const onSubmit = async () => {
         weight: formState.weight || 0,
         category: formState.category || 'others',
     };
+
+    // if not adding to gears, set isForOneTrip to true
+    if (props.isInTripPage && !formState.addToGears) {
+        gearData.isForOneTrip = true;
+    }
 
     if (formState.brand) {
         gearData.brand = constants.GEAR_BRANDS[formState.brand]

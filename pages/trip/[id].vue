@@ -119,13 +119,21 @@
                     <GearDataTable
                         :gears="gears"
                         :hasQuantity="true"
-                        :actions="['edit', 'edit-qty', 'remove']"
+                        :actions="[
+                            'edit',
+                            'edit-qty',
+                            'add-to-gears',
+                            'remove',
+                        ]"
                         @gear-edit="onEditGear"
                         @gear-edit-quantity="
                             (gear: GearWithQuantity) => {
                                 editingQuantityGearType = 'gears';
                                 onEditQuantity(gear);
                             }
+                        "
+                        @gear-add-to-gears="
+                            (gear: Gear) => onAddGearToGears(gear)
                         "
                         @gear-remove="
                             (gear: Gear) => onRemoveGear(gear, 'gears')
@@ -183,7 +191,7 @@
                     <ConsumableDataTable
                         :consumables="consumables"
                         @consumable-edit="onEditConsumable"
-                        @consumable-delete="confirmDeleteConsumable"
+                        @consumable-delete="onDeleteConsumable"
                         @consumable-cell-edit-complete="
                             onConsumableCellEditComplete
                         "
@@ -261,7 +269,12 @@
                     <GearDataTable
                         :gears="gears"
                         :hasQuantity="true"
-                        :actions="['edit', 'edit-qty', 'remove']"
+                        :actions="[
+                            'edit',
+                            'edit-qty',
+                            'add-to-gears',
+                            'remove',
+                        ]"
                         @gear-edit="onEditGear"
                         @gear-edit-quantity="
                             (gear: GearWithQuantity) => {
@@ -325,11 +338,8 @@
         @cancel="isSelectingGears = false"
     />
     <GearEditorDialog
-        :hint="
-            isEditingGear
-                ? $t('INFO_EDIT_GEAR_SYNC_TO_GEARS')
-                : $t('INFO_NEW_GEAR_ADD_TO_GEARS')
-        "
+        :is-editing="isEditingGear"
+        :is-in-trip-page="true"
         @complete-create="onCompleteCreateGearInTrip"
     />
     <GearQuantityEditorDialog @complete-edit="onCompleteEditQuantity" />
@@ -347,6 +357,7 @@ const { trips, isFetchingTrips } = storeToRefs(userTripsStore);
 const userGearsStore = useUserGearsStore();
 const { gearMap } = storeToRefs(userGearsStore);
 const i18n = useI18n();
+const toast = useToast();
 
 const route = useRoute();
 const tripId = route.params.id as string;
@@ -430,8 +441,49 @@ const onCompleteEditQuantity = (quantity: number) => {
     );
 };
 
-const onRemoveGear = (gear: Gear, type: TripGearType) => {
-    userTripsStore.removeGearsFromTrip(tripId, [gear.id], type);
+const onAddGearToGears = async (gear: Gear) => {
+    if (!gear.isForOneTrip) {
+        return;
+    }
+    await userGearsStore.updateGear({
+        id: gear.id,
+        gearData: {
+            isForOneTrip: false,
+        },
+    });
+    toast.add({
+        severity: 'secondary',
+        summary: i18n.t('INFO_GEAR_ADDED_TO_GEARS', {
+            gearName: gear.name,
+        }),
+        life: 3000,
+    });
+};
+
+const onRemoveGear = async (gear: Gear, type: TripGearType) => {
+    if (gear.isForOneTrip) {
+        confirmDeleteDialog({
+            message: i18n.t('MESSAGE_CONFIRM_DELETE_GEAR_FROM_TRIP', {
+                gearName: gear.name,
+            }),
+            header: i18n.t('ACTION_REMOVE_FROM_TRIP'),
+            toastSummary: i18n.t('FEEDBACK_GEAR_DELETED_FROM_TRIP'),
+            onAccept: async () => {
+                try {
+                    await userTripsStore.removeGearsFromTrip(
+                        tripId,
+                        [gear.id],
+                        type,
+                    );
+                    await userGearsStore.deleteGear(gear.id);
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+        });
+    } else {
+        await userTripsStore.removeGearsFromTrip(tripId, [gear.id], type);
+    }
 };
 
 // for TripInfoEditor
@@ -501,15 +553,8 @@ const onConsumableCellEditComplete = async (e: {
 // consumables
 const { onCreateConsumable, onEditConsumable } = useEditConsumable();
 
-const onDeleteConsumable = async (consumable: Consumable) => {
-    await userTripsStore.deleteConsumableFromTrip({
-        tripId,
-        consumableId: consumable.id,
-    });
-};
-
 const { confirmDeleteDialog } = useUiUitls();
-const confirmDeleteConsumable = (consumable: Consumable) => {
+const onDeleteConsumable = (consumable: Consumable) => {
     confirmDeleteDialog({
         message: i18n.t('MESSAGE_CONFIRM_DELETE_CONSUMABLE', {
             consumableName: consumable.name,
@@ -517,7 +562,10 @@ const confirmDeleteConsumable = (consumable: Consumable) => {
         header: i18n.t('ACTION_DELETE_CONSUMABLE'),
         toastSummary: i18n.t('FEEDBACK_CONSUMABLE_DELETED'),
         onAccept: async () => {
-            await onDeleteConsumable(consumable);
+            await userTripsStore.deleteConsumableFromTrip({
+                tripId,
+                consumableId: consumable.id,
+            });
         },
     });
 };

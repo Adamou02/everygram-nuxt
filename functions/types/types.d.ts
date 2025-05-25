@@ -46,6 +46,7 @@ export type Gear = {
     weight: number; // grams
     brand?: GearBrand;
     category: GearCategory;
+    isForOneTrip?: boolean;
     isArchived?: boolean;
     archiveReason?:
         | 'sold'

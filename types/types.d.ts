@@ -47,6 +47,7 @@ declare global {
         weight: number; // grams
         brand?: GearBrand;
         category: GearCategory;
+        isForOneTrip?: boolean;
         isArchived?: boolean;
         archiveReason?:
             | 'sold'

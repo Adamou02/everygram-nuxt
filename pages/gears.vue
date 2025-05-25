@@ -180,9 +180,7 @@
             </div>
         </template>
     </EmptyState>
-    <GearEditorDialog
-        :hint="isEditingGear ? $t('INFO_EDIT_GEAR_SYNC_TO_TRIPS') : ''"
-    />
+    <GearEditorDialog :is-editing="isEditingGear" />
     <ImportGearsDialog
         :is-open="isOpenImportGearsDialog"
         @close="isOpenImportGearsDialog = false"
@@ -197,9 +195,12 @@ definePageMeta({
 
 const userGearsStore = useUserGearsStore();
 const { gears, isFetchingGears } = storeToRefs(userGearsStore);
+const visibleGears = computed(() =>
+    gears.value.filter((gear) => !gear.isForOneTrip && !gear.isArchived),
+);
 const { formatBrand } = useLangUtils();
 const displayGears = computed(() =>
-    isFiltered.value ? filteredGears.value : gears.value,
+    isFiltered.value ? filteredGears.value : visibleGears.value,
 );
 const gearsGroupByCategory = computed(() =>
     dataUtils.groupGearsByCategory(displayGears.value),
@@ -288,12 +289,12 @@ const isFiltered = ref<boolean>(false);
 const debouncedUpdateFilteredGears = _debounce(() => {
     const searchText = filterValue.value.toLocaleLowerCase();
     if (!searchText) {
-        filteredGears.value = gears.value;
+        filteredGears.value = visibleGears.value;
         isFiltered.value = false;
         return;
     }
     // filter by gear name or brand
-    filteredGears.value = gears.value.filter(
+    filteredGears.value = visibleGears.value.filter(
         (gear) =>
             gear.name.toLocaleLowerCase().includes(searchText) ||
             (gear.brand &&
@@ -306,7 +307,7 @@ const debouncedUpdateFilteredGears = _debounce(() => {
 watch(filterValue, (newFilterValue) => {
     if (!newFilterValue) {
         // reset immediately when clear filter
-        filteredGears.value = gears.value;
+        filteredGears.value = visibleGears.value;
         isFiltered.value = false;
     }
     debouncedUpdateFilteredGears();
