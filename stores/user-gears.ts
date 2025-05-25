@@ -23,6 +23,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const gearCollectionRef = collection(db, 'gear');
     const gearMap = ref<UserGears>({});
     const gears = computed(() => Object.values(gearMap.value));
+    const visibleGears = computed(() =>
+        gears.value.filter((gear) => !gear.isForOneTrip && !gear.isArchived),
+    );
     const isFirstFetching = ref(true);
     const hasBuiltUserGears = ref(false);
     const unsubscribe = ref<null | (() => void)>(null);
@@ -279,6 +282,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     return {
         gears,
         gearMap,
+        visibleGears,
         isFetchingGears: isFirstFetching,
         getGearById,
         initialize,

@@ -1,7 +1,10 @@
 <!-- a page to list all gear the user has -->
 <template>
     <PageLoading v-if="isFetchingGears" />
-    <div v-else-if="gears.length" class="flex flex-column gap-2 lg:gap-3">
+    <div
+        v-else-if="visibleGears.length"
+        class="flex flex-column gap-2 lg:gap-3"
+    >
         <!-- header -->
         <div class="grid align-items-center">
             <!-- left -->
@@ -194,10 +197,7 @@ definePageMeta({
 });
 
 const userGearsStore = useUserGearsStore();
-const { gears, isFetchingGears } = storeToRefs(userGearsStore);
-const visibleGears = computed(() =>
-    gears.value.filter((gear) => !gear.isForOneTrip && !gear.isArchived),
-);
+const { visibleGears, isFetchingGears } = storeToRefs(userGearsStore);
 const { formatBrand } = useLangUtils();
 const displayGears = computed(() =>
     isFiltered.value ? filteredGears.value : visibleGears.value,

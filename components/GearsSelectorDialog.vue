@@ -17,7 +17,7 @@
                 "
                 image-src="/image/empty-gear-select.jpg"
             >
-                <template v-if="!gears.length" #actions>
+                <template v-if="!visibleGears.length" #actions>
                     <NuxtLink to="/gears">
                         <PrimeButton
                             :label="$t('ACTION_CREATE_GEAR_IN_GEARS')"
@@ -102,9 +102,9 @@ const emit = defineEmits<{
 
 const { formatWeight } = useLangUtils();
 const userGearsStore = useUserGearsStore();
-const { gears } = storeToRefs(userGearsStore);
+const { visibleGears } = storeToRefs(userGearsStore);
 const gearsInCategories = computed(() =>
-    gears.value.filter(
+    visibleGears.value.filter(
         (gear) => !props.categories || props.categories.includes(gear.category),
     ),
 );
