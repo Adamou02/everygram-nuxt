@@ -124,6 +124,7 @@
     "INFO_INVALID_GEAR_REASON_ROW_LENGTH": "Incorrect data format",
     "INFO_INVALID_GEAR_REASON_WEIGHT": "Weight doesn't look right",
     "INFO_NEW_GEAR_ADD_TO_GEARS": "New gear will be added to your Gears",
+    "INFO_NOT_IN_GEARS": "Not in your Gears",
     "INFO_NO_BASE_GEAR_HINT": "Base gears are those in your pack, including backpack, electronics, camping gears, sleeping system, cookingwares, and others. New created gears will be added to your Gears.",
     "INFO_NO_CONSUMABLES_HINT": "Consumables includes food, drinks, fuel, cosmetics, medical supplies, sanitary supplies, and others. Consumables are for this trip only and will not be added to your Gears.",
     "INFO_NO_GEARS_FOUND": "No Gears Found",

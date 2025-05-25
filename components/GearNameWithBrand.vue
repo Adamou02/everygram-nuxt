@@ -5,6 +5,7 @@
         </div>
         <div class="text-sm lg:text-base line-clamp-2">
             {{ gear.name }}
+            <NotInGearsIconVue v-if="isGearOwner && gear.isForOneTrip" />
         </div>
     </div>
 </template>
@@ -14,4 +15,12 @@ const props = defineProps<{
     gear: Gear;
 }>();
 const { formatBrand } = useLangUtils();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const isGearOwner = computed(() => {
+    if (!user.value) {
+        return false;
+    }
+    return props.gear.role[user.value.uid] === constants.ROLES.OWNER;
+});
 </script>

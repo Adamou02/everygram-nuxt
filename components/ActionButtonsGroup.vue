@@ -15,8 +15,6 @@
             v-tooltip.top="
                 type === 'icon' && {
                     value: action.label,
-                    showDelay: 300,
-                    hideDelay: 100,
                 }
             "
             @click="action.onClick"

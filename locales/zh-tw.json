@@ -124,6 +124,7 @@
     "INFO_INVALID_GEAR_REASON_ROW_LENGTH": "資料格式錯誤",
     "INFO_INVALID_GEAR_REASON_WEIGHT": "裝備重量不正確",
     "INFO_NEW_GEAR_ADD_TO_GEARS": "新增裝備將會加入你的裝備庫",
+    "INFO_NOT_IN_GEARS": "不在裝備庫中",
     "INFO_NO_BASE_GEAR_HINT": "基本裝備是你背包中的裝備，包括背包、電子產品、露營裝備、睡眠系統、炊事器具等裝備。在行程新增的裝備將會自動加到你的裝備庫",
     "INFO_NO_CONSUMABLES_HINT": "消耗品包括食物、飲品、燃料、藥妝、醫療用品、衛生用品等。消耗品只屬於這個行程，不會加到你的裝備庫",
     "INFO_NO_GEARS_FOUND": "找不到符合的裝備",
