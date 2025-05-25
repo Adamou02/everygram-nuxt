@@ -109,6 +109,10 @@ img {
     overflow: hidden;
 }
 
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}
+
 .container {
     max-width: var(--max-page-width);
     margin: auto;

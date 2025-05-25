@@ -110,6 +110,16 @@ const getGearPhotoUrl = (gear: Gear, size?: ThumbnailSize): string => {
         : '';
 };
 
+const getTripDays = (trip: Trip | TripShare): number => {
+    if (trip.dateMode === 'multi' && trip.startDate && trip.endDate) {
+        return getDaysBetweenDates(trip.startDate, trip.endDate);
+    }
+    if (trip.dateMode === 'single' && trip.startDate) {
+        return 1;
+    }
+    return 0;
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -126,4 +136,5 @@ export default {
     formatTripDate,
     getTripBannerImageUrl,
     getGearPhotoUrl,
+    getTripDays,
 };

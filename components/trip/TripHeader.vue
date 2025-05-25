@@ -14,17 +14,32 @@
                 <slot name="banner-actions" />
             </div>
         </div>
-        <div
-            class="flex flex-column lg:flex-row py-4 lg:py-6 lg:justify-content-between lg:align-items-center gap-3"
-        >
-            <div>
+        <div class="grid row-gap-3 lg:row-gap-5 py-4">
+            <div class="col-12 lg:col-8">
                 <h1 class="text-2xl lg:text-3xl">{{ trip.title }}</h1>
-                <!-- trip date -->
-                <div v-if="formattedDate" class="mt-1">
-                    {{ formattedDate }}
+                <div class="mt-2">
+                    <!-- trip date -->
+                    <div v-if="formattedDate" class="trip-date mr-3">
+                        <!-- calendar icon -->
+                        <i class="pi pi-calendar mr-1 text-600" />
+                        <!-- dates -->
+                        {{ formattedDate }}
+                        <!-- days for multi-day trips -->
+                        <template v-if="trip.dateMode === 'multi'">
+                            ・{{ $t('INFO_DAYS', { num: days }, days) }}
+                        </template>
+                    </div>
+                    <!-- trip description -->
+                    <span
+                        v-if="trip.description"
+                        class="text-color line-height-3 whitespace-pre-wrap"
+                        >{{ trip.description }}</span
+                    >
                 </div>
             </div>
-            <div>
+            <div
+                class="col-12 lg:col-4 flex align-items-start lg:justify-content-end"
+            >
                 <slot name="actions" />
             </div>
         </div>
@@ -36,6 +51,7 @@ const props = defineProps<{
     trip: Trip | TripShare;
 }>();
 const formattedDate = computed(() => dataUtils.formatTripDate(props.trip));
+const days = computed(() => dataUtils.getTripDays(props.trip));
 const mobileBannerImage = computed(() =>
     dataUtils.getTripBannerImageUrl(props.trip, 'sm'),
 );
@@ -46,6 +62,7 @@ const desktopBannerImage = computed(() =>
 
 <style lang="scss">
 @import '~/assets/theme/primeflex/core/_variables.scss';
+@import '~/assets/theme/_eg-colors.scss';
 
 .trip-header {
     &__banner {
@@ -60,5 +77,14 @@ const desktopBannerImage = computed(() =>
             aspect-ratio: 3 / 1;
         }
     }
+}
+
+.trip-date {
+    display: inline-block;
+    font-size: 14px;
+    color: $eg-c-text;
+    background-color: $eg-c-gray-200;
+    padding: 2px 4px;
+    border-radius: 2px;
 }
 </style>

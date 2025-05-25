@@ -44,6 +44,7 @@ const LIMIT = {
     maxWeight: 100000,
     minNameLength: 1,
     maxNameLength: 100,
+    maxDescriptionLength: 2000,
     importLimit: 200,
     // square
     gearPhotoWidth: 1280,

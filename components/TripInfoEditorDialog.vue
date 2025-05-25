@@ -72,6 +72,17 @@
                 >
                 </PrimeCalendar>
             </FormField>
+            <!-- textarea form field for trip description -->
+            <FormField :label="$t('LABEL_DESCRIPTION')">
+                <PrimeTextarea
+                    v-model="formState.description"
+                    class="w-full"
+                    rows="2"
+                    autoResize
+                    :invalid="vuelidate.description.$error"
+                    :maxlength="constants.LIMIT.maxDescriptionLength"
+                />
+            </FormField>
         </template>
         <template #footer>
             <PrimeButton
@@ -136,12 +147,14 @@ const dateModeOptions = computed<{ label: string; value: TripDateMode }[]>(
 // form state and validation rules
 const initialFormState = {
     title: '',
+    description: '',
     dateMode: undefined,
     startDate: undefined,
     endDate: undefined,
 };
 const formState = reactive<{
     title: string;
+    description: string;
     dateMode: TripDateMode | undefined;
     startDate: Date | undefined;
     endDate: Date | undefined;
@@ -153,12 +166,19 @@ const formRules = {
         minLength: formValidators.minLength(constants.LIMIT.minNameLength),
         maxLength: formValidators.maxLength(constants.LIMIT.maxNameLength),
     },
+    description: {
+        maxLength: formValidators.maxLength(
+            constants.LIMIT.maxDescriptionLength,
+        ),
+    },
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
 watch(isOpen, (newValue) => {
     if (newValue) {
         formState.title = editingTrip.value?.title || initialFormState.title;
+        formState.description =
+            editingTrip.value?.description || initialFormState.description;
         formState.dateMode =
             editingTrip.value?.dateMode || initialFormState.dateMode;
         formState.startDate =
@@ -182,6 +202,7 @@ const onSubmit = async () => {
 
     const tripData = {
         title: formState.title,
+        description: formState.description,
         ...(formState.dateMode && { dateMode: formState.dateMode }),
         ...(formState.dateMode === 'multi' &&
             formState.startDate &&
