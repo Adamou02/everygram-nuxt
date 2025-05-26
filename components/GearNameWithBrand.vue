@@ -5,7 +5,7 @@
         </div>
         <div class="text-sm lg:text-base line-clamp-2">
             {{ gear.name }}
-            <NotInGearsIconVue v-if="isGearOwner && gear.isForOneTrip" />
+            <NotInGearsIcon v-if="isGearOwner && gear.isForOneTrip" />
         </div>
     </div>
 </template>
