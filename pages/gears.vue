@@ -333,4 +333,6 @@ const mainClass = 'col-12 md:col-9 lg:col-10';
 useHead({
     title: i18n.t('PAGE_GEARS'),
 });
+
+useScrollRestoration('gears');
 </script>
