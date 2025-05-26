@@ -306,3 +306,4 @@ export const onTripDeleted = onDocumentDeleted(
 );
 
 export { incrementTripShareView } from './increment-tripshare-view';
+export { onUserProfileUpdated } from './on-user-profile-updated';

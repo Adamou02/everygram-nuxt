@@ -162,6 +162,24 @@ async function onSubmit() {
         // Update user profile
         await userStore.updateUserProfile(newProfile);
 
+        // Also update tripShare owner info in Firestore via callable function
+        try {
+            const { getFunctions, httpsCallable } = await import(
+                'firebase/functions'
+            );
+            const functions = getFunctions(undefined, 'asia-northeast1');
+            const onUserProfileUpdated = httpsCallable(
+                functions,
+                'onUserProfileUpdated',
+            );
+            await onUserProfileUpdated({
+                userId: props.user.uid,
+                ...newProfile,
+            });
+        } catch (e) {
+            // Ignore error, do not block UI
+        }
+
         emit('complete');
     } finally {
         isSaving.value = false;
