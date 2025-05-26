@@ -17,6 +17,13 @@
         :isOpen="isOpenLocaleMenu"
         @close="isOpenLocaleMenu = false"
     />
+    <UserSettingsDialog
+        v-if="user"
+        :isOpen="isOpenUserSettingsDialog"
+        :user="user"
+        @complete="isOpenUserSettingsDialog = false"
+        @cancel="isOpenUserSettingsDialog = false"
+    />
 </template>
 
 <script setup>
@@ -31,7 +38,17 @@ const onSignOut = async () => {
 };
 
 const menu = ref();
+const isOpenLocaleMenu = ref(false);
+const isOpenUserSettingsDialog = ref(false);
+
 const items = computed(() => [
+    {
+        label: i18n.t('ACTION_USER_SETTINGS'),
+        icon: 'pi pi-user-edit',
+        command: () => {
+            isOpenUserSettingsDialog.value = true;
+        },
+    },
     {
         label: i18n.t('LABEL_LOCALE_CURRENT', {
             locale: localeToLabel(getCurrentLocale()),
@@ -47,6 +64,4 @@ const items = computed(() => [
         command: () => onSignOut(),
     },
 ]);
-
-const isOpenLocaleMenu = ref(false);
 </script>

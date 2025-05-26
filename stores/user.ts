@@ -7,6 +7,7 @@ import {
     signInWithPopup,
     getRedirectResult,
     GoogleAuthProvider,
+    updateProfile,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
@@ -100,6 +101,25 @@ export const useUserStore = defineStore('userStore', () => {
                 if (!credential) {
                     return;
                 }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        },
+        updateUserProfile: async (profileData: Partial<ProfileData>) => {
+            if (!user.value) {
+                return;
+            }
+
+            // validate profileData
+            if (!profileData.displayName && !profileData.photoURL) {
+                throw new Error(
+                    'Profile data must contain displayName or photoURL',
+                );
+            }
+
+            try {
+                await updateProfile(user.value, profileData);
             } catch (error) {
                 console.error(error);
                 throw error;

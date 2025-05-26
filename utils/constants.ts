@@ -56,11 +56,14 @@ const LIMIT = {
     minQuantity: 1,
     maxQuantity: 100,
     maxFractionDigits: 1,
+    avatarPhotoWidth: 512,
+    avatarPhotoHeight: 512,
 };
 
 const STORAGE_PATH = {
     GEAR: 'gear',
     TRIP: 'trip',
+    USER: 'user',
 };
 
 const TRIP_DATE_MODE: Record<string, TripDateMode> = {

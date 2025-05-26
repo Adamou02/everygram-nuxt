@@ -135,3 +135,8 @@ export type ThumbnailOption = {
     height: number;
     name: ThumbnailSize;
 };
+
+export type ProfileData = {
+    displayName: string;
+    photoURL: string;
+};

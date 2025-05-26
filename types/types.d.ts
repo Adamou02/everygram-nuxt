@@ -164,4 +164,9 @@ declare global {
         height: number;
         name: ThumbnailSize;
     };
+
+    type ProfileData = {
+        displayName: string;
+        photoURL: string;
+    };
 }
