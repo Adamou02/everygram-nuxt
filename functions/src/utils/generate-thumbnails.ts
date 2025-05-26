@@ -4,7 +4,7 @@ import type {
     ThumbnailSize,
     ThumbnailOption,
     StorageFile,
-} from '../types/types';
+} from '../../types/types';
 import _ from 'lodash';
 import path from 'path';
 import os from 'os';

@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
-import { unpublishTrip } from './trip-publish-unpublish';
+import { unpublishTrip } from '../utils/trip-publish-unpublish';
 
 export const onTripDeleted = onDocumentDeleted(
     'trip/{tripId}',

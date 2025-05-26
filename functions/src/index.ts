@@ -16,10 +16,15 @@ admin.initializeApp({
     storageBucket: 'everygram.appspot.com',
 });
 
-export { onGearUpdated } from './on-gear-updated';
-export { onGearDeleted } from './on-gear-deleted';
-export { onTripUpdated } from './on-trip-updated';
-export { onTripDeleted } from './on-trip-deleted';
-export { incrementTripShareView } from './increment-tripshare-view';
-export { onUserProfileUpdated } from './on-user-profile-updated';
+// event handlers
+export { onGearUpdated } from './event-handlers/on-gear-updated';
+export { onGearDeleted } from './event-handlers/on-gear-deleted';
+export { onTripUpdated } from './event-handlers/on-trip-updated';
+export { onTripDeleted } from './event-handlers/on-trip-deleted';
+
+// callable functions
+export { incrementTripShareView } from './callable-functions/increment-tripshare-view';
+export { onUserProfileUpdated } from './callable-functions/on-user-profile-updated';
+
+// cron jobs
 export { findCustomBrands } from './cron-jobs/find-custom-brands';

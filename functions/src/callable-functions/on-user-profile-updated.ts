@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { ProfileData } from '../types/types';
+import { ProfileData } from '../../types/types';
 
 // Callable function when user profile is updated
 export const onUserProfileUpdated = functions

@@ -2,8 +2,9 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 // Scheduled function to collect custom brand statistics from gear collection
-export const findCustomBrands = functions.pubsub
-    .schedule('every 5 minutes') // changed for testing
+export const findCustomBrands = functions
+    .region('asia-northeast1')
+    .pubsub.schedule('every 5 minutes') // changed for testing
     .timeZone('Asia/Taipei')
     .onRun(async (context) => {
         const db = admin.firestore();

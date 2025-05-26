@@ -1,7 +1,12 @@
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-import type { Gear, GearWithQuantity, Trip, TripShare } from '../types/types';
+import type {
+    Gear,
+    GearWithQuantity,
+    Trip,
+    TripShare,
+} from '../../types/types';
 import _ from 'lodash';
 
 export const publishTrip = async (tripId: string) => {

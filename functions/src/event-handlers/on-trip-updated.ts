@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
-import { publishTrip, unpublishTrip } from './trip-publish-unpublish';
+import { publishTrip, unpublishTrip } from '../utils/trip-publish-unpublish';
 import {
     generateThumbnails,
     TRIP_THUMBNAIL_SIZES,
-} from './generate-thumbnails';
+} from '../utils/generate-thumbnails';
 
 export const onTripUpdated = onDocumentUpdated(
     'trip/{tripId}',

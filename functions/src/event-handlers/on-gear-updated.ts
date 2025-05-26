@@ -1,11 +1,11 @@
 import * as admin from 'firebase-admin';
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import _ from 'lodash';
-import { publishTrip } from './trip-publish-unpublish';
+import { publishTrip } from '../utils/trip-publish-unpublish';
 import {
     generateThumbnails,
     GEAR_THUMBNAIL_SIZES,
-} from './generate-thumbnails';
+} from '../utils/generate-thumbnails';
 
 export const onGearUpdated = onDocumentUpdated(
     'gear/{gearId}',
