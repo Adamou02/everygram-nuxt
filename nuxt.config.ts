@@ -121,4 +121,7 @@ export default defineNuxtConfig({
             prefix: 'Prime',
         },
     },
+    experimental: {
+        viewTransition: false,
+    },
 });

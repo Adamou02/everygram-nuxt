@@ -1,22 +1,37 @@
 <template>
     <div class="trip-header">
-        <div
-            class="trip-header__banner w-full border-round-md overflow-hidden relative"
-        >
-            <picture>
+        <div class="w-full relative">
+            <!-- banner image -->
+            <picture class="trip-header__banner-image">
                 <source
                     :media="`(min-width: ${constants.BREAK_POINTS.lg}px)`"
                     :srcset="desktopBannerImage"
                 />
-                <img :src="mobileBannerImage" alt="Trip Banner Image" />
+                <img
+                    :src="mobileBannerImage"
+                    alt="Trip Banner Image"
+                    class="border-round-md"
+                    :style="{
+                        viewTransitionName: `trip-image-${trip.id}`,
+                    }"
+                />
             </picture>
+            <!-- banner actions -->
             <div class="absolute bottom-0 right-0 p-3">
                 <slot name="banner-actions" />
             </div>
         </div>
         <div class="grid row-gap-3 lg:row-gap-5 py-4">
             <div class="col-12 lg:col-8">
-                <h1 class="text-2xl lg:text-3xl">{{ trip.title }}</h1>
+                <!-- title -->
+                <h1
+                    class="text-2xl lg:text-3xl"
+                    :style="{
+                        viewTransitionName: `trip-title-${trip.id}`,
+                    }"
+                >
+                    {{ trip.title }}
+                </h1>
                 <div class="mt-2">
                     <!-- trip date -->
                     <div v-if="formattedDate" class="trip-date mr-3">
@@ -65,16 +80,19 @@ const desktopBannerImage = computed(() =>
 @import '~/assets/theme/_eg-colors.scss';
 
 .trip-header {
-    &__banner {
-        aspect-ratio: 2 / 1;
-        img {
+    &__banner-image {
+        &,
+        & > img {
+            aspect-ratio: 2 / 1;
+            @media (min-width: $lg) {
+                aspect-ratio: 3 / 1;
+            }
+        }
+        > img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
-        }
-        @media (min-width: $lg) {
-            aspect-ratio: 3 / 1;
         }
     }
 }
