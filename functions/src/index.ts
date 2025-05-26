@@ -22,3 +22,4 @@ export { onTripUpdated } from './on-trip-updated';
 export { onTripDeleted } from './on-trip-deleted';
 export { incrementTripShareView } from './increment-tripshare-view';
 export { onUserProfileUpdated } from './on-user-profile-updated';
+export { findCustomBrands } from './cron-jobs/find-custom-brands';
