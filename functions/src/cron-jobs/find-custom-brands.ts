@@ -4,7 +4,7 @@ import * as functions from 'firebase-functions';
 // Scheduled function to collect custom brand statistics from gear collection
 export const findCustomBrands = functions
     .region('asia-northeast1')
-    .pubsub.schedule('every 5 minutes') // changed for testing
+    .pubsub.schedule('0 0 1 * *') // run at 00:00 on the 1st of each month
     .timeZone('Asia/Taipei')
     .onRun(async (context) => {
         const db = admin.firestore();
@@ -32,14 +32,23 @@ export const findCustomBrands = functions
             }
         });
 
+        // Convert brandCounts to sorted array of "brand: count" strings
+        const brandsArray = Object.entries(brandCounts)
+            .sort((a, b) => {
+                // Sort by count descending, then name alphabetically
+                if (b[1] !== a[1]) return b[1] - a[1];
+                return a[0].localeCompare(b[0]);
+            })
+            .map(([brand, count]) => `${brand}: ${count}`);
+
         await db.collection('customBrands').add({
             created: admin.firestore.FieldValue.serverTimestamp(),
-            brands: brandCounts,
+            brands: brandsArray,
             gearCount: Object.values(brandCounts).reduce(
                 (sum, count) => sum + count,
                 0,
             ),
-            brandCount: Object.keys(brandCounts).length,
+            brandCount: brandsArray.length,
         });
 
         return null;
