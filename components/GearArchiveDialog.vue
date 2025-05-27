@@ -69,7 +69,7 @@ const isSaving = ref(false);
 const i18n = useI18n();
 
 const initialFormState = {
-    archiveReason: constants.GEAR_ARCHIVE_REASONS.NOT_USED,
+    archiveReason: constants.GEAR_ARCHIVE_REASONS.UNUSED,
     customNote: '',
 };
 const formState = reactive<{
@@ -90,8 +90,8 @@ const formRules = {
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-const reasonOptions = [
-    { value: 'notUsed', label: i18n.t('LABEL_ARCHIVE_REASON_NOT_USED') },
+const reasonOptions: { value: GearArchiveReason; label: string }[] = [
+    { value: 'unused', label: i18n.t('LABEL_ARCHIVE_REASON_UNUSED') },
     { value: 'lost', label: i18n.t('LABEL_ARCHIVE_REASON_LOST') },
     { value: 'broken', label: i18n.t('LABEL_ARCHIVE_REASON_BROKEN') },
     { value: 'sold', label: i18n.t('LABEL_ARCHIVE_REASON_SOLD') },

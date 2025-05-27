@@ -39,7 +39,7 @@ export type GearBrand = {
     custom?: string;
 };
 export type GearArchiveReason =
-    | 'notUsed'
+    | 'unused'
     | 'sold'
     | 'given'
     | 'trashed'

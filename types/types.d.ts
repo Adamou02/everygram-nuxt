@@ -40,7 +40,7 @@ declare global {
         custom?: string;
     };
     type GearArchiveReason =
-        | 'notUsed'
+        | 'unused'
         | 'sold'
         | 'given'
         | 'trashed'

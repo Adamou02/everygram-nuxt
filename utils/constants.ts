@@ -73,7 +73,7 @@ const TRIP_DATE_MODE: Record<string, TripDateMode> = {
 };
 
 const GEAR_ARCHIVE_REASONS: Record<string, GearArchiveReason> = {
-    NOT_USED: 'notUsed',
+    UNUSED: 'unused',
     SOLD: 'sold',
     GIVEN: 'given',
     TRASHED: 'trashed',

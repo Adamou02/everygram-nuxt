@@ -1,11 +1,12 @@
 <template>
     <div class="flex flex-column gap-1">
-        <div v-if="gear.brand" class="text-sm lg:text-sm text-color-light">
+        <div v-if="gear.brand" class="text-sm text-color-light cursor-default">
             {{ formatBrand(gear.brand) }}
         </div>
         <div class="text-sm lg:text-base line-clamp-2">
             {{ gear.name }}
             <NotInGearsIcon v-if="isGearOwner && gear.isForOneTrip" />
+            <ArchivedGearTag v-if="gear.isArchived" :gear="gear" />
         </div>
     </div>
 </template>
