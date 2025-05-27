@@ -144,8 +144,9 @@
                             <GearDataTable
                                 :gears="gearsGroupByCategory[category]"
                                 :hasQuantity="false"
-                                :actions="['edit', 'delete']"
+                                :actions="['edit', 'archive', 'delete']"
                                 @gear-edit="onEditGear"
+                                @gear-archive="onArchiveGear"
                                 @gear-delete="confirmDeleteGear"
                                 @gear-cell-edit-complete="onCellEditComplete"
                             />
@@ -184,6 +185,7 @@
         </template>
     </EmptyState>
     <GearEditorDialog :is-editing="isEditingGear" />
+    <GearArchiveDialog />
     <ImportGearsDialog
         :is-open="isOpenImportGearsDialog"
         @close="isOpenImportGearsDialog = false"
@@ -228,6 +230,8 @@ const i18n = useI18n();
 
 // for GearEditor
 const { onCreateGear, onEditGear, isEditingGear } = useEditGear();
+// for GearArchive
+const { onArchiveGear } = useArchiveGear();
 
 const onDeleteGear = async (gear: Gear) => {
     try {

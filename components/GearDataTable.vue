@@ -127,6 +127,13 @@
                                         emit('gear-add-to-gears', data);
                                     },
                                 },
+                            actions.includes('archive') && {
+                                icon: 'pi pi-box',
+                                label: $t('ACTION_ARCHIVE'),
+                                command: () => {
+                                    emit('gear-archive', data);
+                                },
+                            },
                             actions.includes('remove') && {
                                 icon: 'pi pi-times',
                                 label: $t('ACTION_REMOVE_FROM_TRIP'),
@@ -155,7 +162,14 @@ import type { MenuItem } from 'primevue/menuitem';
 const props = defineProps<{
     gears?: (Gear & { quantity?: number })[];
     hasQuantity?: boolean;
-    actions?: ('edit' | 'edit-qty' | 'add-to-gears' | 'delete' | 'remove')[];
+    actions?: (
+        | 'edit'
+        | 'edit-qty'
+        | 'add-to-gears'
+        | 'archive'
+        | 'delete'
+        | 'remove'
+    )[];
     readonly?: boolean;
 }>();
 
@@ -181,6 +195,7 @@ const emit = defineEmits<{
     'gear-edit': [gear: Gear];
     'gear-edit-quantity': [gear: GearWithQuantity];
     'gear-add-to-gears': [gear: Gear];
+    'gear-archive': [gear: Gear];
     'gear-delete': [gear: Gear];
     'gear-remove': [gear: Gear];
 }>();

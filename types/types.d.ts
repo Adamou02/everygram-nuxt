@@ -39,6 +39,14 @@ declare global {
         key?: string;
         custom?: string;
     };
+    type GearArchiveReason =
+        | 'notUsed'
+        | 'sold'
+        | 'given'
+        | 'trashed'
+        | 'lost'
+        | 'broken'
+        | 'other';
 
     type Gear = {
         id: string;
@@ -49,13 +57,8 @@ declare global {
         category: GearCategory;
         isForOneTrip?: boolean;
         isArchived?: boolean;
-        archiveReason?:
-            | 'sold'
-            | 'donated'
-            | 'trashed'
-            | 'lost'
-            | 'broken'
-            | 'other';
+        archiveReason?: GearArchiveReason;
+        archiveNote?: string;
         created?: Timestamp;
         updated?: Timestamp;
         photo?: StorageImage;
