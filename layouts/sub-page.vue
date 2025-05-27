@@ -25,6 +25,8 @@
         <slot />
     </div>
     <AppFooter />
+    <!-- dialogs available in all sub pages -->
+    <UserSettingsDialog />
 </template>
 
 <script setup lang="ts">

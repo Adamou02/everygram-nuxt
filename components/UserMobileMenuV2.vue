@@ -26,9 +26,15 @@ const { user } = storeToRefs(userStore);
 const isOpenUserMenu = ref(false);
 const isOpenLocaleMenu = ref(false);
 const i18n = useI18n();
+const { openUserSettingsDialog } = useUserSettingsDialog();
 
 const userMenuItems = computed(() => {
     return [
+        {
+            label: i18n.t('ACTION_USER_SETTINGS'),
+            icon: 'pi pi-user-edit',
+            command: () => openUserSettingsDialog(),
+        },
         {
             label: i18n.t('LABEL_LOCALE_CURRENT', {
                 locale: localeToLabel(getCurrentLocale()),

@@ -24,6 +24,7 @@
                     v-model="formState.customNote"
                     class="w-full"
                     :maxlength="constants.LIMIT.maxGearArchiveNoteLength"
+                    @keypress.enter="onArchive"
                 />
             </FormField>
             <HintInfo :description="$t('INFO_ARCHIVE_GEAR_HINT')" size="xs" />
