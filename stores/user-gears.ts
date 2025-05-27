@@ -21,7 +21,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
     const gearCollectionRef = collection(db, 'gear');
-    const gearMap = ref<UserGears>({});
+    const gearMap = ref<UserGears>({}); // gearMap is the local state that holds all user's gears
     const gears = computed(() => Object.values(gearMap.value));
     const visibleGears = computed(() =>
         gears.value.filter((gear) => !gear.isForOneTrip && !gear.isArchived),
@@ -33,43 +33,67 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
     const getGearById = computed(() => (id: string) => gearMap.value[id]);
 
-    const initialize = () => {
+    const initialize = async () => {
         if (isInitialized.value || !user.value) {
             console.error('initialize useUserGearsStore fail');
             return;
         }
 
+        // Unsubscribe previous listener if exists
+        if (unsubscribe.value) {
+            unsubscribe.value();
+            unsubscribe.value = null;
+        }
+
         const userId = user.value.uid;
         const userGearsDocRef = doc(db, 'userGears', userId);
+
+        // Use a Firestore transaction to create the initial userGears document if needed
+        try {
+            await runTransaction(db, async (transaction) => {
+                const userGearsDocSnap = await transaction.get(userGearsDocRef);
+
+                // Check if userGears document exists, or if gears field is empty (in case of data lost)
+                if (
+                    !userGearsDocSnap.exists() ||
+                    isEmpty(userGearsDocSnap.data().gears)
+                ) {
+                    // get all user's gears
+                    const gearDocs = await getDocs(
+                        query(
+                            gearCollectionRef,
+                            where(
+                                `role.${userId}`,
+                                '==',
+                                constants.ROLES.OWNER,
+                            ),
+                        ),
+                    );
+                    const userGears: UserGears = {};
+                    gearDocs.forEach((gearDoc) => {
+                        const gearData = gearDoc.data();
+                        const gearId = gearDoc.id;
+                        userGears[gearId] = {
+                            ...constants.EMPTY_GEAR_DATA,
+                            ...gearData,
+                            id: gearId,
+                        };
+                    });
+                    transaction.set(userGearsDocRef, {
+                        gears: userGears,
+                        created: serverTimestamp(),
+                    });
+                }
+            });
+        } catch (err) {
+            console.error('Error in Firestore transaction for userGears:', err);
+        }
+
+        // Listen to userGears document changes
         unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
             const docData = doc.data();
-            if (
-                !docData ||
-                (isEmpty(docData.gears) && !hasBuiltUserGears.value)
-            ) {
-                hasBuiltUserGears.value = true;
-                // get all user's gears
-                const gearDocs = await getDocs(
-                    query(
-                        gearCollectionRef,
-                        where(`role.${userId}`, '==', constants.ROLES.OWNER),
-                    ),
-                );
-                const userGears: UserGears = {};
-                gearDocs.forEach((gearDoc) => {
-                    const gearData = gearDoc.data();
-                    const gearId = gearDoc.id;
-                    userGears[gearId] = {
-                        ...constants.EMPTY_GEAR_DATA,
-                        ...gearData,
-                        id: gearId,
-                    };
-                });
-                // create initial userGears document
-                await setDoc(userGearsDocRef, {
-                    gears: userGears,
-                    created: serverTimestamp(), // to enfirce snapshot change
-                });
+            if (!docData || !docData.gears) {
+                // Document creation is now handled by the transaction above
                 return;
             }
 
