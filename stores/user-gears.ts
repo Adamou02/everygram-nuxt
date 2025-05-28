@@ -26,6 +26,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const visibleGears = computed(() =>
         gears.value.filter((gear) => !gear.isForOneTrip && !gear.isArchived),
     );
+    const archivedGears = computed(() =>
+        gears.value.filter((gear) => gear.isArchived),
+    );
     const isFirstFetching = ref(true);
     const hasBuiltUserGears = ref(false);
     const unsubscribe = ref<null | (() => void)>(null);
@@ -250,17 +253,29 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 if (!gearDocSnap.exists || !userGearsDocSnap.exists) {
                     throw new Error('Document does not exist');
                 }
-                // update gear data
-                transaction.update(gearRef, {
-                    ...gearData,
+                const hasGearBeenArchived =
+                    gearDocSnap.data()?.isArchived || false;
+                const formattedGearData = {
                     updated: serverTimestamp(),
-                });
+                    ...gearData,
+                    // set archived timestamp if isArchived is set from false to true
+                    ...(gearData.isArchived && !hasGearBeenArchived
+                        ? { archived: serverTimestamp() }
+                        : {}),
+                    // remove archived timestamp if isArchived is set from true to false
+                    ...(!gearData.isArchived && hasGearBeenArchived
+                        ? { archived: deleteField() }
+                        : {}),
+                };
+
+                // update gear data
+                transaction.update(gearRef, formattedGearData);
+
                 // update userGears document
                 transaction.update(userGearsDocRef, {
                     [`gears.${id}`]: {
                         ...gearMap.value[id],
-                        ...gearData,
-                        updated: serverTimestamp(),
+                        ...formattedGearData,
                     },
                 });
             });
@@ -307,6 +322,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         gears,
         gearMap,
         visibleGears,
+        archivedGears,
         isFetchingGears: isFirstFetching,
         getGearById,
         initialize,

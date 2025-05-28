@@ -60,6 +60,7 @@ export type Gear = {
     archiveNote?: string;
     created?: Timestamp;
     updated?: Timestamp;
+    archived?: Timestamp;
     photo?: StorageImage;
 };
 export type EditingGear = Partial<Gear>;

@@ -61,6 +61,7 @@ declare global {
         archiveNote?: string;
         created?: Timestamp;
         updated?: Timestamp;
+        archived?: Timestamp;
         photo?: StorageImage;
     };
     type EditingGear = Partial<Gear>;
