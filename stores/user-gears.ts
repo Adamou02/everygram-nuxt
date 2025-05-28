@@ -14,7 +14,7 @@ import {
     deleteField,
     runTransaction,
 } from 'firebase/firestore';
-import type { DocumentReference } from 'firebase/firestore';
+import type { DocumentReference, DocumentData } from 'firebase/firestore';
 
 export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = firebaseUtils.getFirestoreDB();
@@ -35,6 +35,17 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const isInitialized = ref(false);
 
     const getGearById = computed(() => (id: string) => gearMap.value[id]);
+
+    const formatDataToGearType = (
+        id: string,
+        gearData?: Partial<Gear> | DocumentData,
+    ): Gear => {
+        return {
+            ...constants.EMPTY_GEAR_DATA,
+            ...gearData,
+            id,
+        };
+    };
 
     const initialize = async () => {
         if (isInitialized.value || !user.value) {
@@ -76,11 +87,10 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                     gearDocs.forEach((gearDoc) => {
                         const gearData = gearDoc.data();
                         const gearId = gearDoc.id;
-                        userGears[gearId] = {
-                            ...constants.EMPTY_GEAR_DATA,
-                            ...gearData,
-                            id: gearId,
-                        };
+                        userGears[gearId] = formatDataToGearType(
+                            gearId,
+                            gearData,
+                        );
                     });
                     transaction.set(userGearsDocRef, {
                         gears: userGears,
@@ -104,11 +114,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
             // fill in missing gear fields
             Object.entries(userGears).forEach(([gearId, gear]) => {
-                userGears[gearId] = {
-                    ...constants.EMPTY_GEAR_DATA,
-                    ...gear,
-                    id: gearId,
-                };
+                userGears[gearId] = formatDataToGearType(gearId, gear);
             });
 
             gearMap.value = userGears;
@@ -155,11 +161,7 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             const gearId = gearDocRef.id;
             const gearDocSnap = await getDoc(gearDocRef);
             const gearData = gearDocSnap.data();
-            const newGear: Gear = {
-                ...constants.EMPTY_GEAR_DATA,
-                ...gearData,
-                id: gearId,
-            };
+            const newGear: Gear = formatDataToGearType(gearId, gearData);
 
             // Add new gear to userGears document
             const userGearsDocRef = doc(db, 'userGears', userId);
@@ -201,14 +203,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             const newGearDocs = await Promise.all(
                 newGearRefs.map((ref) => getDoc(ref)),
             );
-            const newGears: Gear[] = newGearDocs.map((doc, index) => {
-                const gearData = doc.data();
-                return {
-                    ...constants.EMPTY_GEAR_DATA,
-                    ...gearData,
-                    id: newGearRefs[index].id,
-                };
-            });
+            const newGears: Gear[] = newGearDocs.map((doc, index) =>
+                formatDataToGearType(newGearRefs[index].id, doc.data()),
+            );
 
             // write new gears to userGears document
             const newGearsFields: Record<string, Gear> = newGears.reduce(
@@ -238,7 +235,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
-            delete gearData.id;
+            // Clone gearData to avoid mutating the original object
+            const gearDataClone = { ...gearData };
+            delete gearDataClone.id;
 
             // use transaction to update gear data and userGears document
             await runTransaction(db, async (transaction) => {
@@ -257,14 +256,20 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                     gearDocSnap.data()?.isArchived || false;
                 const formattedGearData = {
                     updated: serverTimestamp(),
-                    ...gearData,
+                    ...gearDataClone,
                     // set archived timestamp if isArchived is set from false to true
-                    ...(gearData.isArchived && !hasGearBeenArchived
+                    ...(gearDataClone.isArchived === true &&
+                    !hasGearBeenArchived
                         ? { archived: serverTimestamp() }
                         : {}),
-                    // remove archived timestamp if isArchived is set from true to false
-                    ...(!gearData.isArchived && hasGearBeenArchived
-                        ? { archived: deleteField() }
+                    // clear archive data if isArchived is set from true to false (explicitly)
+                    ...(gearDataClone.isArchived === false &&
+                    hasGearBeenArchived
+                        ? {
+                              archived: null,
+                              archiveNote: null,
+                              archiveReason: null,
+                          }
                         : {}),
                 };
 
@@ -273,10 +278,10 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
                 // update userGears document
                 transaction.update(userGearsDocRef, {
-                    [`gears.${id}`]: {
+                    [`gears.${id}`]: formatDataToGearType(id, {
                         ...gearMap.value[id],
                         ...formattedGearData,
-                    },
+                    }),
                 });
             });
         } catch (error) {

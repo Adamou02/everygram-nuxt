@@ -1,16 +1,25 @@
 <template>
-    <div class="flex gap-2 align-items-center min-w-0">
+    <div
+        :class="[
+            'flex align-items-center min-w-0',
+            size === 'lg' ? 'gap-3' : 'gap-2',
+        ]"
+    >
         <GearPhoto
-            class="w-4rem h-4rem lg:w-4rem lg:h-4rem flex-shrink-0"
+            :class="[
+                'flex-shrink-0',
+                size === 'lg' ? 'w-6rem h-6rem ' : 'w-4rem h-4rem',
+            ]"
             :gear="gear"
             readonly
         />
-        <GearNameWithBrand :gear="gear" />
+        <GearNameWithBrand :gear="gear" :size="size" />
     </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
     gear: Gear;
+    size?: 'md' | 'lg';
 }>();
 </script>

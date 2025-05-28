@@ -17,7 +17,6 @@
         >
             <CategoryHeader
                 :category="category"
-                type="gear"
                 :weight="gearWeightByCategory[category]"
             >
                 <template #actions>

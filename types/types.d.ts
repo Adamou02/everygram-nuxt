@@ -48,6 +48,16 @@ declare global {
         | 'broken'
         | 'other';
 
+    type GearAction =
+        | 'edit'
+        | 'edit-archive'
+        | 'edit-qty'
+        | 'add-to-gears'
+        | 'archive'
+        | 'unarchive'
+        | 'delete'
+        | 'remove';
+
     type Gear = {
         id: string;
         name: string;

@@ -39,6 +39,11 @@ const backButton = computed<{ label: string; parent: string }>(() => {
                 label: i18n.t('ACTION_BACK_TO_TRIPS'),
                 parent: '/trips',
             };
+        case 'archived-gears':
+            return {
+                label: i18n.t('ACTION_BACK_TO_GEARS'),
+                parent: '/gears',
+            };
         default:
             return {
                 label: i18n.t('ACTION_BACK'),

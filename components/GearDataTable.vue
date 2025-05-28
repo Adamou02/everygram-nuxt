@@ -22,7 +22,17 @@
             :class="['hide-in-mobile', { 'hover:surface-50': !props.readonly }]"
         >
             <template #body="{ data }">
-                <GearNameWithBrand :gear="data" />
+                <GearNameWithBrand :gear="data">
+                    <template #extra-info>
+                        <NotInGearsIcon
+                            v-if="!props.readonly && data.isForOneTrip"
+                        />
+                        <ArchivedGearTag
+                            v-if="!props.readonly && data.isArchived"
+                            :gear="data"
+                        />
+                    </template>
+                </GearNameWithBrand>
             </template>
             <template #editor="{ data, field }">
                 <PrimeInputText
@@ -80,7 +90,17 @@
         <!-- mobile -->
         <PrimeColumn field="name" :header="$t('LABEL_NAME')" class="lg:hidden">
             <template #body="{ data }">
-                <GearNameWithBrand :gear="data" />
+                <GearNameWithBrand :gear="data">
+                    <template #extra-info>
+                        <NotInGearsIcon
+                            v-if="!props.readonly && data.isForOneTrip"
+                        />
+                        <ArchivedGearTag
+                            v-if="!props.readonly && data.isArchived"
+                            :gear="data"
+                        />
+                    </template>
+                </GearNameWithBrand>
             </template>
         </PrimeColumn>
         <PrimeColumn class="text-right white-space-nowrap text-sm lg:hidden">
@@ -99,57 +119,20 @@
             class="w-1rem px-0 lg:pl-2"
         >
             <template #body="{ data }">
-                <MoreActionsMenuButton
-                    text
-                    size="small"
-                    :items="
-                        _filter([
-                            actions.includes('edit') && {
-                                icon: 'pi pi-pencil',
-                                label: $t('ACTION_EDIT'),
-                                command: () => {
-                                    emit('gear-edit', data);
-                                },
-                            },
-                            actions.includes('edit-qty') &&
-                                hasQuantity && {
-                                    icon: 'pi pi-sort',
-                                    label: $t('ACTION_EDIT_QUANTITY'),
-                                    command: () => {
-                                        emit('gear-edit-quantity', data);
-                                    },
-                                },
-                            actions.includes('add-to-gears') &&
-                                data.isForOneTrip && {
-                                    icon: 'pi pi-plus',
-                                    label: $t('ACTION_ADD_TO_GEARS'),
-                                    command: () => {
-                                        emit('gear-add-to-gears', data);
-                                    },
-                                },
-                            actions.includes('archive') && {
-                                icon: 'pi pi-box',
-                                label: $t('ACTION_ARCHIVE'),
-                                command: () => {
-                                    emit('gear-archive', data);
-                                },
-                            },
-                            actions.includes('remove') && {
-                                icon: 'pi pi-times',
-                                label: $t('ACTION_REMOVE_FROM_TRIP'),
-                                command: () => {
-                                    emit('gear-remove', data);
-                                },
-                            },
-                            actions.includes('delete') && {
-                                icon: 'pi pi-trash',
-                                label: $t('ACTION_DELETE'),
-                                command: () => {
-                                    emit('gear-delete', data);
-                                },
-                            },
-                        ]) as MenuItem[]
+                <GearActionsMenuButton
+                    :actions="actions"
+                    :gear="data"
+                    :has-quantity="hasQuantity"
+                    @gear-edit="(gear) => emit('gear-edit', gear)"
+                    @gear-edit-quantity="
+                        (gear) => emit('gear-edit-quantity', gear)
                     "
+                    @gear-add-to-gears="
+                        (gear) => emit('gear-add-to-gears', gear)
+                    "
+                    @gear-archive="(gear) => emit('gear-archive', gear)"
+                    @gear-delete="(gear) => emit('gear-delete', gear)"
+                    @gear-remove="(gear) => emit('gear-remove', gear)"
                 />
             </template>
         </PrimeColumn>
@@ -157,19 +140,10 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from 'primevue/menuitem';
-
 const props = defineProps<{
     gears?: (Gear & { quantity?: number })[];
     hasQuantity?: boolean;
-    actions?: (
-        | 'edit'
-        | 'edit-qty'
-        | 'add-to-gears'
-        | 'archive'
-        | 'delete'
-        | 'remove'
-    )[];
+    actions?: GearAction[];
     readonly?: boolean;
 }>();
 

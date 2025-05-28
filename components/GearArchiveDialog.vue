@@ -24,10 +24,14 @@
                     v-model="formState.customNote"
                     class="w-full"
                     :maxlength="constants.LIMIT.maxGearArchiveNoteLength"
-                    @keypress.enter="onArchive"
+                    @keypress.enter="onSubmit"
                 />
             </FormField>
-            <HintInfo :description="$t('INFO_ARCHIVE_GEAR_HINT')" size="xs" />
+            <HintInfo
+                v-if="!isEditingArchivedGear"
+                :description="$t('INFO_ARCHIVE_GEAR_HINT')"
+                size="xs"
+            />
         </template>
         <template #footer>
             <PrimeButton
@@ -39,10 +43,14 @@
                 @click="onCancel"
             />
             <PrimeButton
-                :label="$t('ACTION_ARCHIVE')"
+                :label="
+                    isEditingArchivedGear
+                        ? $t('ACTION_SAVE')
+                        : $t('ACTION_ARCHIVE')
+                "
                 rounded
                 :loading="isSaving"
-                @click="onArchive"
+                @click="onSubmit"
             />
         </template>
     </PrimeDialog>
@@ -59,10 +67,12 @@ const emit = defineEmits<{
 }>();
 
 const {
-    isArchivingGear,
+    isOpenArchiveGearDialog,
+    isEditingArchivedGear,
     archivingGear,
     onCancelArchiveGear,
     onCompleteArchiveGear,
+    archiveGear,
 } = useArchiveGear();
 
 const userGearsStore = useUserGearsStore();
@@ -101,7 +111,9 @@ const reasonOptions: { value: GearArchiveReason; label: string }[] = [
     { value: 'other', label: i18n.t('LABEL_ARCHIVE_REASON_OTHER') },
 ];
 
-const isOpen = computed(() => isArchivingGear.value && !!archivingGear.value);
+const isOpen = computed(
+    () => isOpenArchiveGearDialog.value && !!archivingGear.value,
+);
 
 watch(
     () => isOpen.value,
@@ -124,25 +136,17 @@ const onCancel = () => {
     onCancelArchiveGear();
 };
 
-const onArchive = async () => {
+const onSubmit = async () => {
     if (!archivingGear.value) return;
     if (!(await vuelidate.value.$validate())) return;
 
     isSaving.value = true;
 
     try {
-        const updateData: EditingGear = {
-            isArchived: true,
+        await archiveGear({
+            gear: archivingGear.value,
             archiveReason: formState.archiveReason,
-            // Only include custom note if 'other' is selected
-            ...(formState.customNote
-                ? { archiveNote: formState.customNote }
-                : {}),
-        };
-
-        await userGearsStore.updateGear({
-            id: archivingGear.value.id,
-            gearData: updateData,
+            customNote: formState.customNote,
         });
 
         emit(

@@ -64,34 +64,16 @@
                     class="w-full"
                 >
                     <template #value="slotProps">
-                        <div
+                        <CategoryLabel
                             v-if="slotProps.value"
-                            class="flex align-items-center gap-2"
-                        >
-                            <GearCategoryAvatar
-                                :category="slotProps.value"
-                                size="small"
-                            />
-                            <div>
-                                {{ gearCategoryToLabel(slotProps.value) }}
-                            </div>
-                        </div>
+                            :category="slotProps.value"
+                        />
                         <span v-else>
                             {{ slotProps.placeholder }}
                         </span>
                     </template>
                     <template #option="slotProps">
-                        <div class="flex align-items-center gap-2">
-                            <GearCategoryAvatar
-                                :category="slotProps.option.value"
-                                size="small"
-                            />
-                            <div>
-                                {{
-                                    gearCategoryToLabel(slotProps.option.value)
-                                }}
-                            </div>
-                        </div>
+                        <CategoryLabel :category="slotProps.option.value" />
                     </template>
                 </PrimeDropdown>
             </FormField>
@@ -126,7 +108,7 @@
             </div>
             <!-- Hint for editing gear -->
             <HintInfo
-                v-if="props.isEditing && !editingGear?.isForOneTrip"
+                v-if="isEditingGear && !editingGear?.isForOneTrip"
                 :description="
                     props.isInTripPage
                         ? $t('INFO_EDIT_GEAR_SYNC_TO_GEARS')
@@ -163,7 +145,6 @@
 import useVuelidate from '@vuelidate/core';
 
 const props = defineProps<{
-    isEditing?: boolean;
     isInTripPage?: boolean;
 }>();
 
@@ -261,7 +242,7 @@ const onSubmit = async () => {
     };
 
     // if not adding to gears, set isForOneTrip to true
-    if (props.isInTripPage && !formState.addToGears) {
+    if (props.isInTripPage && !isEditingGear && !formState.addToGears) {
         gearData.isForOneTrip = true;
     }
 
