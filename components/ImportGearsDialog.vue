@@ -265,8 +265,8 @@ const onImportGears = async () => {
         name: gear.name,
         weight: gear.weight,
         category: gear.category,
-        quantity: 1,
     }));
+
     try {
         isImporting.value = true;
         await userGearsStore.createGears(gears);

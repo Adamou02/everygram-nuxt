@@ -36,6 +36,19 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
     const getGearById = computed(() => (id: string) => gearMap.value[id]);
 
+    const buildNewGear = (userId: string, gearData: EditingGear) => {
+        const newGear = {
+            ...constants.EMPTY_GEAR_DATA,
+            ...gearData,
+            role: {
+                [userId]: constants.ROLES.OWNER,
+            },
+            created: serverTimestamp(),
+        };
+
+        return newGear;
+    };
+
     const formatDataToGearType = (
         id: string,
         gearData?: Partial<Gear> | DocumentData,
@@ -103,26 +116,35 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
 
         // Listen to userGears document changes
-        unsubscribe.value = onSnapshot(userGearsDocRef, async (doc) => {
-            const docData = doc.data();
-            if (!docData || !docData.gears) {
-                // Document creation is now handled by the transaction above
-                return;
-            }
+        unsubscribe.value = onSnapshot(
+            userGearsDocRef,
+            async (doc) => {
+                const docData = doc.data();
+                if (!docData || !docData.gears) {
+                    // Document creation is now handled by the transaction above
+                    return;
+                }
 
-            const userGears = _cloneDeep(docData.gears) as UserGears;
+                const userGears = _cloneDeep(docData.gears) as UserGears;
 
-            // fill in missing gear fields
-            Object.entries(userGears).forEach(([gearId, gear]) => {
-                userGears[gearId] = formatDataToGearType(gearId, gear);
-            });
+                // fill in missing gear fields
+                Object.entries(userGears).forEach(([gearId, gear]) => {
+                    userGears[gearId] = formatDataToGearType(gearId, gear);
+                });
 
-            gearMap.value = userGears;
+                gearMap.value = userGears;
 
-            if (isFirstFetching.value) {
-                isFirstFetching.value = false;
-            }
-        });
+                if (isFirstFetching.value) {
+                    isFirstFetching.value = false;
+                }
+            },
+            (error) => {
+                console.error(
+                    'Error in onSnapshot listener for userGears:',
+                    error,
+                );
+            },
+        );
 
         isInitialized.value = true;
     };
@@ -130,13 +152,13 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const destroy = () => {
         if (unsubscribe.value) {
             unsubscribe.value();
+            unsubscribe.value = null;
         }
 
         // reset all ref values
         gearMap.value = {};
         isFirstFetching.value = true;
         isInitialized.value = false;
-        unsubscribe.value = null;
     };
 
     const createGear = async (
@@ -146,29 +168,23 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             return null;
         }
         const userId = user.value.uid;
+        let newGear: Gear | null = null;
         try {
-            // Add new gear to gear collection
-            const gearDocRef = await addDoc(gearCollectionRef, {
-                ...constants.EMPTY_GEAR_DATA,
-                ...editingGear,
-                role: {
-                    [userId]: constants.ROLES.OWNER,
-                },
-                created: serverTimestamp(),
+            await runTransaction(db, async (transaction) => {
+                // Create a new gear document reference with an auto-generated ID
+                const gearDocRef = doc(gearCollectionRef);
+                const gearId = gearDocRef.id;
+                const gearData = buildNewGear(userId, editingGear);
+                transaction.set(gearDocRef, gearData);
+
+                // Add new gear to userGears document
+                const userGearsDocRef = doc(db, 'userGears', userId);
+                const formattedGear = formatDataToGearType(gearId, gearData);
+                transaction.update(userGearsDocRef, {
+                    [`gears.${gearId}`]: formattedGear,
+                });
+                newGear = formattedGear;
             });
-
-            // Get new gear data
-            const gearId = gearDocRef.id;
-            const gearDocSnap = await getDoc(gearDocRef);
-            const gearData = gearDocSnap.data();
-            const newGear: Gear = formatDataToGearType(gearId, gearData);
-
-            // Add new gear to userGears document
-            const userGearsDocRef = doc(db, 'userGears', userId);
-            await updateDoc(userGearsDocRef, {
-                [`gears.${gearId}`]: newGear,
-            });
-
             return newGear;
         } catch (error) {
             console.error(error);
@@ -182,41 +198,27 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
-            // write new gears to gear collection in batch
-            const newGearRefs: DocumentReference[] = [];
-            const batch = writeBatch(db);
-            gears.forEach((gear) => {
-                const docRef = doc(gearCollectionRef);
-                newGearRefs.push(docRef);
-                batch.set(docRef, {
-                    ...constants.EMPTY_GEAR_DATA,
-                    ...gear,
-                    role: {
-                        [userId]: constants.ROLES.OWNER,
-                    },
-                    created: serverTimestamp(),
+            await runTransaction(db, async (transaction) => {
+                const newGears: Gear[] = [];
+                const userGearsDocRef = doc(db, 'userGears', userId);
+                const newGearsFields: Record<string, Gear> = {};
+                gears.forEach((gear) => {
+                    // Create a new gear document reference with an auto-generated ID
+                    const gearDocRef = doc(gearCollectionRef);
+                    const gearId = gearDocRef.id;
+                    const gearData = buildNewGear(userId, gear);
+                    transaction.set(gearDocRef, gearData);
+
+                    // Add new gear to userGears document
+                    const formattedGear = formatDataToGearType(
+                        gearId,
+                        gearData,
+                    );
+                    newGears.push(formattedGear);
+                    newGearsFields[`gears.${gearId}`] = formattedGear;
                 });
+                transaction.update(userGearsDocRef, newGearsFields);
             });
-            await batch.commit();
-
-            // get new gears data
-            const newGearDocs = await Promise.all(
-                newGearRefs.map((ref) => getDoc(ref)),
-            );
-            const newGears: Gear[] = newGearDocs.map((doc, index) =>
-                formatDataToGearType(newGearRefs[index].id, doc.data()),
-            );
-
-            // write new gears to userGears document
-            const newGearsFields: Record<string, Gear> = newGears.reduce(
-                (acc, gear) => {
-                    acc[`gears.${gear.id}`] = gear;
-                    return acc;
-                },
-                {} as Record<string, Gear>,
-            );
-            const userGearsDocRef = doc(db, 'userGears', userId);
-            await updateDoc(userGearsDocRef, newGearsFields);
         } catch (error) {
             console.error(error);
             throw error;
