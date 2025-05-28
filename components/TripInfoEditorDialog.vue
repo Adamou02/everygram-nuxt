@@ -80,7 +80,7 @@
                     rows="2"
                     autoResize
                     :invalid="vuelidate.description.$error"
-                    :maxlength="constants.LIMIT.maxDescriptionLength"
+                    :maxlength="constants.LIMIT.maxTripDescriptionLength"
                 />
             </FormField>
         </template>
@@ -168,7 +168,7 @@ const formRules = {
     },
     description: {
         maxLength: formValidators.maxLength(
-            constants.LIMIT.maxDescriptionLength,
+            constants.LIMIT.maxTripDescriptionLength,
         ),
     },
 };

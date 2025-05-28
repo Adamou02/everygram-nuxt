@@ -45,15 +45,7 @@
             class="hide-in-mobile w-10rem"
         >
             <template #body="{ data }">
-                <div class="flex align-items-center gap-2">
-                    <GearCategoryAvatar
-                        :category="data.category"
-                        size="small"
-                    />
-                    <div>
-                        {{ gearCategoryToLabel(data.category) }}
-                    </div>
-                </div>
+                <CategoryLabel :category="data.category" />
             </template>
         </PrimeColumn>
         <!-- mobile category -->

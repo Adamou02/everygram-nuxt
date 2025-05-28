@@ -338,7 +338,6 @@
         @cancel="isSelectingGears = false"
     />
     <GearEditorDialog
-        :is-editing="isEditingGear"
         :is-in-trip-page="true"
         @complete-create="onCompleteCreateGearInTrip"
     />

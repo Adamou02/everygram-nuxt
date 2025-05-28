@@ -6,20 +6,15 @@
         ]"
     >
         <div class="flex-1 flex align-items-center gap-3">
-            <template v-if="type === 'gear'">
-                <GearCategoryAvatar
-                    v-if="type === 'gear'"
-                    :category="category as GearCategory"
-                    size="medium"
-                />
+            <template v-if="isGearCategory">
+                <GearCategoryAvatar :category="gearCategory" size="medium" />
                 <h3 class="text-lg">
                     {{ gearCategoryToLabel(category as GearCategory) }}
                 </h3>
             </template>
-            <template v-if="type === 'consumable'">
+            <template v-else>
                 <ConsumableCategoryAvatar
-                    v-if="type === 'consumable'"
-                    :category="category as ConsumableCategory"
+                    :category="consumableCategory"
                     size="medium"
                 />
                 <h3>
@@ -43,7 +38,6 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-    type: 'consumable' | 'gear';
     category: GearCategory | ConsumableCategory;
     weight?: number;
     sticky?: boolean;
@@ -51,6 +45,12 @@ const props = defineProps<{
 
 const { gearCategoryToLabel, consumableCategoryToLabel, formatWeight } =
     useLangUtils();
+
+const isGearCategory = computed(() =>
+    constants.GEAR_CATEGORY_KEYS.includes(props.category as GearCategory),
+);
+const gearCategory = computed(() => props.category as GearCategory);
+const consumableCategory = computed(() => props.category as ConsumableCategory);
 </script>
 
 <style lang="scss">

@@ -1,11 +1,16 @@
 <template>
     <div class="flex flex-column gap-1">
-        <div v-if="gear.brand" class="text-sm lg:text-sm text-color-light">
+        <div v-if="gear.brand" class="text-color-light cursor-default text-sm">
             {{ formatBrand(gear.brand) }}
         </div>
-        <div class="text-sm lg:text-base line-clamp-2">
+        <div
+            :class="[
+                'line-clamp-2',
+                size === 'lg' ? 'text-base lg:text-lg' : 'text-sm lg:text-base',
+            ]"
+        >
             {{ gear.name }}
-            <NotInGearsIcon v-if="isGearOwner && gear.isForOneTrip" />
+            <slot name="extra-info" />
         </div>
     </div>
 </template>
@@ -13,6 +18,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     gear: Gear;
+    size?: 'md' | 'lg';
 }>();
 const { formatBrand } = useLangUtils();
 const userStore = useUserStore();

@@ -80,6 +80,11 @@ img {
     color: $eg-c-primary;
 }
 
+.p-tag-light {
+    background-color: $eg-c-gray-200;
+    color: $eg-c-text-light;
+}
+
 .material-symbols-outlined {
     font-size: 1.25em;
 }
@@ -111,6 +116,14 @@ img {
 
 .whitespace-pre-wrap {
     white-space: pre-wrap;
+}
+
+.cursor-default {
+    cursor: default !important;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
 }
 
 .container {

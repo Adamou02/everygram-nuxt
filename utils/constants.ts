@@ -44,7 +44,8 @@ const LIMIT = {
     maxWeight: 100000,
     minNameLength: 1,
     maxNameLength: 100,
-    maxDescriptionLength: 2000,
+    maxTripDescriptionLength: 2000,
+    maxGearArchiveNoteLength: 50,
     importLimit: 200,
     // square
     gearPhotoWidth: 1280,
@@ -69,6 +70,16 @@ const STORAGE_PATH = {
 const TRIP_DATE_MODE: Record<string, TripDateMode> = {
     single: 'single',
     multi: 'multi',
+};
+
+const GEAR_ARCHIVE_REASONS: Record<string, GearArchiveReason> = {
+    UNUSED: 'unused',
+    SOLD: 'sold',
+    GIVEN: 'given',
+    TRASHED: 'trashed',
+    LOST: 'lost',
+    BROKEN: 'broken',
+    OTHER: 'other',
 };
 
 const DEFAULT_TRIP_BANNER_IMAGE_PATH = '/image/illustration/illu-mountains.jpg';
@@ -98,6 +109,7 @@ export default {
     LOCALES,
     LIMIT,
     TRIP_DATE_MODE,
+    GEAR_ARCHIVE_REASONS,
     DEFAULT_TRIP_BANNER_IMAGE_PATH,
     SITE_DOMAIN,
     ANALYTICS_EVENTS,

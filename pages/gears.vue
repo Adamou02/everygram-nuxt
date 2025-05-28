@@ -11,7 +11,9 @@
             <div :class="sidebarClass">
                 <GearNum
                     :num="displayGears.length"
-                    :isFiltered="isFiltered"
+                    :lang-key="
+                        isFiltered ? 'INFO_GEAR_NUM_FILTERED' : undefined
+                    "
                     class="px-4"
                 />
             </div>
@@ -28,10 +30,33 @@
                     >
                         <GearNum
                             :num="displayGears.length"
-                            :isFiltered="isFiltered"
+                            :lang-key="
+                                isFiltered
+                                    ? 'INFO_GEAR_NUM_FILTERED'
+                                    : undefined
+                            "
                             class="md:hidden"
                         />
                         <div class="flex align-items-center gap-2">
+                            <!-- view archive -->
+                            <PrimeButton
+                                severity="secondary"
+                                rounded
+                                text
+                                :label="$t('ACTION_VIEW_ARCHIVES')"
+                                icon="pi pi-box"
+                                @click="() => navigateTo('/archived-gears')"
+                                class="hide-in-mobile"
+                            />
+                            <PrimeButton
+                                severity="secondary"
+                                rounded
+                                outlined
+                                icon="pi pi-box"
+                                @click="() => navigateTo('/archived-gears')"
+                                class="lg:hidden"
+                            />
+                            <!-- import gears -->
                             <PrimeButton
                                 severity="secondary"
                                 rounded
@@ -49,6 +74,7 @@
                                 @click="isOpenImportGearsDialog = true"
                                 class="lg:hidden"
                             />
+                            <!-- create gear -->
                             <PrimeButton
                                 severity="secondary"
                                 rounded
@@ -116,7 +142,6 @@
                         <template #header>
                             <CategoryHeader
                                 :category="category"
-                                type="gear"
                                 class="p-3 border-round-md"
                                 sticky
                             >
@@ -144,8 +169,9 @@
                             <GearDataTable
                                 :gears="gearsGroupByCategory[category]"
                                 :hasQuantity="false"
-                                :actions="['edit', 'delete']"
+                                :actions="['edit', 'archive', 'delete']"
                                 @gear-edit="onEditGear"
+                                @gear-archive="onArchiveGear"
                                 @gear-delete="confirmDeleteGear"
                                 @gear-cell-edit-complete="onCellEditComplete"
                             />
@@ -183,7 +209,8 @@
             </div>
         </template>
     </EmptyState>
-    <GearEditorDialog :is-editing="isEditingGear" />
+    <GearEditorDialog />
+    <GearArchiveDialog />
     <ImportGearsDialog
         :is-open="isOpenImportGearsDialog"
         @close="isOpenImportGearsDialog = false"
@@ -227,26 +254,11 @@ const { gearCategoryToLabel } = useLangUtils();
 const i18n = useI18n();
 
 // for GearEditor
-const { onCreateGear, onEditGear, isEditingGear } = useEditGear();
-
-const onDeleteGear = async (gear: Gear) => {
-    try {
-        await userGearsStore.deleteGear(gear.id);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-const confirmDeleteGear = (gear: Gear) => {
-    confirmDeleteDialog({
-        message: i18n.t('MESSAGE_CONFIRM_DELETE_GEAR', { gearName: gear.name }),
-        header: i18n.t('ACTION_DELETE_GEAR'),
-        toastSummary: i18n.t('FEEDBACK_GEAR_DELETED'),
-        onAccept: async () => {
-            await onDeleteGear(gear);
-        },
-    });
-};
+const { onCreateGear, onEditGear } = useEditGear();
+// for GearArchive
+const { onArchiveGear } = useArchiveGear();
+// for delete gear
+const { confirmDeleteGear } = useDeleteGear();
 
 // for edit gear in table
 const onCellEditComplete = async (e: {

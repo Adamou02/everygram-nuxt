@@ -63,36 +63,16 @@
                     class="w-full"
                 >
                     <template #value="slotProps">
-                        <div
+                        <CategoryLabel
                             v-if="slotProps.value"
-                            class="flex align-items-center gap-2"
-                        >
-                            <ConsumableCategoryAvatar
-                                :category="slotProps.value"
-                                size="small"
-                            />
-                            <div>
-                                {{ consumableCategoryToLabel(slotProps.value) }}
-                            </div>
-                        </div>
+                            :category="slotProps.value"
+                        />
                         <span v-else>
                             {{ slotProps.placeholder }}
                         </span>
                     </template>
                     <template #option="slotProps">
-                        <div class="flex align-items-center gap-2">
-                            <ConsumableCategoryAvatar
-                                :category="slotProps.option.value"
-                                size="small"
-                            />
-                            <div>
-                                {{
-                                    consumableCategoryToLabel(
-                                        slotProps.option.value,
-                                    )
-                                }}
-                            </div>
-                        </div>
+                        <CategoryLabel :category="slotProps.option.value" />
                     </template>
                 </PrimeDropdown>
             </FormField>

@@ -39,6 +39,24 @@ declare global {
         key?: string;
         custom?: string;
     };
+    type GearArchiveReason =
+        | 'unused'
+        | 'sold'
+        | 'given'
+        | 'trashed'
+        | 'lost'
+        | 'broken'
+        | 'other';
+
+    type GearAction =
+        | 'edit'
+        | 'edit-archive'
+        | 'edit-qty'
+        | 'add-to-gears'
+        | 'archive'
+        | 'unarchive'
+        | 'delete'
+        | 'remove';
 
     type Gear = {
         id: string;
@@ -49,15 +67,11 @@ declare global {
         category: GearCategory;
         isForOneTrip?: boolean;
         isArchived?: boolean;
-        archiveReason?:
-            | 'sold'
-            | 'donated'
-            | 'trashed'
-            | 'lost'
-            | 'broken'
-            | 'other';
+        archiveReason?: GearArchiveReason;
+        archiveNote?: string;
         created?: Timestamp;
         updated?: Timestamp;
+        archived?: Timestamp;
         photo?: StorageImage;
     };
     type EditingGear = Partial<Gear>;

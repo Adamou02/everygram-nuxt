@@ -17,7 +17,6 @@
         >
             <CategoryHeader
                 :category="category"
-                type="consumable"
                 :weight="consumableWeightByCategory[category]"
             >
                 <template #actions>

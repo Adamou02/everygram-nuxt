@@ -25,6 +25,8 @@
         <slot />
     </div>
     <AppFooter />
+    <!-- dialogs available in all sub pages -->
+    <UserSettingsDialog />
 </template>
 
 <script setup lang="ts">
@@ -36,6 +38,11 @@ const backButton = computed<{ label: string; parent: string }>(() => {
             return {
                 label: i18n.t('ACTION_BACK_TO_TRIPS'),
                 parent: '/trips',
+            };
+        case 'archived-gears':
+            return {
+                label: i18n.t('ACTION_BACK_TO_GEARS'),
+                parent: '/gears',
             };
         default:
             return {

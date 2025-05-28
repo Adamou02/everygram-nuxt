@@ -1,18 +1,12 @@
 <template>
     <PrimeDialog
-        :visible="isOpen"
+        :visible="isOpenUserSettingsDialog"
         :header="$t('ACTION_USER_SETTINGS')"
         modal
         class="w-full mx-2 max-w-20rem"
-        @update:visible="
-            (value: boolean) => {
-                if (!value) {
-                    $emit('cancel');
-                }
-            }
-        "
+        @update:visible="(value) => !value && closeUserSettingsDialog()"
     >
-        <template v-if="isOpen" #default>
+        <template v-if="isOpenUserSettingsDialog" #default>
             <!-- User Photo -->
             <FormField :label="$t('LABEL_PHOTO')">
                 <ImageUploadBox
@@ -53,11 +47,7 @@
                 rounded
                 severity="secondary"
                 :disabled="isSaving"
-                @click="
-                    () => {
-                        $emit('cancel');
-                    }
-                "
+                @click="closeUserSettingsDialog"
             />
             <PrimeButton
                 :label="$t('ACTION_SAVE')"
@@ -73,22 +63,11 @@
 import useVuelidate from '@vuelidate/core';
 import type { UserProfile } from 'firebase/auth';
 
-const props = defineProps<{
-    isOpen: boolean;
-    user: {
-        uid: string;
-        displayName: string;
-        photoURL: string;
-    };
-}>();
-
-const emit = defineEmits<{
-    complete: [];
-    cancel: [];
-}>();
-
 const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 const { uploadFile } = useStorage();
+const { isOpenUserSettingsDialog, closeUserSettingsDialog } =
+    useUserSettingsDialog();
 
 const initialFormState = {
     displayName: '',
@@ -107,17 +86,17 @@ const formRules = {
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
 
-const avatarUrl = computed(() => props.user.photoURL || '');
+const avatarUrl = computed(() => user.value?.photoURL || '');
 const compressedPhotoFile = ref<Blob | null>(null);
 const isSaving = ref(false);
 
 // reset form state when dialog opens
 watch(
-    () => props.isOpen,
+    () => isOpenUserSettingsDialog.value,
     (newValue) => {
         if (newValue) {
             formState.displayName =
-                props.user.displayName || initialFormState.displayName;
+                user.value?.displayName || initialFormState.displayName;
             compressedPhotoFile.value = null;
             vuelidate.value.$reset();
         }
@@ -137,25 +116,25 @@ async function onSubmit() {
         // upload photo if provided
         if (compressedPhotoFile.value) {
             const result = await uploadFile({
-                path: `${constants.STORAGE_PATH.USER}/${props.user.uid}/avatar`,
+                path: `${constants.STORAGE_PATH.USER}/${user.value?.uid}/avatar`,
                 file: compressedPhotoFile.value,
             });
             newPhotoURL = result ? result.downloadUrl : '';
         }
 
         // Update display name if changed
-        if (formState.displayName !== props.user.displayName) {
+        if (formState.displayName !== user.value?.displayName) {
             newProfile.displayName = formState.displayName;
         }
 
         // Update photo URL if changed
-        if (compressedPhotoFile.value && props.user.photoURL !== newPhotoURL) {
+        if (compressedPhotoFile.value && user.value?.photoURL !== newPhotoURL) {
             newProfile.photoURL = newPhotoURL;
         }
 
         if (Object.keys(newProfile).length === 0) {
             // No changes to save
-            emit('complete');
+            closeUserSettingsDialog();
             return;
         }
 
@@ -173,14 +152,14 @@ async function onSubmit() {
                 'onUserProfileUpdated',
             );
             await onUserProfileUpdated({
-                userId: props.user.uid,
+                userId: user.value?.uid,
                 ...newProfile,
             });
         } catch (e) {
             // Ignore error, do not block UI
         }
 
-        emit('complete');
+        closeUserSettingsDialog();
     } finally {
         isSaving.value = false;
     }

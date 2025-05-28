@@ -31,4 +31,6 @@
         <slot />
     </div>
     <AppFooter />
+    <!-- dialogs available in all user pages -->
+    <UserSettingsDialog />
 </template>

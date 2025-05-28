@@ -38,6 +38,14 @@ export type GearBrand = {
     key?: string;
     custom?: string;
 };
+export type GearArchiveReason =
+    | 'unused'
+    | 'sold'
+    | 'given'
+    | 'trashed'
+    | 'lost'
+    | 'broken'
+    | 'other';
 
 export type Gear = {
     id: string;
@@ -48,15 +56,11 @@ export type Gear = {
     category: GearCategory;
     isForOneTrip?: boolean;
     isArchived?: boolean;
-    archiveReason?:
-        | 'sold'
-        | 'donated'
-        | 'trashed'
-        | 'lost'
-        | 'broken'
-        | 'other';
+    archiveReason?: GearArchiveReason;
+    archiveNote?: string;
     created?: Timestamp;
     updated?: Timestamp;
+    archived?: Timestamp;
     photo?: StorageImage;
 };
 export type EditingGear = Partial<Gear>;
