@@ -1,6 +1,6 @@
 <template>
     <PrimeTag
-        class="p-tag-light font-normal cursor-default"
+        class="p-tag-light font-normal cursor-default text-xs lg:text-sm"
         v-tooltip.bottom="
             gear.archiveNote
                 ? {

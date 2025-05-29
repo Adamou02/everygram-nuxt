@@ -1,10 +1,14 @@
 <template>
-    <div class="flex flex-column gap-1">
-        <div v-if="gear.brand" class="text-color-light cursor-default text-sm">
+    <div class="gear-name-with-brand flex flex-column gap-1">
+        <div
+            v-if="gear.brand"
+            class="gear-name-with-brand__brand text-color-light cursor-default text-sm"
+        >
             {{ formatBrand(gear.brand) }}
         </div>
         <div
             :class="[
+                'gear-name-with-brand__name',
                 'line-clamp-2',
                 size === 'lg' ? 'text-base lg:text-lg' : 'text-sm lg:text-base',
             ]"
@@ -23,10 +27,13 @@ const props = defineProps<{
 const { formatBrand } = useLangUtils();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const isGearOwner = computed(() => {
-    if (!user.value) {
-        return false;
-    }
-    return props.gear.role[user.value.uid] === constants.ROLES.OWNER;
-});
 </script>
+
+<style lang="scss">
+.gear-name-with-brand {
+    // add a gap between name and extra-info
+    &__name > :last-child {
+        margin-left: 0.5rem;
+    }
+}
+</style>

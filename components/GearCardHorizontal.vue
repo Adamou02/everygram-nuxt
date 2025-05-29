@@ -18,7 +18,7 @@
         <div class="flex align-items-center justify-content-between gap-2">
             <div class="flex align-items-center gap-2">
                 <CategoryLabel :category="gear.category" />
-                <span class="text-color-lightest">|</span>
+                <span class="inline-vertical-line text-color-lightest" />
                 <span class="text-color-light">{{
                     formatWeight(gear.weight)
                 }}</span>

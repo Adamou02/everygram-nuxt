@@ -18,7 +18,7 @@
                         class="flex flex-column gap-2"
                     >
                         <!-- year label -->
-                        <h2 class="text-color-light text-base lg:text-lg">
+                        <h2 class="text-color mb-2 text-xl lg:text-2xl">
                             {{ year === 'others' ? $t('LABEL_NO_DATE') : year }}
                         </h2>
                         <!-- gear cards -->
@@ -90,6 +90,17 @@ const archivedGearsByYear = computed(() => {
         }
         grouped[year].push(gear);
     });
+
+    // sort each group by archived timestamp
+    Object.keys(grouped).forEach((year) => {
+        grouped[year].sort((a, b) => {
+            return (
+                (b.archived ? b.archived.toDate().getTime() : 0) -
+                (a.archived ? a.archived.toDate().getTime() : 0)
+            );
+        });
+    });
+
     return grouped;
 });
 </script>

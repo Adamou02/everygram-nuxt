@@ -86,9 +86,6 @@ const days = computed(() => dataUtils.getTripDays(props.trip));
         &,
         & > img {
             aspect-ratio: 2 / 1;
-            // @media (min-width: $lg) {
-            //     aspect-ratio: 3 / 1;
-            // }
         }
         background-size: cover;
         background-position: center;

@@ -9,13 +9,18 @@
         <template v-if="isOpen && archivingGear" #default>
             <GearLabel :gear="archivingGear" class="mt-1 mb-4" />
             <!-- Archive reason selection -->
-            <FormField :label="$t('LABEL_ARCHIVE_REASON')">
+            <FormField
+                :label="$t('LABEL_ARCHIVE_REASON')"
+                :errors="vuelidate.archiveReason.$errors"
+                required
+            >
                 <PrimeDropdown
                     v-model="formState.archiveReason"
                     :options="reasonOptions"
                     optionValue="value"
                     optionLabel="label"
                     class="w-full"
+                    :invalid="vuelidate.archiveReason.$error"
                 />
             </FormField>
             <!-- Custom note input -->
@@ -80,11 +85,11 @@ const isSaving = ref(false);
 const i18n = useI18n();
 
 const initialFormState = {
-    archiveReason: constants.GEAR_ARCHIVE_REASONS.UNUSED,
+    archiveReason: null,
     customNote: '',
 };
 const formState = reactive<{
-    archiveReason: GearArchiveReason;
+    archiveReason: GearArchiveReason | null;
     customNote: string;
 }>({ ...initialFormState });
 
@@ -138,7 +143,8 @@ const onCancel = () => {
 
 const onSubmit = async () => {
     if (!archivingGear.value) return;
-    if (!(await vuelidate.value.$validate())) return;
+    if (!(await vuelidate.value.$validate()) || !formState.archiveReason)
+        return;
 
     isSaving.value = true;
 
