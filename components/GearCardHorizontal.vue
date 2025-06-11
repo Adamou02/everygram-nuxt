@@ -1,7 +1,14 @@
 <template>
-    <div class="flex flex-column gap-3 bg-white border-round-md p-3 shadow-1">
+    <div
+        :class="[
+            'gear-card-horizontal',
+            'flex flex-column bg-white border-round-md shadow-1',
+            'p-2 lg:p-3',
+            'gap-2',
+        ]"
+    >
         <div class="flex align-items-start justify-content-between">
-            <GearLabel :gear="gear" size="lg" />
+            <GearLabel :gear="gear" :size="isLargeScreen ? 'lg' : 'md'" />
             <GearActionsMenuButton
                 :gear="gear"
                 :actions="actionItems"
@@ -13,17 +20,12 @@
                 @gear-unarchive="$emit('gear-unarchive', $event)"
                 @gear-delete="$emit('gear-delete', $event)"
                 @gear-remove="$emit('gear-remove', $event)"
+                class="gear-card-horizontal__actions"
             />
         </div>
         <div class="flex align-items-center justify-content-between gap-2">
-            <div class="flex align-items-center gap-2">
-                <CategoryLabel :category="gear.category" />
-                <span class="inline-vertical-line text-color-lightest" />
-                <span class="text-color-light">{{
-                    formatWeight(gear.weight)
-                }}</span>
-            </div>
-            <slot name="extra-info"></slot>
+            <slot name="info-left"></slot>
+            <slot name="info-right"></slot>
         </div>
     </div>
 </template>
@@ -45,5 +47,20 @@ defineEmits<{
     'gear-remove': [gear: Gear];
 }>();
 
-const { formatWeight } = useLangUtils();
+const { isLargeScreen } = useDeviceMeta();
 </script>
+
+<style lang="scss">
+@import '~/assets/theme/primeflex/core/_variables.scss';
+.gear-card-horizontal {
+    &__actions {
+        position: relative;
+        top: -0.25rem;
+        right: -0.25rem;
+        @media (min-width: $lg) {
+            top: -0.5rem;
+            right: -0.5rem;
+        }
+    }
+}
+</style>

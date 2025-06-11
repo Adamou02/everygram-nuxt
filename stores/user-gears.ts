@@ -1,20 +1,15 @@
 import {
     collection,
-    addDoc,
     doc,
-    getDoc,
-    updateDoc,
     onSnapshot,
     serverTimestamp,
-    writeBatch,
-    setDoc,
     getDocs,
     query,
     where,
     deleteField,
     runTransaction,
 } from 'firebase/firestore';
-import type { DocumentReference, DocumentData } from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 
 export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = firebaseUtils.getFirestoreDB();
@@ -30,14 +25,13 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         gears.value.filter((gear) => gear.isArchived),
     );
     const isFirstFetching = ref(true);
-    const hasBuiltUserGears = ref(false);
     const unsubscribe = ref<null | (() => void)>(null);
     const isInitialized = ref(false);
 
     const getGearById = computed(() => (id: string) => gearMap.value[id]);
 
     const buildNewGear = (userId: string, gearData: EditingGear) => {
-        const newGear = {
+        const newGear: any = {
             ...constants.EMPTY_GEAR_DATA,
             ...gearData,
             role: {
@@ -46,6 +40,13 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             created: serverTimestamp(),
         };
 
+        // delete undefined fields from newGear
+        Object.entries(newGear).forEach(([key, value]) => {
+            if (value === undefined) {
+                delete newGear[key];
+            }
+        });
+
         return newGear;
     };
 
@@ -53,11 +54,20 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         id: string,
         gearData?: Partial<Gear> | DocumentData,
     ): Gear => {
-        return {
+        const gear: any = {
             ...constants.EMPTY_GEAR_DATA,
             ...gearData,
             id,
         };
+
+        // delete undefined fields from gear
+        Object.entries(gear).forEach(([key, value]) => {
+            if (value === undefined) {
+                delete gear[key];
+            }
+        });
+
+        return gear as Gear;
     };
 
     const initialize = async () => {
@@ -237,10 +247,6 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
         const userId = user.value.uid;
         try {
-            // Clone gearData to avoid mutating the original object
-            const gearDataClone = { ...gearData };
-            delete gearDataClone.id;
-
             // use transaction to update gear data and userGears document
             await runTransaction(db, async (transaction) => {
                 const gearRef = doc(db, 'gear', id);
@@ -254,29 +260,39 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                 if (!gearDocSnap.exists || !userGearsDocSnap.exists) {
                     throw new Error('Document does not exist');
                 }
+
+                const formattedGearData: any = {
+                    ...gearData,
+                    updated: serverTimestamp(),
+                };
+                delete formattedGearData.id; // remove id from gearData
+
+                // archive / unarchive  gear
                 const hasGearBeenArchived =
                     gearDocSnap.data()?.isArchived || false;
-                const formattedGearData = {
-                    updated: serverTimestamp(),
-                    ...gearDataClone,
+                if (!hasGearBeenArchived && gearData.isArchived === true) {
                     // set archived timestamp if isArchived is set from false to true
-                    ...(gearDataClone.isArchived === true &&
-                    !hasGearBeenArchived
-                        ? { archived: serverTimestamp() }
-                        : {}),
+                    formattedGearData.archived = serverTimestamp();
+                } else if (
+                    hasGearBeenArchived &&
+                    gearData.isArchived === false
+                ) {
                     // clear archive data if isArchived is set from true to false (explicitly)
-                    ...(gearDataClone.isArchived === false &&
-                    hasGearBeenArchived
-                        ? {
-                              archived: null,
-                              archiveNote: null,
-                              archiveReason: null,
-                          }
-                        : {}),
-                };
+                    formattedGearData.isArchived = undefined;
+                    formattedGearData.archived = undefined;
+                    formattedGearData.archiveNote = undefined;
+                    formattedGearData.archiveReason = undefined;
+                }
 
                 // update gear data
-                transaction.update(gearRef, formattedGearData);
+                const gearDataToUpdate = { ...formattedGearData };
+                // replace undefined value with deleteField()
+                Object.entries(gearDataToUpdate).forEach(([key, value]) => {
+                    if (value === undefined) {
+                        gearDataToUpdate[key] = deleteField();
+                    }
+                });
+                transaction.update(gearRef, gearDataToUpdate);
 
                 // update userGears document
                 transaction.update(userGearsDocRef, {

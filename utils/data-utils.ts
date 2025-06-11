@@ -78,6 +78,20 @@ const formatDateString = (date: string, separator: string): string => {
     return date.split('-').join(separator);
 };
 
+const validateDateString = (date: string): boolean => {
+    if (!date) return false;
+
+    // regex
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(date)) return false;
+
+    // check if date is valid
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return false;
+
+    return true;
+};
+
 const getDaysBetweenDates = (startDate: string, endDate: string): number => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -120,6 +134,123 @@ const getTripDays = (trip: Trip | TripShare): number => {
     return 0;
 };
 
+const getWeightSortedItems = <
+    T extends { id: string; name: string; weight: number },
+>(
+    items: T[],
+): T[] =>
+    items?.sort(
+        (a, b) =>
+            b.weight - a.weight ||
+            (b.name < a.name ? 1 : -1) ||
+            (b.id < a.id ? 1 : -1),
+    ) ?? [];
+
+const getGearUsedCount = (gear: Gear, trips: Trip[]): number => {
+    return trips.reduce((count, trip) => {
+        // count once if gear is either in gears or wornGears
+        if (trip.gears && trip.gears[gear.id]) {
+            count += 1;
+        } else if (trip.wornGears && trip.wornGears[gear.id]) {
+            count += 1;
+        }
+        return count;
+    }, 0);
+};
+
+/**
+ * Format form state to EditingGear object
+ * This function is used to convert the form state from the gear editing form
+ * to the EditingGear object that can be used to update the gear in the database.
+ * It handles the conversion of various fields.
+ *
+ * Only the fields that are present in the form state will be included in the result.
+ * If a field is not present in the form state, it will not be included in the result, hence
+ * it is safe to use this function to update the gear without worrying about missing fields.
+ *
+ * Invlaid fields will be set to undefined, and then deleted by the database update function.
+ */
+const formatFormStateToEditingGear = (formState: any): EditingGear => {
+    const gearData: EditingGear = {};
+
+    // name (required)
+    if ('name' in formState) {
+        gearData.name =
+            typeof formState?.name === 'string'
+                ? _trim(formState.name) || ''
+                : '';
+    }
+
+    // weight (required)
+    if ('weight' in formState) {
+        gearData.weight =
+            typeof formState?.weight === 'number' ||
+            typeof formState?.weight === 'string'
+                ? +formState.weight
+                : 0;
+    }
+
+    // category (required)
+    if ('category' in formState) {
+        gearData.category =
+            typeof formState?.category === 'string' &&
+            constants.GEAR_CATEGORY_KEYS.includes(formState.category)
+                ? formState.category
+                : 'others';
+    }
+
+    // brand (optional)
+    if ('brand' in formState) {
+        if (
+            typeof formState.brand === 'string' &&
+            constants.GEAR_BRANDS[formState.brand]
+        ) {
+            gearData.brand = { key: formState.brand };
+        } else if (typeof formState.brand === 'string') {
+            gearData.brand = { custom: formState.brand };
+        } else {
+            gearData.brand = undefined;
+        }
+    }
+
+    // description (optional)
+    if ('description' in formState) {
+        gearData.description =
+            typeof formState?.description === 'string'
+                ? _trim(formState.description) || undefined
+                : undefined;
+    }
+
+    // currency and price (optional)
+    if ('price' in formState && 'currency' in formState) {
+        if (
+            isNumber(formState?.price) &&
+            typeof formState?.currency === 'string' &&
+            constants.CURRENCY_CODES.includes(formState.currency)
+        ) {
+            gearData.price = formState.price;
+            gearData.currency = formState.currency;
+        } else {
+            gearData.price = undefined;
+            gearData.currency = undefined;
+        }
+    }
+
+    // acquiredDate (optional)
+    if ('acquiredDate' in formState) {
+        if (
+            formState?.acquiredDate instanceof Date &&
+            !isNaN(formState.acquiredDate.getTime())
+        ) {
+            gearData.acquiredDate = formatDateToString(formState.acquiredDate);
+        } else {
+            gearData.acquiredDate = undefined;
+        }
+    }
+
+    return gearData;
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -132,9 +263,13 @@ export default {
     getWornGearsInTrip,
     formatDateToString,
     formatDateString,
+    validateDateString,
     getDaysBetweenDates,
     formatTripDate,
     getTripBannerImageUrl,
     getGearPhotoUrl,
     getTripDays,
+    getWeightSortedItems,
+    getGearUsedCount,
+    formatFormStateToEditingGear,
 };

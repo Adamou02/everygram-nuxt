@@ -22,12 +22,8 @@
                             {{ year === 'others' ? $t('LABEL_NO_DATE') : year }}
                         </h2>
                         <!-- gear cards -->
-                        <div class="grid">
-                            <div
-                                v-for="gear in gears"
-                                :key="gear.id"
-                                class="col-12 md:col-6"
-                            >
+                        <GearCardList :gears="gears">
+                            <template #gear-card="{ gear }">
                                 <GearCardHorizontal
                                     :gear="gear"
                                     :action-items="[
@@ -38,15 +34,33 @@
                                     ]"
                                     @gear-edit="onEditGear"
                                     @gear-edit-archive="onEditArchivedGear"
-                                    @gear-unarchive="unarchiveGear"
+                                    @gear-unarchive="onUnarchiveGear"
                                     @gear-delete="confirmDeleteGear"
                                 >
-                                    <template #extra-info>
-                                        <ArchivedGearTag :gear="gear" />
+                                    <template #info-left>
+                                        <GearInfos
+                                            :gear="gear"
+                                            :infos="[
+                                                'category-avatar',
+                                                'weight',
+                                            ]"
+                                            class="text-color-light"
+                                        />
+                                    </template>
+                                    <template #info-right>
+                                        <GearInfos
+                                            :gear="gear"
+                                            :infos="[
+                                                'usedCount',
+                                                'price',
+                                                'archived',
+                                            ]"
+                                            class="text-color-light"
+                                        />
                                     </template>
                                 </GearCardHorizontal>
-                            </div>
-                        </div>
+                            </template>
+                        </GearCardList>
                     </div>
                 </div>
             </div>
@@ -56,7 +70,7 @@
         v-else
         :title="$t('INFO_NO_ARCHIVED_GEARS')"
         :description="$t('INFO_NO_ARCHIVED_GEARS_DESC')"
-        image-src="/image/empty-gear.jpg"
+        image-src="/image/empty-gear-fade.jpg"
     />
     <GearEditorDialog />
     <GearArchiveDialog />
@@ -72,6 +86,8 @@ const userGearsStore = useUserGearsStore();
 const { isFetchingGears, archivedGears } = storeToRefs(userGearsStore);
 const { unarchiveGear } = useArchiveGear();
 const { confirmDeleteGear } = useDeleteGear();
+const i18n = useI18n();
+const toast = useToast();
 
 // for GearEditor
 const { onEditGear } = useEditGear();
@@ -103,4 +119,13 @@ const archivedGearsByYear = computed(() => {
 
     return grouped;
 });
+
+const onUnarchiveGear = async (gear: Gear) => {
+    await unarchiveGear(gear);
+    toast.add({
+        severity: 'secondary',
+        summary: i18n.t('FEEDBACK_GEAR_UNARCHIVED', { gearName: gear.name }),
+        life: constants.TOAST_TTL,
+    });
+};
 </script>

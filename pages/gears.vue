@@ -39,46 +39,42 @@
                         />
                         <div class="flex align-items-center gap-2">
                             <!-- view archive -->
-                            <PrimeButton
-                                severity="secondary"
-                                rounded
-                                text
-                                :label="$t('ACTION_VIEW_ARCHIVES')"
-                                icon="pi pi-box"
-                                @click="() => navigateTo('/archived-gears')"
-                                class="hide-in-mobile"
-                            />
-                            <PrimeButton
-                                severity="secondary"
-                                rounded
-                                outlined
-                                icon="pi pi-box"
-                                @click="() => navigateTo('/archived-gears')"
-                                class="lg:hidden"
-                            />
+                            <NuxtLink to="/archived-gears">
+                                <PrimeButton
+                                    severity="secondary"
+                                    rounded
+                                    :text="isLargeScreen"
+                                    :outlined="!isLargeScreen"
+                                    :label="
+                                        isLargeScreen
+                                            ? $t('ACTION_VIEW_ARCHIVES')
+                                            : ''
+                                    "
+                                    icon="pi pi-box"
+                                />
+                            </NuxtLink>
                             <!-- import gears -->
                             <PrimeButton
                                 severity="secondary"
                                 rounded
                                 outlined
-                                :label="$t('ACTION_IMPORT_GEARS')"
-                                icon="pi pi-file-arrow-up"
-                                class="hide-in-mobile"
-                                @click="isOpenImportGearsDialog = true"
-                            />
-                            <PrimeButton
-                                severity="secondary"
-                                rounded
-                                outlined
+                                :label="
+                                    isLargeScreen
+                                        ? $t('ACTION_IMPORT_GEARS')
+                                        : ''
+                                "
                                 icon="pi pi-file-arrow-up"
                                 @click="isOpenImportGearsDialog = true"
-                                class="lg:hidden"
                             />
                             <!-- create gear -->
                             <PrimeButton
                                 severity="secondary"
                                 rounded
-                                :label="$t('ACTION_CREATE_GEAR')"
+                                :label="
+                                    isLargeScreen
+                                        ? $t('ACTION_CREATE_GEAR')
+                                        : $t('ACTION_CREATE')
+                                "
                                 icon="pi pi-plus"
                                 @click="() => onCreateGear()"
                             />
@@ -112,7 +108,7 @@
                         text
                         size="small"
                         :class="[
-                            'text-color text-left w-full',
+                            'py-2 text-color text-left w-full',
                             { 'opacity-50': !gearsGroupByCategory[category] },
                         ]"
                         @click="scrollToCategory(category)"
@@ -130,53 +126,75 @@
             <!-- main -->
             <div :class="mainClass">
                 <div class="flex flex-column gap-5">
-                    <SectionPanel
+                    <div
                         v-for="category in displayGearCatergories"
                         :id="`category-section-${category}`"
                         :key="category"
-                        :class="{
-                            'opacity-50': !gearsGroupByCategory[category],
-                        }"
+                        class="flex flex-column gap-3"
                         style="scroll-margin-top: var(--app-header-height)"
                     >
-                        <template #header>
-                            <CategoryHeader
-                                :category="category"
-                                class="p-3 border-round-md"
-                                sticky
-                            >
-                                <template #actions>
-                                    <ActionButtonsGroup
-                                        text
-                                        type="icon"
-                                        size="small"
-                                        :actions="[
-                                            {
-                                                icon: 'pi pi-plus',
-                                                label: $t('ACTION_CREATE_GEAR'),
-                                                onClick: () =>
-                                                    onCreateGear({ category }),
-                                            },
-                                        ]"
-                                    />
-                                </template>
-                            </CategoryHeader>
-                        </template>
-                        <template
-                            v-if="gearsGroupByCategory[category]"
-                            #default
+                        <CategoryHeader
+                            :class="{
+                                'opacity-50': !gearsGroupByCategory[category],
+                            }"
+                            :category="category"
+                            class="py-2"
+                            sticky
+                            sticky-theme="app-background"
                         >
-                            <GearDataTable
-                                :gears="gearsGroupByCategory[category]"
-                                :hasQuantity="false"
-                                :actions="['edit', 'archive', 'delete']"
-                                @gear-edit="onEditGear"
-                                @gear-archive="onArchiveGear"
-                                @gear-delete="confirmDeleteGear"
-                                @gear-cell-edit-complete="onCellEditComplete"
-                            />
-                        </template>
-                    </SectionPanel>
+                            <template #actions>
+                                <ActionButtonsGroup
+                                    text
+                                    type="icon"
+                                    size="small"
+                                    :actions="[
+                                        {
+                                            icon: 'pi pi-plus',
+                                            label: $t('ACTION_CREATE_GEAR'),
+                                            onClick: () =>
+                                                onCreateGear({ category }),
+                                        },
+                                    ]"
+                                />
+                            </template>
+                        </CategoryHeader>
+                        <GearCardList
+                            v-if="gearsGroupByCategory[category]"
+                            :gears="gearsGroupByCategory[category]"
+                        >
+                            <template #gear-card="{ gear }">
+                                <GearCardHorizontal
+                                    :gear="gear"
+                                    :action-items="[
+                                        'edit',
+                                        'archive',
+                                        'delete',
+                                    ]"
+                                    @gear-edit="onEditGear"
+                                    @gear-archive="onArchiveGear"
+                                    @gear-delete="confirmDeleteGear"
+                                >
+                                    <template #info-left>
+                                        <GearInfos
+                                            :gear="gear"
+                                            :infos="['weight']"
+                                        />
+                                    </template>
+                                    <template #info-right>
+                                        <GearInfos
+                                            :gear="gear"
+                                            :infos="[
+                                                'usedCount',
+                                                'price',
+                                                'age',
+                                            ]"
+                                            class="text-color-lighter"
+                                        />
+                                    </template>
+                                </GearCardHorizontal>
+                            </template>
+                        </GearCardList>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,34 +241,8 @@ definePageMeta({
     layout: 'user-page',
 });
 
-const userGearsStore = useUserGearsStore();
-const { visibleGears, isFetchingGears } = storeToRefs(userGearsStore);
-const { formatBrand } = useLangUtils();
-const displayGears = computed(() =>
-    isFiltered.value ? filteredGears.value : visibleGears.value,
-);
-const gearsGroupByCategory = computed(() =>
-    dataUtils.groupGearsByCategory(displayGears.value),
-);
-const nonEmptyGearCatergories = computed(() =>
-    constants.GEAR_CATEGORY_KEYS.filter(
-        (category) => gearsGroupByCategory.value[category],
-    ),
-);
-const emptyGearCategories = computed(() =>
-    isFiltered.value
-        ? []
-        : constants.GEAR_CATEGORY_KEYS.filter(
-              (category) => !gearsGroupByCategory.value[category],
-          ),
-);
-const displayGearCatergories = computed(() =>
-    isFiltered.value
-        ? nonEmptyGearCatergories.value
-        : [...nonEmptyGearCatergories.value, ...emptyGearCategories.value],
-);
-const { confirmDeleteDialog } = useUiUitls();
 const { gearCategoryToLabel } = useLangUtils();
+const { isLargeScreen } = useDeviceMeta();
 const i18n = useI18n();
 
 // for GearEditor
@@ -260,69 +252,22 @@ const { onArchiveGear } = useArchiveGear();
 // for delete gear
 const { confirmDeleteGear } = useDeleteGear();
 
-// for edit gear in table
-const onCellEditComplete = async (e: {
-    data: Gear;
-    newValue: any;
-    field: string;
-}) => {
-    const { data, newValue, field } = e;
-    switch (field) {
-        case 'name':
-            await userGearsStore.updateGear({
-                id: data.id,
-                gearData: {
-                    name: newValue,
-                },
-            });
-            break;
-        case 'weight':
-            await userGearsStore.updateGear({
-                id: data.id,
-                gearData: {
-                    weight: newValue,
-                },
-            });
-            break;
-    }
-};
+// for display gears
+const {
+    visibleGears,
+    isFetchingGears,
+    filterValue,
+    isFiltered,
+    displayGears,
+    gearsGroupByCategory,
+    displayGearCatergories,
+} = useDisplayGears();
 
 // for ImportGearsDialog
 const isOpenImportGearsDialog = ref<boolean>(false);
 
 onMounted(() => {
     analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_GEARS_PAGE);
-});
-
-// filter
-const filterValue = ref<string>('');
-const filteredGears = ref<Gear[]>([]);
-const isFiltered = ref<boolean>(false);
-const debouncedUpdateFilteredGears = _debounce(() => {
-    const searchText = filterValue.value.toLocaleLowerCase();
-    if (!searchText) {
-        filteredGears.value = visibleGears.value;
-        isFiltered.value = false;
-        return;
-    }
-    // filter by gear name or brand
-    filteredGears.value = visibleGears.value.filter(
-        (gear) =>
-            gear.name.toLocaleLowerCase().includes(searchText) ||
-            (gear.brand &&
-                formatBrand(gear.brand)
-                    .toLocaleLowerCase()
-                    .includes(searchText)),
-    );
-    isFiltered.value = true;
-}, 500);
-watch(filterValue, (newFilterValue) => {
-    if (!newFilterValue) {
-        // reset immediately when clear filter
-        filteredGears.value = visibleGears.value;
-        isFiltered.value = false;
-    }
-    debouncedUpdateFilteredGears();
 });
 
 // for scroll into view
@@ -345,6 +290,4 @@ const mainClass = 'col-12 md:col-9 lg:col-10';
 useHead({
     title: i18n.t('PAGE_GEARS'),
 });
-
-useScrollRestoration('gears');
 </script>

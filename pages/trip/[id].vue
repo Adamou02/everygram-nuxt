@@ -28,7 +28,10 @@
                     />
                 </template>
                 <template #actions>
-                    <div class="flex gap-3">
+                    <div
+                        v-if="trip.isPublished || isLargeScreen"
+                        class="flex gap-3"
+                    >
                         <div
                             v-if="trip.isPublished"
                             class="flex align-items-center gap-1 text-color-light"
@@ -38,7 +41,7 @@
                                 {{ $t('INFO_TRIP_HAS_BEEN_PUBLISHED') }}
                             </div>
                         </div>
-                        <div class="flex gap-2 hide-in-mobile">
+                        <div v-if="isLargeScreen" class="flex gap-2">
                             <TripShareButton
                                 :trip="trip"
                                 severity="contrast"
@@ -66,6 +69,7 @@
             <TripGearSection :title="$t('LABEL_BASE')" :gears="gearsInTrip">
                 <template #header-actions>
                     <ActionButtonsGroup
+                        v-if="isLargeScreen"
                         severity="secondary"
                         text
                         type="text"
@@ -87,9 +91,9 @@
                                 },
                             },
                         ]"
-                        class="hide-in-mobile"
                     />
                     <MoreActionsMenuButton
+                        v-else
                         severity="secondary"
                         text
                         icon="pi-plus"
@@ -112,7 +116,6 @@
                             },
                         ]"
                         size="small"
-                        class="lg:hidden"
                     />
                 </template>
                 <template #category-body="{ gears }">
@@ -138,14 +141,8 @@
                         @gear-remove="
                             (gear: Gear) => onRemoveGear(gear, 'gears')
                         "
-                        @gear-cell-edit-complete="
-                            (e: any) =>
-                                onGearCellEditComplete({
-                                    ...e,
-                                    type: 'gears',
-                                })
-                        "
                         class="lg:ml-6"
+                        editable
                     />
                 </template>
                 <template #empty-state>
@@ -162,7 +159,7 @@
                     <ActionButtonsGroup
                         severity="secondary"
                         text
-                        type="text"
+                        :type="isLargeScreen ? 'text' : 'icon'"
                         :actions="[
                             {
                                 icon: 'pi pi-plus',
@@ -170,21 +167,7 @@
                                 onClick: () => onCreateConsumable(),
                             },
                         ]"
-                        class="hide-in-mobile"
-                    />
-                    <ActionButtonsGroup
-                        severity="secondary"
-                        text
-                        type="icon"
-                        :actions="[
-                            {
-                                icon: 'pi pi-plus',
-                                label: $t('ACTION_CREATE'),
-                                onClick: () => onCreateConsumable(),
-                            },
-                        ]"
-                        size="small"
-                        class="lg:hidden"
+                        :size="isLargeScreen ? 'medium' : 'small'"
                     />
                 </template>
                 <template #category-body="{ consumables }">
@@ -192,10 +175,8 @@
                         :consumables="consumables"
                         @consumable-edit="onEditConsumable"
                         @consumable-delete="onDeleteConsumable"
-                        @consumable-cell-edit-complete="
-                            onConsumableCellEditComplete
-                        "
                         class="lg:ml-6"
+                        editable
                     />
                 </template>
                 <template #empty-state>
@@ -210,6 +191,7 @@
             >
                 <template #header-actions>
                     <ActionButtonsGroup
+                        v-if="isLargeScreen"
                         severity="secondary"
                         text
                         type="text"
@@ -234,9 +216,9 @@
                                 },
                             },
                         ]"
-                        class="hide-in-mobile"
                     />
                     <MoreActionsMenuButton
+                        v-else
                         severity="secondary"
                         text
                         icon="pi-plus"
@@ -262,7 +244,6 @@
                             },
                         ]"
                         size="small"
-                        class="lg:hidden"
                     />
                 </template>
                 <template #category-body="{ gears }">
@@ -285,14 +266,8 @@
                         @gear-remove="
                             (gear: Gear) => onRemoveGear(gear, 'wornGears')
                         "
-                        @gear-cell-edit-complete="
-                            (e: any) =>
-                                onGearCellEditComplete({
-                                    ...e,
-                                    type: 'wornGears',
-                                })
-                        "
                         class="lg:ml-6"
+                        editable
                     />
                 </template>
                 <template #empty-state>
@@ -455,7 +430,7 @@ const onAddGearToGears = async (gear: Gear) => {
         summary: i18n.t('INFO_GEAR_ADDED_TO_GEARS', {
             gearName: gear.name,
         }),
-        life: 3000,
+        life: constants.TOAST_TTL,
     });
 };
 
@@ -487,67 +462,6 @@ const onRemoveGear = async (gear: Gear, type: TripGearType) => {
 
 // for TripInfoEditor
 const { onEditTrip } = useEditTrip();
-
-// for edit gear in table
-const onGearCellEditComplete = async ({
-    data,
-    newValue,
-    field,
-    type,
-}: {
-    data: Gear;
-    newValue: any;
-    field: string;
-    type: TripGearType;
-}) => {
-    switch (field) {
-        case 'quantity':
-            await userTripsStore.setGearsToTrip(
-                tripId,
-                [{ id: data.id, quantity: newValue }],
-                type,
-            );
-            break;
-        case 'name':
-            await userGearsStore.updateGear({
-                id: data.id,
-                gearData: {
-                    name: newValue,
-                },
-            });
-            break;
-        case 'weight':
-            await userGearsStore.updateGear({
-                id: data.id,
-                gearData: {
-                    weight: newValue,
-                },
-            });
-            break;
-    }
-};
-
-// for edit consumable cell
-const onConsumableCellEditComplete = async (e: {
-    data: Consumable;
-    newValue: any;
-    field: string;
-}) => {
-    const { data, newValue, field } = e;
-    switch (field) {
-        case 'name':
-        case 'weight':
-            await userTripsStore.updateConsumableInTrip({
-                tripId,
-                consumableId: data.id,
-                consumable: {
-                    ...data,
-                    [field]: newValue,
-                },
-            });
-            break;
-    }
-};
 
 // consumables
 const { onCreateConsumable, onEditConsumable } = useEditConsumable();
@@ -619,4 +533,6 @@ useHead({
             : i18n.t('META_TRIP_NOT_FOUND_TITLE');
     },
 });
+
+const { isLargeScreen } = useDeviceMeta();
 </script>

@@ -5,7 +5,7 @@
             editingGear ? $t('ACTION_EDIT_GEAR') : $t('ACTION_CREATE_GEAR')
         "
         modal
-        class="w-full mx-2 max-w-20rem"
+        class="w-full mx-2 max-w-30rem"
         @update:visible="
             (value: boolean) => {
                 if (!value) {
@@ -16,85 +16,166 @@
         "
     >
         <template v-if="isOpen" #default>
-            <FormField
-                :label="$t('LABEL_NAME')"
-                :errors="vuelidate.name.$errors"
-                required
-            >
-                <PrimeInputText
-                    v-model="formState.name"
-                    class="w-full"
-                    :minlength="constants.LIMIT.minNameLength"
-                    :maxlength="constants.LIMIT.maxNameLength"
-                    :autofocus="!editingGear"
-                    :invalid="vuelidate.name.$error"
-                    @keypress.enter="onSubmit"
-                />
-            </FormField>
-            <FormField
-                :label="$t('LABEL_WEIGHT')"
-                :errors="vuelidate.weight.$errors"
-            >
-                <PrimeInputGroup>
-                    <PrimeInputNumber
-                        v-model="formState.weight"
-                        class="w-full text-right"
-                        :maxFractionDigits="constants.LIMIT.maxFractionDigits"
-                        :min="constants.LIMIT.minWeight"
-                        :max="constants.LIMIT.maxWeight"
-                        :invalid="vuelidate.weight.$error"
-                        @keypress.enter="onSubmit"
-                    />
-                    <PrimeInputGroupAddon>g</PrimeInputGroupAddon>
-                </PrimeInputGroup>
-            </FormField>
-            <FormField :label="$t('LABEL_BRAND')">
-                <GearBrandDropdown v-model="formState.brand" class="w-full" />
-            </FormField>
-            <FormField :label="$t('LABEL_CATEGORY')">
-                <PrimeDropdown
-                    v-model="formState.category"
-                    :options="
-                        selectableCategories.map((category) => ({
-                            value: category,
-                        }))
-                    "
-                    optionValue="value"
-                    :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
-                    class="w-full"
-                >
-                    <template #value="slotProps">
-                        <CategoryLabel
-                            v-if="slotProps.value"
-                            :category="slotProps.value"
+            <div class="grid">
+                <!-- primary data: left column -->
+                <div class="col-12 lg:col-6">
+                    <!-- name -->
+                    <FormField
+                        :label="$t('LABEL_NAME')"
+                        :errors="vuelidate.name.$errors"
+                        required
+                    >
+                        <PrimeInputText
+                            v-model="formState.name"
+                            class="w-full"
+                            :minlength="constants.LIMIT.minNameLength"
+                            :maxlength="constants.LIMIT.maxNameLength"
+                            :autofocus="!editingGear"
+                            :invalid="vuelidate.name.$error"
+                            @keypress.enter="onSubmit"
                         />
-                        <span v-else>
-                            {{ slotProps.placeholder }}
-                        </span>
-                    </template>
-                    <template #option="slotProps">
-                        <CategoryLabel :category="slotProps.option.value" />
-                    </template>
-                </PrimeDropdown>
-            </FormField>
-            <FormField :label="$t('LABEL_PHOTO')">
-                <ImageUploadBox
-                    :width="120"
-                    :aspectRatio="1"
-                    :imageUrl="gearPhotoUrl"
-                    :isLoading="isSaving"
-                    :compressorOptions="{
-                        width: constants.LIMIT.gearPhotoWidth,
-                        height: constants.LIMIT.gearPhotoHeight,
-                        resize: 'cover',
-                    }"
-                    @file-compressed="(file) => (compressedPhotoFile = file)"
-                    @file-removed="() => (compressedPhotoFile = null)"
-                />
-            </FormField>
+                    </FormField>
+                    <!-- weight -->
+                    <FormField
+                        :label="$t('LABEL_WEIGHT')"
+                        :errors="vuelidate.weight.$errors"
+                    >
+                        <PrimeInputGroup>
+                            <PrimeInputNumber
+                                v-model="formState.weight"
+                                class="w-full text-right"
+                                :maxFractionDigits="
+                                    constants.LIMIT.maxFractionDigits
+                                "
+                                :min="constants.LIMIT.minWeight"
+                                :max="constants.LIMIT.maxWeight"
+                                :invalid="vuelidate.weight.$error"
+                                @keypress.enter="onSubmit"
+                            />
+                            <WeightUnitAddon />
+                        </PrimeInputGroup>
+                    </FormField>
+                    <!-- brand -->
+                    <FormField :label="$t('LABEL_BRAND')">
+                        <GearBrandDropdown
+                            v-model="formState.brand"
+                            class="w-full"
+                        />
+                    </FormField>
+                    <!-- category -->
+                    <FormField :label="$t('LABEL_CATEGORY')">
+                        <PrimeDropdown
+                            v-model="formState.category"
+                            :options="
+                                selectableCategories.map((category) => ({
+                                    value: category,
+                                }))
+                            "
+                            optionValue="value"
+                            :placeholder="$t('ACTION_SELECT_A_CATEGORY')"
+                            class="w-full"
+                        >
+                            <template #value="slotProps">
+                                <CategoryLabel
+                                    v-if="slotProps.value"
+                                    :category="slotProps.value"
+                                />
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                            <template #option="slotProps">
+                                <CategoryLabel
+                                    :category="slotProps.option.value"
+                                />
+                            </template>
+                        </PrimeDropdown>
+                    </FormField>
+                    <!-- photo upload -->
+                    <FormField :label="$t('LABEL_PHOTO')">
+                        <ImageUploadBox
+                            :width="120"
+                            :aspectRatio="1"
+                            :imageUrl="gearPhotoUrl"
+                            :isLoading="isSaving"
+                            :compressorOptions="{
+                                width: constants.LIMIT.gearPhotoWidth,
+                                height: constants.LIMIT.gearPhotoHeight,
+                                resize: 'cover',
+                            }"
+                            @file-compressed="
+                                (file) => (compressedPhotoFile = file)
+                            "
+                            @file-removed="() => (compressedPhotoFile = null)"
+                        />
+                    </FormField>
+                </div>
+                <div class="col-12 lg:hidden">
+                    <HorizontalLine />
+                </div>
+                <!-- secondary data: right column -->
+                <div class="col-12 lg:col-6">
+                    <!-- price -->
+                    <FormField :label="$t('LABEL_PRICE')">
+                        <PrimeInputGroup>
+                            <PrimeDropdown
+                                v-model="formState.currency"
+                                :options="currencyOptions"
+                                optionLabel="code"
+                                optionValue="code"
+                                class="w-auto"
+                                :pt="{
+                                    input: {
+                                        class: 'w-4rem',
+                                    },
+                                    trigger: {
+                                        class: 'hidden',
+                                    },
+                                }"
+                                :tabindex="-1"
+                            />
+                            <PrimeInputNumber
+                                v-model="formState.price"
+                                :min="0"
+                                :maxFractionDigits="
+                                    constants.CURRENCIES[formState.currency]
+                                        .fraction
+                                "
+                                :invalid="vuelidate.price?.$error"
+                                class="w-full text-right"
+                                @keypress.enter="onSubmit"
+                            />
+                        </PrimeInputGroup>
+                    </FormField>
+                    <!-- date -->
+                    <FormField :label="$t('LABEL_ACQUIRED_DATE')">
+                        <PrimeCalendar
+                            v-model="formState.acquiredDate"
+                            class="w-full"
+                            :dateFormat="constants.DATE_FORMAT"
+                            :placeholder="constants.DATE_PLACEHOLDER"
+                            @keypress.enter="onSubmit"
+                        />
+                    </FormField>
+                    <!-- description -->
+                    <FormField :label="$t('LABEL_DESCRIPTION')">
+                        <PrimeTextarea
+                            v-model="formState.description"
+                            :maxlength="
+                                constants.LIMIT.maxGearDescriptionLength
+                            "
+                            rows="2"
+                            class="w-full"
+                            autoResize
+                        />
+                    </FormField>
+                </div>
+            </div>
+        </template>
+        <template #footer>
             <!-- Checkbox for adding the new gear to the users gears when creating gear in trip page, checked by default -->
             <div
-                class="flex align-items-center gap-2"
+                class="flex align-self-center gap-2 w-full"
                 v-if="props.isInTripPage && !editingGear"
             >
                 <PrimeCheckbox
@@ -108,17 +189,17 @@
             </div>
             <!-- Hint for editing gear -->
             <HintInfo
-                v-if="isEditingGear && !editingGear?.isForOneTrip"
+                v-else-if="isEditingGear && !editingGear?.isForOneTrip"
                 :description="
                     props.isInTripPage
                         ? $t('INFO_EDIT_GEAR_SYNC_TO_GEARS')
                         : $t('INFO_EDIT_GEAR_SYNC_TO_TRIPS')
                 "
+                class="align-self-center w-full"
                 size="sm"
             />
-        </template>
-        <template #footer>
             <PrimeButton
+                v-else
                 :label="$t('ACTION_CANCEL')"
                 text
                 rounded
@@ -135,6 +216,7 @@
                 :label="editingGear ? $t('ACTION_SAVE') : $t('ACTION_CREATE')"
                 rounded
                 :loading="isSaving"
+                class="flex-shrink-0"
                 @click="onSubmit"
             />
         </template>
@@ -172,23 +254,19 @@ const selectableCategories = computed(() =>
         : constants.GEAR_CATEGORY_KEYS,
 );
 
-const { gearCategoryToLabel } = useLangUtils();
-
 // form state and validation rules
 const initialFormState = {
     name: '',
-    brand: undefined,
-    weight: undefined,
-    category: undefined,
+    weight: undefined as number | undefined,
+    brand: undefined as string | undefined,
+    category: undefined as GearCategory | undefined,
     addToGears: true,
+    description: '',
+    price: undefined as number | undefined,
+    currency: 'TWD' as CurrencyCode,
+    acquiredDate: undefined as Date | undefined,
 };
-const formState = reactive<{
-    name: string;
-    brand: string | undefined;
-    weight: number | undefined;
-    category: GearCategory | undefined;
-    addToGears: boolean;
-}>({ ...initialFormState });
+const formState = reactive({ ...initialFormState });
 const formValidators = useFormValidators();
 const formRules = {
     name: {
@@ -200,22 +278,47 @@ const formRules = {
         minValue: formValidators.minValue(constants.LIMIT.minWeight),
         maxValue: formValidators.maxValue(constants.LIMIT.maxWeight),
     },
+    price: {
+        minValue: formValidators.minValue(0),
+    },
+    description: {
+        maxLength: formValidators.maxLength(
+            constants.LIMIT.maxGearDescriptionLength,
+        ),
+    },
 };
-const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
+const vuelidate = useVuelidate(formRules, toRefs(formState), {
+    $autoDirty: true,
+});
+const currencyOptions = computed(() =>
+    Object.keys(constants.CURRENCIES).map(
+        (code) => constants.CURRENCIES[code as CurrencyCode],
+    ),
+);
 
 watch(isOpen, (newValue) => {
     if (newValue) {
-        formState.name = editingGear.value?.name || initialFormState.name;
+        formState.name = editingGear.value?.name ?? initialFormState.name;
+        formState.weight = editingGear.value?.weight || initialFormState.weight; // empty if not set or 0
         formState.brand =
-            editingGear.value?.brand?.key ||
-            editingGear.value?.brand?.custom ||
+            editingGear.value?.brand?.key ??
+            editingGear.value?.brand?.custom ??
             initialFormState.brand;
-        formState.weight = editingGear.value?.weight || initialFormState.weight;
         formState.category =
-            editingGear.value?.category ||
-            defaultGearCategory.value ||
+            editingGear.value?.category ??
+            defaultGearCategory.value ??
             initialFormState.category;
         formState.addToGears = initialFormState.addToGears;
+        formState.description =
+            editingGear.value?.description ?? initialFormState.description;
+        formState.price = editingGear.value?.price ?? initialFormState.price;
+        formState.currency =
+            editingGear.value?.currency ??
+            (preferenceUtils.getSelectedCurrencyCode() ||
+                initialFormState.currency);
+        formState.acquiredDate = editingGear.value?.acquiredDate
+            ? new Date(editingGear.value.acquiredDate)
+            : initialFormState.acquiredDate;
         compressedPhotoFile.value = null;
         vuelidate.value.$reset();
     }
@@ -225,7 +328,7 @@ const isSaving = ref<boolean>(false);
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
 const gearPhotoUrl = computed(() =>
-    editingGear.value ? dataUtils.getGearPhotoUrl(editingGear.value, 'xs') : '',
+    editingGear.value ? dataUtils.getGearPhotoUrl(editingGear.value, 'sm') : '',
 );
 const compressedPhotoFile = ref<Blob | null>(null);
 const { uploadFile } = useStorage();
@@ -235,21 +338,11 @@ const onSubmit = async () => {
         return;
     }
 
-    const gearData: EditingGear = {
-        name: formState.name,
-        weight: formState.weight || 0,
-        category: formState.category || 'others',
-    };
+    const gearData = dataUtils.formatFormStateToEditingGear(formState);
 
     // if not adding to gears, set isForOneTrip to true
-    if (props.isInTripPage && !isEditingGear && !formState.addToGears) {
+    if (props.isInTripPage && !isEditingGear.value && !formState.addToGears) {
         gearData.isForOneTrip = true;
-    }
-
-    if (formState.brand) {
-        gearData.brand = constants.GEAR_BRANDS[formState.brand]
-            ? { key: formState.brand }
-            : { custom: formState.brand };
     }
 
     try {
@@ -278,6 +371,15 @@ const onSubmit = async () => {
                 'complete-edit',
                 userGearsStore.getGearById(editingGear.value.id),
             );
+
+            // save selected currency to local storage if currency is updated
+            if (
+                gearData.currency &&
+                editingGear.value.currency !== gearData.currency
+            ) {
+                preferenceUtils.saveSelectedCurrency(gearData.currency);
+            }
+
             onCompleteEditGear();
         } else {
             // create new gear first
@@ -307,6 +409,12 @@ const onSubmit = async () => {
             }
             emit('complete-create', newGear);
             onCompleteCreateGear();
+
+            // save selected currency to local storage if it is set
+            if (gearData.currency) {
+                preferenceUtils.saveSelectedCurrency(gearData.currency);
+            }
+
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_GEAR, {
                 gear_category: gearData.category,
                 user_gear_num: gears.value.length,

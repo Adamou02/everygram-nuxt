@@ -45,8 +45,10 @@ const LIMIT = {
     minNameLength: 1,
     maxNameLength: 100,
     maxTripDescriptionLength: 2000,
-    maxGearArchiveNoteLength: 50,
     importLimit: 200,
+    // gear
+    maxGearDescriptionLength: 200,
+    maxGearArchiveNoteLength: 50,
     // square
     gearPhotoWidth: 1280,
     gearPhotoHeight: 1280,
@@ -89,10 +91,31 @@ const BREAK_POINTS = {
     sm: 576,
     md: 768,
     lg: 992,
-    xl: 120,
+    xl: 1200,
 };
 
 const PUBLIC_TRIPS_PAGE_SIZE = 24;
+
+const CURRENCIES: Record<CurrencyCode, Currency> = {
+    TWD: { code: 'TWD', label: 'NT$', fraction: 0 },
+    JPY: { code: 'JPY', label: '¥', fraction: 0 },
+    USD: { code: 'USD', label: '$', fraction: 2 },
+    CNY: { code: 'CNY', label: '¥', fraction: 2 },
+    EUR: { code: 'EUR', label: '€', fraction: 2 },
+    HKD: { code: 'HKD', label: 'HK$', fraction: 2 },
+    KRW: { code: 'KRW', label: '₩', fraction: 0 },
+    GBP: { code: 'GBP', label: '£', fraction: 2 },
+    AUD: { code: 'AUD', label: 'A$', fraction: 2 },
+    CAD: { code: 'CAD', label: 'C$', fraction: 2 },
+    SGD: { code: 'SGD', label: 'S$', fraction: 2 },
+};
+
+const CURRENCY_CODES = Object.keys(CURRENCIES) as CurrencyCode[];
+
+const DATE_FORMAT = 'yy-mm-dd';
+const DATE_PLACEHOLDER = 'yyyy-mm-dd';
+
+const TOAST_TTL = 3000; // 3 seconds
 
 export default {
     ROLES,
@@ -116,4 +139,9 @@ export default {
     STORAGE_PATH,
     BREAK_POINTS,
     PUBLIC_TRIPS_PAGE_SIZE,
+    CURRENCIES,
+    CURRENCY_CODES,
+    DATE_FORMAT,
+    DATE_PLACEHOLDER,
+    TOAST_TTL,
 };
