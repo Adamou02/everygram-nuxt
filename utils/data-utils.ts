@@ -139,7 +139,7 @@ const getWeightSortedItems = <
 >(
     items: T[],
 ): T[] =>
-    items?.sort(
+    [...items]?.sort(
         (a, b) =>
             b.weight - a.weight ||
             (b.name < a.name ? 1 : -1) ||

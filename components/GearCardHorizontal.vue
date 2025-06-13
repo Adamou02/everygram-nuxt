@@ -10,6 +10,7 @@
         <div class="flex align-items-start justify-content-between">
             <GearLabel :gear="gear" :size="isLargeScreen ? 'lg' : 'md'" />
             <GearActionsMenuButton
+                v-if="actionItems.length"
                 :gear="gear"
                 :actions="actionItems"
                 @gear-edit="$emit('gear-edit', $event)"

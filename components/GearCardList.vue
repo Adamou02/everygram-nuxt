@@ -1,19 +1,15 @@
 <template>
     <div class="gear-card-list">
-        <div v-for="gear in sortedGears" :key="gear.id">
+        <div v-for="gear in gears" :key="gear.id">
             <slot name="gear-card" :gear="gear"></slot>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
+defineProps<{
     gears: Gear[];
 }>();
-
-const sortedGears = computed(() =>
-    dataUtils.getWeightSortedItems<Gear>(props.gears),
-);
 </script>
 
 <style lang="scss">

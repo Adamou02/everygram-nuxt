@@ -160,7 +160,11 @@
                         </CategoryHeader>
                         <GearCardList
                             v-if="gearsGroupByCategory[category]"
-                            :gears="gearsGroupByCategory[category]"
+                            :gears="
+                                dataUtils.getWeightSortedItems(
+                                    gearsGroupByCategory[category],
+                                )
+                            "
                         >
                             <template #gear-card="{ gear }">
                                 <GearCardHorizontal
