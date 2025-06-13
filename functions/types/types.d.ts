@@ -66,6 +66,10 @@ export type Gear = {
     price?: number;
     currency?: CurrencyCode;
     acquiredDate?: string; // ISO string or Date
+    imgUrl?: {
+        sm: string;
+        lg: string;
+    };
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };

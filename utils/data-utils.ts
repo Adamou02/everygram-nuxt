@@ -119,9 +119,13 @@ const getTripBannerImageUrl = (
 };
 
 const getGearPhotoUrl = (gear: Gear, size?: ThumbnailSize): string => {
-    return gear.photo
-        ? (size && gear.photo.thumbnails?.[size].url) || gear.photo.url
-        : '';
+    if (gear.photo) {
+        return (size && gear.photo.thumbnails?.[size].url) || gear.photo.url;
+    }
+    if (gear.imgUrl) {
+        return gear.imgUrl.sm;
+    }
+    return '';
 };
 
 const getTripDays = (trip: Trip | TripShare): number => {
@@ -223,12 +227,19 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
 
     // currency and price (optional)
     if ('price' in formState && 'currency' in formState) {
+        const parsedPrice =
+            typeof formState?.price === 'number'
+                ? formState.price
+                : typeof formState?.price === 'string'
+                  ? parseFloat(formState.price)
+                  : NaN;
+
         if (
-            isNumber(formState?.price) &&
+            !isNaN(parsedPrice) &&
             typeof formState?.currency === 'string' &&
             constants.CURRENCY_CODES.includes(formState.currency)
         ) {
-            gearData.price = formState.price;
+            gearData.price = parsedPrice;
             gearData.currency = formState.currency;
         } else {
             gearData.price = undefined;
@@ -245,6 +256,23 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
             gearData.acquiredDate = formatDateToString(formState.acquiredDate);
         } else {
             gearData.acquiredDate = undefined;
+        }
+    }
+
+    // imgUrl (optional)
+    if ('imgUrlSm' in formState && 'imgUrlLg' in formState) {
+        if (
+            typeof formState.imgUrlSm === 'string' &&
+            formState.imgUrlSm.trim() &&
+            typeof formState.imgUrlLg === 'string' &&
+            formState.imgUrlLg.trim()
+        ) {
+            gearData.imgUrl = {
+                sm: formState.imgUrlSm.trim(),
+                lg: formState.imgUrlLg.trim(),
+            };
+        } else {
+            gearData.imgUrl = undefined;
         }
     }
 

@@ -77,6 +77,10 @@ declare global {
         price?: number;
         currency?: CurrencyCode;
         acquiredDate?: string; // ISO string or Date
+        imgUrl?: {
+            sm: string;
+            lg: string;
+        };
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };

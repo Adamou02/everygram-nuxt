@@ -190,7 +190,7 @@ const gearNameExists = ref<Record<string, boolean>>({});
 const onFileSelected = async (file: File) => {
     resetData();
     isFormatting.value = true;
-    const parsedContent = await fileUtils.parseCsv(file);
+    const parsedContent = await fileUtils.parseCsvFile(file);
     importedGearRows.value = parsedContent;
     parsedContent.forEach((row, index) => {
         if (formattedGearsData.value.length >= constants.LIMIT.importLimit) {

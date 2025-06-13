@@ -55,6 +55,11 @@ const backButton = computed<{ label: string; parent: string }>(() => {
                 label: i18n.t('ACTION_BACK_TO_GEARS'),
                 parent: '/gears',
             };
+        case 'import-gears-from-lighterpack':
+            return {
+                label: i18n.t('ACTION_BACK_TO_GEARS'),
+                parent: '/gears',
+            };
         default:
             return {
                 label: i18n.t('ACTION_BACK'),
