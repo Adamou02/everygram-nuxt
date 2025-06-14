@@ -100,7 +100,7 @@
                             })
                         "
                     >
-                        <ul class="text-red-700 pl-3 line-height-3">
+                        <ul class="text-danger pl-3 line-height-3">
                             <li v-for="row in invalidRows">
                                 {{
                                     $t('INFO_INVALID_GEAR_DATA_ROW', {

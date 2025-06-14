@@ -250,10 +250,17 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // acquiredDate (optional)
     if ('acquiredDate' in formState) {
         if (
+            // date
             formState?.acquiredDate instanceof Date &&
             !isNaN(formState.acquiredDate.getTime())
         ) {
             gearData.acquiredDate = formatDateToString(formState.acquiredDate);
+        } else if (
+            // string
+            typeof formState?.acquiredDate === 'string' &&
+            validateDateString(formState.acquiredDate)
+        ) {
+            gearData.acquiredDate = formState.acquiredDate.trim();
         } else {
             gearData.acquiredDate = undefined;
         }
@@ -279,6 +286,17 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     return gearData;
 };
 
+const convertedEditingGearToTempGear = (editingGear: EditingGear): Gear => {
+    return {
+        ...editingGear,
+        id: _uniqueId(),
+        role: {},
+        name: editingGear.name || '',
+        weight: editingGear.weight || 0,
+        category: editingGear.category || ('others' as GearCategory),
+    };
+};
+
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
@@ -300,4 +318,5 @@ export default {
     getWeightSortedItems,
     getGearUsedCount,
     formatFormStateToEditingGear,
+    convertedEditingGearToTempGear,
 };

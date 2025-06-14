@@ -2,13 +2,13 @@
     <div class="form-field field">
         <label>
             {{ label }}
-            <span v-if="required" class="text-red-700">*</span>
+            <span v-if="required" class="text-danger">*</span>
         </label>
         <slot />
         <small
             v-for="error in errors"
             :key="error.$uid"
-            class="block text-red-700"
+            class="block text-danger"
             >{{ error.$message }}</small
         >
     </div>

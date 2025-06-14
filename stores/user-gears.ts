@@ -40,6 +40,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             created: serverTimestamp(),
         };
 
+        // delete id
+        delete newGear.id;
+
         // delete undefined fields from newGear
         Object.entries(newGear).forEach(([key, value]) => {
             if (value === undefined) {

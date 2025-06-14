@@ -203,7 +203,15 @@ declare global {
         | 'GBP'
         | 'AUD'
         | 'CAD'
-        | 'SGD';
+        | 'SGD'
+        | 'NZD'
+        | 'SEK'
+        | 'CHF'
+        | 'THB'
+        | 'IDR'
+        | 'MYR'
+        | 'PHP'
+        | 'VND';
 
     type Currency = {
         code: CurrencyCode;

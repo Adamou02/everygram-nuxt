@@ -1,7 +1,7 @@
 <template>
     <div class="gear-card-list">
-        <div v-for="gear in gears" :key="gear.id">
-            <slot name="gear-card" :gear="gear"></slot>
+        <div v-for="(gear, index) in gears" :key="gear.id">
+            <slot name="gear-card" :gear="gear" :index="index"></slot>
         </div>
     </div>
 </template>

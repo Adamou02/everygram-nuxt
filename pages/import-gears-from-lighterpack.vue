@@ -1,0 +1,206 @@
+<template>
+    <div class="grid">
+        <div class="col-12 lg:col-10 lg:col-offset-1">
+            <Panel v-if="activeStep === 0">
+                <div class="flex flex-column gap-3">
+                    <h3>
+                        {{ $t('ACTION_IMPORT_GEARS_FROM_LIGHTERPACK') }}
+                    </h3>
+                    <div class="grid">
+                        <!-- instructions -->
+                        <div class="col-12 lg:col-6">
+                            <ul class="pl-5 line-height-3">
+                                <li
+                                    v-for="item in $t(
+                                        'INFO_IMPORT_LIGHTERPACK_GEARS_DESC',
+                                        {
+                                            max: constants.LIMIT.importLimit,
+                                        },
+                                    ).split(';')"
+                                >
+                                    {{ item }}
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- form -->
+                        <div class="col-12 lg:col-6">
+                            <div class="flex flex-column gap-3">
+                                <FormField
+                                    :label="$t('LABEL_LIGHTERPACK_URL')"
+                                    required
+                                    :errors="vuelidate.lighterpackUrl.$errors"
+                                >
+                                    <PrimeInputText
+                                        id="lighterpack-url"
+                                        v-model="formState.lighterpackUrl"
+                                        type="text"
+                                        placeholder="https://lighterpack.com/r/xxxxxx"
+                                        class="w-full"
+                                        :invalid="
+                                            vuelidate.lighterpackUrl.$error
+                                        "
+                                        @keypress.enter="onStart"
+                                    />
+                                </FormField>
+                                <FormField
+                                    :label="$t('LABEL_LIGHTERPACK_CURRENCY')"
+                                    required
+                                >
+                                    <PrimeDropdown
+                                        v-model="formState.currency"
+                                        :options="currencyOptions"
+                                        optionLabel="code"
+                                        optionValue="code"
+                                        class="w-full"
+                                    />
+                                </FormField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-column gap-3">
+                        <div class="flex gap-2 justify-content-end">
+                            <!-- cancel -->
+                            <PrimeButton
+                                size="small"
+                                :label="$t('ACTION_CANCEL')"
+                                text
+                                severity="secondary"
+                                outlined
+                                @click="
+                                    hasLastVisited
+                                        ? $router.back()
+                                        : $router.push('/gears')
+                                "
+                            />
+                            <PrimeButton
+                                size="small"
+                                :label="$t('ACTION_START')"
+                                icon="pi pi-arrow-right"
+                                iconPos="right"
+                                @click="onStart"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Panel>
+            <ImportGearsWidget
+                v-else
+                :title="$t('ACTION_IMPORT_GEARS_FROM_LIGHTERPACK')"
+                :is-loading="isLoading"
+                :error-msg="
+                    hasErrorInProcess
+                        ? $t('ERROR_FAILED_TO_IMPORT_LIGHTERPACK_DATA')
+                        : ''
+                "
+                :importable-gears="importableGears"
+                @back="onBack"
+                @complete="$router.push('/gears')"
+            />
+        </div>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import useVuelidate from '@vuelidate/core';
+import { helpers } from '@vuelidate/validators';
+
+definePageMeta({
+    middleware: ['auth-guard'],
+    layout: 'sub-page',
+});
+
+const { convertLighterpackGears } = useConvertLighterpackGears();
+const { hasLastVisited } = useNavigation();
+const i18n = useI18n();
+const currencyOptions = Object.values(constants.CURRENCIES);
+
+const activeStep = ref(0);
+const isLoading = ref(false);
+const hasErrorInProcess = ref(false);
+const convertedGears = ref<EditingGear[]>([]);
+const importableGears = ref<Gear[]>([]);
+const formState = reactive({
+    lighterpackUrl: '',
+    currency: preferenceUtils.getSelectedCurrencyCode() || 'TWD',
+});
+
+// form validation
+const urlPattern = /^https:\/\/lighterpack\.com\/r\/[a-zA-Z0-9]+$/;
+const formValidators = useFormValidators();
+const formRules = {
+    lighterpackUrl: {
+        required: formValidators.required,
+        validUrl: helpers.withMessage(
+            i18n.t('ERROR_INVALID_LIGHTERPACK_LINK'),
+            helpers.regex(urlPattern),
+        ),
+    },
+};
+const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
+
+const getLighterPackPackData = async (listId: string): Promise<any[][]> => {
+    const { getFunctions, httpsCallable } = await import('firebase/functions');
+    const functions = getFunctions(undefined, 'asia-northeast1');
+    const callable = httpsCallable(functions, 'getLighterPackPackData');
+    const result = await callable({ listId });
+
+    // result.data is { lighterpackGears: any[][] }
+    return (result.data as any).lighterpackGears || [];
+};
+
+const onBack = () => {
+    activeStep.value = 0;
+    hasErrorInProcess.value = false;
+    importableGears.value = [];
+};
+
+const onStart = async () => {
+    const valid = await vuelidate.value.$validate();
+    if (!valid) {
+        return;
+    }
+
+    hasErrorInProcess.value = false;
+    importableGears.value = [];
+    isLoading.value = true;
+    activeStep.value = 1;
+    try {
+        // extract the list ID from the provided URL
+        const listId = new URL(formState.lighterpackUrl).pathname
+            .split('/')
+            .pop();
+        if (!listId) {
+            hasErrorInProcess.value = true;
+            return;
+        }
+
+        // Fetch data from Lighterpack using Firebase callable function
+        const lighterpackGears = await getLighterPackPackData(listId);
+        if (!lighterpackGears || !Array.isArray(lighterpackGears)) {
+            hasErrorInProcess.value = true;
+            isLoading.value = false;
+            return;
+        }
+
+        // Convert the fetched data to our gear format
+        const gears = await convertLighterpackGears(lighterpackGears, {
+            currency: formState.currency,
+        });
+        if (!gears || !Array.isArray(gears)) {
+            hasErrorInProcess.value = true;
+            isLoading.value = false;
+            return;
+        }
+
+        // Update the reactive state with converted gears
+        convertedGears.value = gears;
+        importableGears.value = gears.map(
+            dataUtils.convertedEditingGearToTempGear,
+        );
+    } catch (e: any) {
+        hasErrorInProcess.value = true;
+    } finally {
+        isLoading.value = false;
+    }
+};
+</script>

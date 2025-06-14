@@ -164,7 +164,15 @@ export type CurrencyCode =
     | 'GBP'
     | 'AUD'
     | 'CAD'
-    | 'SGD';
+    | 'SGD'
+    | 'NZD'
+    | 'SEK'
+    | 'CHF'
+    | 'THB'
+    | 'IDR'
+    | 'MYR'
+    | 'PHP'
+    | 'VND';
 
 export type Currency = {
     code: CurrencyCode;

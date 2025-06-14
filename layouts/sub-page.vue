@@ -34,8 +34,7 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const navigation = useNavigationStore();
-const hasLastVisited = computed(() => !!navigation.previousRoute);
+const { hasLastVisited, previousRoutePath } = useNavigation();
 
 const i18n = useI18n();
 const backButton = computed<{ label: string; parent: string }>(() => {
@@ -63,7 +62,7 @@ const backButton = computed<{ label: string; parent: string }>(() => {
         default:
             return {
                 label: i18n.t('ACTION_BACK'),
-                parent: navigation.previousRoute?.path || '/',
+                parent: previousRoutePath.value || '/',
             };
     }
 });
