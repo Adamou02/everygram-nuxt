@@ -9,11 +9,10 @@
         <!-- desktop -->
         <PrimeColumn field="photo" :header="$t('LABEL_PHOTO')" class="w-3rem">
             <template #body="{ data }">
-                <GearPhoto
+                <!-- TODO: extend GearPhoto as GearPhotoEditable -->
+                <GearPhotoEditable
                     :gear="data"
                     :size="isLargeScreen ? 'sm' : 'xs'"
-                    editable
-                    clickToUpload
                 />
             </template>
         </PrimeColumn>
