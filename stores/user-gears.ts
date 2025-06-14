@@ -287,6 +287,12 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                     formattedGearData.archiveReason = undefined;
                 }
 
+                // clear imgUrl if photo is provided
+                const hasImgUrl = gearDocSnap.data()?.imgUrl;
+                if (gearData.photo && hasImgUrl) {
+                    formattedGearData.imgUrl = undefined;
+                }
+
                 // update gear data
                 const gearDataToUpdate = { ...formattedGearData };
                 // replace undefined value with deleteField()
