@@ -58,6 +58,8 @@ declare global {
         | 'delete'
         | 'remove';
 
+    type GearSource = 'csv' | 'lp';
+
     type Gear = {
         id: string;
         name: string;
@@ -81,6 +83,7 @@ declare global {
             sm: string;
             lg: string;
         };
+        source?: GearSource;
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };

@@ -47,6 +47,8 @@ export type GearArchiveReason =
     | 'broken'
     | 'other';
 
+export type GearSource = 'csv' | 'lp';
+
 export type Gear = {
     id: string;
     name: string;
@@ -70,6 +72,7 @@ export type Gear = {
         sm: string;
         lg: string;
     };
+    source?: GearSource;
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };

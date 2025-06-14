@@ -5,20 +5,7 @@
                 <h3>
                     {{ title }}
                 </h3>
-                <!-- message -->
-                <p v-if="isLoading">
-                    {{ $t('INFO_LOADING_LIGHTERPACK_DATA') }}
-                </p>
-                <p v-else-if="errorMsg" class="text-danger">
-                    {{ errorMsg }}
-                </p>
-                <p v-else class="flex flex-column gap-2">
-                    {{
-                        $t('INFO_IMPORT_GEARS_FROM_LIGHTERPACK', {
-                            num: importableGears.length,
-                        })
-                    }}
-                </p>
+                <slot name="message" />
                 <!-- actions -->
                 <div class="flex gap-2 justify-content-between mt-3">
                     <PrimeButton
@@ -40,10 +27,7 @@
                         icon="pi pi-download"
                         :loading="isImporting"
                         :disabled="
-                            isLoading ||
-                            !!errorMsg ||
-                            selectedCount === 0 ||
-                            isImporting
+                            isLoading || selectedCount === 0 || isImporting
                         "
                         @click="onImport"
                     />
@@ -110,7 +94,6 @@
 const props = defineProps<{
     title: string;
     isLoading: boolean;
-    errorMsg?: string;
     importableGears: Gear[];
 }>();
 

@@ -350,7 +350,11 @@ const resetData = () => {
 const userGearsStore = useUserGearsStore();
 const onImportGears = async () => {
     const gears = selectedGears.value.map(
-        dataUtils.formatFormStateToEditingGear,
+        (gear) =>
+            ({
+                ...dataUtils.formatFormStateToEditingGear(gear),
+                source: 'csv',
+            }) as EditingGear,
     );
 
     try {

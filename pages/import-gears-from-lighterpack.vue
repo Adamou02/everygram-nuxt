@@ -87,15 +87,26 @@
                 v-else
                 :title="$t('ACTION_IMPORT_GEARS_FROM_LIGHTERPACK')"
                 :is-loading="isLoading"
-                :error-msg="
-                    hasErrorInProcess
-                        ? $t('ERROR_FAILED_TO_IMPORT_LIGHTERPACK_DATA')
-                        : ''
-                "
                 :importable-gears="importableGears"
                 @back="onBack"
                 @complete="$router.push('/gears')"
-            />
+            >
+                <template #message>
+                    <p v-if="isLoading">
+                        {{ $t('INFO_LOADING_LIGHTERPACK_DATA') }}
+                    </p>
+                    <p v-else-if="hasErrorInProcess" class="text-danger">
+                        {{ $t('ERROR_FAILED_TO_IMPORT_LIGHTERPACK_DATA') }}
+                    </p>
+                    <p v-else>
+                        {{
+                            $t('INFO_IMPORT_GEARS_FROM_LIGHTERPACK', {
+                                num: importableGears.length,
+                            })
+                        }}
+                    </p>
+                </template>
+            </ImportGearsWidget>
         </div>
     </div>
 </template>
@@ -194,9 +205,10 @@ const onStart = async () => {
 
         // Update the reactive state with converted gears
         convertedGears.value = gears;
-        importableGears.value = gears.map(
-            dataUtils.convertedEditingGearToTempGear,
-        );
+        importableGears.value = gears.map((gear) => ({
+            ...dataUtils.convertedEditingGearToTempGear(gear),
+            source: 'lp',
+        }));
     } catch (e: any) {
         hasErrorInProcess.value = true;
     } finally {
