@@ -11,8 +11,9 @@
             <template #body="{ data }">
                 <GearPhoto
                     :gear="data"
-                    clickToUpload
                     :size="isLargeScreen ? 'sm' : 'xs'"
+                    editable
+                    clickToUpload
                 />
             </template>
         </PrimeColumn>

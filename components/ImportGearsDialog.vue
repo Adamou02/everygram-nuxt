@@ -349,27 +349,9 @@ const resetData = () => {
 
 const userGearsStore = useUserGearsStore();
 const onImportGears = async () => {
-    const gears = selectedGears.value.map((gear) => {
-        const newGear: EditingGear = {
-            name: gear.name,
-            weight: gear.weight,
-            category: gear.category,
-        };
-
-        // Optional fields
-        if (gear.description) {
-            newGear.description = gear.description;
-        }
-        if (gear.currency && gear.price) {
-            newGear.price = gear.price;
-            newGear.currency = gear.currency;
-        }
-        if (gear.acquiredDate) {
-            newGear.acquiredDate = gear.acquiredDate;
-        }
-
-        return newGear;
-    });
+    const gears = selectedGears.value.map(
+        dataUtils.formatFormStateToEditingGear,
+    );
 
     try {
         isImporting.value = true;

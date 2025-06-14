@@ -116,7 +116,7 @@
             </div>
             <!-- main -->
             <div :class="mainClass">
-                <div class="flex flex-column gap-5">
+                <div class="flex flex-column gap-4">
                     <div
                         v-for="category in displayGearCatergories"
                         :id="`category-section-${category}`"
@@ -151,12 +151,14 @@
                         </CategoryHeader>
                         <GearCardList
                             v-if="gearsGroupByCategory[category]"
+                            class="pb-2"
                             :gears="
                                 dataUtils.getWeightSortedItems(
                                     gearsGroupByCategory[category],
                                 )
                             "
                         >
+                            <!-- pb-2 for avoiding card shadow from leaking -->
                             <template #gear-card="{ gear }">
                                 <GearCardHorizontal
                                     :gear="gear"

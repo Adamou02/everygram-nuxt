@@ -6,12 +6,12 @@
                 'gear-photo--empty surface-100 text-color-lightest border-2 border-100':
                     !displayImageUrl,
                 'hover:border-dashed hover:border-400 cursor-pointer':
-                    !readonly && (!displayImageUrl || clickToUpload),
+                    editable && (!displayImageUrl || clickToUpload),
                 'opacity-50':
-                    !readonly && (isHovering || isCompressing || isLoading),
+                    editable && (isHovering || isCompressing || isLoading),
                 // show dashed border when hovering on empty gear photo
                 'border-dashed border-400':
-                    !readonly && isHovering && !displayImageUrl,
+                    editable && isHovering && !displayImageUrl,
                 'w-3rem h-3rem': !size || size === 'xs',
                 'w-4rem h-4rem': size === 'sm',
                 'w-6rem h-6rem': size === 'md',
@@ -30,7 +30,7 @@
         }}</span>
         <!-- invisible image uploader -->
         <div
-            v-if="!readonly"
+            v-if="editable"
             class="gear-photo__image-uploader absolute top-0 left-0 right-0 bottom-0"
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
@@ -51,7 +51,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     gear: Gear;
-    readonly?: boolean;
+    editable?: boolean;
     clickToUpload?: boolean;
     size?: 'xs' | 'sm' | 'md';
 }>();

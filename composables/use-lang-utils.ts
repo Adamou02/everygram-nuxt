@@ -15,7 +15,10 @@ export default function () {
             });
         },
         formatWeight: (weight: number, unit?: 'g' | 'kg') => {
-            const roundedWeight = _round(weight);
+            const roundedWeight = _round(
+                weight,
+                constants.LIMIT.maxFractionDigits,
+            );
             const weightG = i18n.t(
                 'INFO_WEIGHT_GRAM',
                 { weight: roundedWeight },

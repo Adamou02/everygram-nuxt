@@ -172,7 +172,9 @@ const getGearUsedCount = (gear: Gear, trips: Trip[]): number => {
  * If a field is not present in the form state, it will not be included in the result, hence
  * it is safe to use this function to update the gear without worrying about missing fields.
  *
- * Invlaid fields will be set to undefined, and then deleted by the database update function.
+ * Empty fields will be set to undefined, and then deleted by the database update function.
+ *
+ * !! We don't do validation here, as the form validation should handle it !!
  */
 const formatFormStateToEditingGear = (formState: any): EditingGear => {
     const gearData: EditingGear = {};
@@ -180,9 +182,7 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // name (required)
     if ('name' in formState) {
         gearData.name =
-            typeof formState?.name === 'string'
-                ? _trim(formState.name) || ''
-                : '';
+            typeof formState?.name === 'string' ? formState.name : '';
     }
 
     // weight (required)
@@ -220,8 +220,9 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // description (optional)
     if ('description' in formState) {
         gearData.description =
-            typeof formState?.description === 'string'
-                ? _trim(formState.description) || undefined
+            typeof formState?.description === 'string' &&
+            formState.description.length > 0
+                ? formState.description
                 : undefined;
     }
 
@@ -236,6 +237,7 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
 
         if (
             !isNaN(parsedPrice) &&
+            parsedPrice >= 0 &&
             typeof formState?.currency === 'string' &&
             constants.CURRENCY_CODES.includes(formState.currency)
         ) {
@@ -260,7 +262,7 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
             typeof formState?.acquiredDate === 'string' &&
             validateDateString(formState.acquiredDate)
         ) {
-            gearData.acquiredDate = formState.acquiredDate.trim();
+            gearData.acquiredDate = formState.acquiredDate;
         } else {
             gearData.acquiredDate = undefined;
         }
@@ -270,13 +272,11 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     if ('imgUrlSm' in formState && 'imgUrlLg' in formState) {
         if (
             typeof formState.imgUrlSm === 'string' &&
-            formState.imgUrlSm.trim() &&
-            typeof formState.imgUrlLg === 'string' &&
-            formState.imgUrlLg.trim()
+            typeof formState.imgUrlLg === 'string'
         ) {
             gearData.imgUrl = {
-                sm: formState.imgUrlSm.trim(),
-                lg: formState.imgUrlLg.trim(),
+                sm: formState.imgUrlSm,
+                lg: formState.imgUrlLg,
             };
         } else {
             gearData.imgUrl = undefined;

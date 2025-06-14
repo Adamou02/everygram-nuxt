@@ -32,13 +32,13 @@ const convertWeightToGrams = (
 
     switch (unit) {
         case 'gram':
-            return Math.round(weight);
+            return _round(weight, constants.LIMIT.maxFractionDigits);
         case 'kilogram':
-            return Math.round(weight * 1000);
+            return _round(weight * 1000);
         case 'ounce':
-            return Math.round(weight * 28.3495);
+            return _round(weight * 28.3495);
         case 'pound':
-            return Math.round(weight * 453.592);
+            return _round(weight * 453.592);
         default:
             return 0;
     }
@@ -160,14 +160,22 @@ export const useConvertLighterpackGears = () => {
             // format name, description, weight, price, image urls locally
             const partialData: any = {};
             const itemName = row[LIGHTERPACK_CSV_COLUMNS_MAP.ITEM_NAME];
-            partialData.name = itemName;
+            partialData.name = itemName
+                .trim()
+                .slice(0, constants.LIMIT.maxNameLength);
             const desc = row[LIGHTERPACK_CSV_COLUMNS_MAP.DESC];
             if (desc) {
-                partialData.description = desc;
+                partialData.description = desc
+                    .trim()
+                    .slice(0, constants.LIMIT.maxGearDescriptionLength);
             }
             const weight = row[LIGHTERPACK_CSV_COLUMNS_MAP.WEIGHT];
             const weightUnit = row[LIGHTERPACK_CSV_COLUMNS_MAP.UNIT];
-            partialData.weight = convertWeightToGrams(weight, weightUnit);
+            partialData.weight = _clamp(
+                convertWeightToGrams(weight, weightUnit),
+                constants.LIMIT.minWeight,
+                constants.LIMIT.maxWeight,
+            );
             const price = row[LIGHTERPACK_CSV_COLUMNS_MAP.PRICE];
             if (+price > 0 && options.currency) {
                 // only set price and currency if price is greater than 0

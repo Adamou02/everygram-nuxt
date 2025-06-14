@@ -8,7 +8,6 @@
         <GearPhoto
             class="flex-shrink-0"
             :gear="gear"
-            readonly
             :size="size === 'lg' ? 'md' : 'sm'"
         />
         <GearNameWithBrand :gear="gear" :size="size" />
