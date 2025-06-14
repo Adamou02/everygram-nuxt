@@ -10,13 +10,15 @@
                 <div class="flex gap-2 justify-content-between mt-3">
                     <PrimeButton
                         size="small"
+                        rounded
                         :label="$t('ACTION_BACK')"
                         icon="pi pi-arrow-left"
-                        outlined
+                        text
                         @click="$emit('back')"
                     />
                     <PrimeButton
                         size="small"
+                        rounded
                         :label="
                             $t(
                                 'ACTION_IMPORT_NUM_GEARS',
@@ -37,6 +39,7 @@
         <div class="flex justify-content-end gap-2">
             <PrimeButton
                 size="small"
+                rounded
                 :label="$t('ACTION_SELECT_ALL')"
                 icon="pi pi-check"
                 outlined
@@ -44,6 +47,7 @@
             />
             <PrimeButton
                 size="small"
+                rounded
                 :label="$t('ACTION_DESELECT_ALL')"
                 icon="pi pi-times"
                 outlined

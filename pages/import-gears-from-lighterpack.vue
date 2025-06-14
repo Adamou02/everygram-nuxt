@@ -6,22 +6,7 @@
                     <h3>
                         {{ $t('ACTION_IMPORT_GEARS_FROM_LIGHTERPACK') }}
                     </h3>
-                    <div class="grid">
-                        <!-- instructions -->
-                        <div class="col-12 lg:col-6">
-                            <ul class="pl-5 line-height-3">
-                                <li
-                                    v-for="item in $t(
-                                        'INFO_IMPORT_LIGHTERPACK_GEARS_DESC',
-                                        {
-                                            max: constants.LIMIT.importLimit,
-                                        },
-                                    ).split(';')"
-                                >
-                                    {{ item }}
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="grid lg:flex-row-reverse">
                         <!-- form -->
                         <div class="col-12 lg:col-6">
                             <div class="flex flex-column gap-3">
@@ -44,7 +29,6 @@
                                 </FormField>
                                 <FormField
                                     :label="$t('LABEL_LIGHTERPACK_CURRENCY')"
-                                    required
                                 >
                                     <PrimeDropdown
                                         v-model="formState.currency"
@@ -54,31 +38,49 @@
                                         class="w-full"
                                     />
                                 </FormField>
+                                <!-- form actions -->
+                                <div class="flex gap-2 justify-content-end">
+                                    <PrimeButton
+                                        size="small"
+                                        :label="$t('ACTION_CANCEL')"
+                                        text
+                                        severity="secondary"
+                                        outlined
+                                        rounded
+                                        @click="
+                                            hasLastVisited
+                                                ? $router.back()
+                                                : $router.push('/gears')
+                                        "
+                                    />
+                                    <PrimeButton
+                                        size="small"
+                                        :label="$t('ACTION_START')"
+                                        icon="pi pi-arrow-right"
+                                        iconPos="right"
+                                        rounded
+                                        @click="onStart"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex flex-column gap-3">
-                        <div class="flex gap-2 justify-content-end">
-                            <!-- cancel -->
-                            <PrimeButton
-                                size="small"
-                                :label="$t('ACTION_CANCEL')"
-                                text
-                                severity="secondary"
-                                outlined
-                                @click="
-                                    hasLastVisited
-                                        ? $router.back()
-                                        : $router.push('/gears')
-                                "
-                            />
-                            <PrimeButton
-                                size="small"
-                                :label="$t('ACTION_START')"
-                                icon="pi pi-arrow-right"
-                                iconPos="right"
-                                @click="onStart"
-                            />
+                        <div class="col-12 lg:hidden">
+                            <HorizontalLine />
+                        </div>
+                        <!-- instructions -->
+                        <div class="col-12 lg:col-6">
+                            <ul class="pl-5 line-height-3">
+                                <li
+                                    v-for="item in $t(
+                                        'INFO_IMPORT_LIGHTERPACK_GEARS_DESC',
+                                        {
+                                            max: constants.LIMIT.importLimit,
+                                        },
+                                    ).split(';')"
+                                >
+                                    {{ item }}
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
