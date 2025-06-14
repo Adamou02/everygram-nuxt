@@ -47,6 +47,8 @@ export type GearArchiveReason =
     | 'broken'
     | 'other';
 
+export type GearSource = 'csv' | 'lp';
+
 export type Gear = {
     id: string;
     name: string;
@@ -66,6 +68,11 @@ export type Gear = {
     price?: number;
     currency?: CurrencyCode;
     acquiredDate?: string; // ISO string or Date
+    imgUrl?: {
+        sm: string;
+        lg: string;
+    };
+    source?: GearSource;
 };
 export type EditingGear = Partial<Gear>;
 export type GearWithQuantity = Gear & { quantity: number };
@@ -160,7 +167,15 @@ export type CurrencyCode =
     | 'GBP'
     | 'AUD'
     | 'CAD'
-    | 'SGD';
+    | 'SGD'
+    | 'NZD'
+    | 'SEK'
+    | 'CHF'
+    | 'THB'
+    | 'IDR'
+    | 'MYR'
+    | 'PHP'
+    | 'VND';
 
 export type Currency = {
     code: CurrencyCode;

@@ -58,6 +58,8 @@ declare global {
         | 'delete'
         | 'remove';
 
+    type GearSource = 'csv' | 'lp';
+
     type Gear = {
         id: string;
         name: string;
@@ -77,6 +79,11 @@ declare global {
         price?: number;
         currency?: CurrencyCode;
         acquiredDate?: string; // ISO string or Date
+        imgUrl?: {
+            sm: string;
+            lg: string;
+        };
+        source?: GearSource;
     };
     type EditingGear = Partial<Gear>;
     type GearWithQuantity = Gear & { quantity: number };
@@ -199,7 +206,15 @@ declare global {
         | 'GBP'
         | 'AUD'
         | 'CAD'
-        | 'SGD';
+        | 'SGD'
+        | 'NZD'
+        | 'SEK'
+        | 'CHF'
+        | 'THB'
+        | 'IDR'
+        | 'MYR'
+        | 'PHP'
+        | 'VND';
 
     type Currency = {
         code: CurrencyCode;

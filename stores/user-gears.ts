@@ -40,6 +40,9 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             created: serverTimestamp(),
         };
 
+        // delete id
+        delete newGear.id;
+
         // delete undefined fields from newGear
         Object.entries(newGear).forEach(([key, value]) => {
             if (value === undefined) {
@@ -282,6 +285,12 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
                     formattedGearData.archived = undefined;
                     formattedGearData.archiveNote = undefined;
                     formattedGearData.archiveReason = undefined;
+                }
+
+                // clear imgUrl if photo is provided
+                const hasImgUrl = gearDocSnap.data()?.imgUrl;
+                if (gearData.photo && hasImgUrl) {
+                    formattedGearData.imgUrl = undefined;
                 }
 
                 // update gear data

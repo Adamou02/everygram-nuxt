@@ -65,13 +65,6 @@
                     </div>
                     <div class="flex flex-row gap-2">
                         <PrimeButton
-                            :label="$t('ACTION_CANCEL')"
-                            text
-                            rounded
-                            severity="secondary"
-                            @click="$emit('cancel')"
-                        />
-                        <PrimeButton
                             rounded
                             :label="$t('ACTION_ADD')"
                             :disabled="!selectedGears.length"

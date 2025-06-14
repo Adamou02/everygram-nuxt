@@ -119,9 +119,13 @@ const getTripBannerImageUrl = (
 };
 
 const getGearPhotoUrl = (gear: Gear, size?: ThumbnailSize): string => {
-    return gear.photo
-        ? (size && gear.photo.thumbnails?.[size].url) || gear.photo.url
-        : '';
+    if (gear.photo) {
+        return (size && gear.photo.thumbnails?.[size].url) || gear.photo.url;
+    }
+    if (gear.imgUrl) {
+        return gear.imgUrl.sm;
+    }
+    return '';
 };
 
 const getTripDays = (trip: Trip | TripShare): number => {
@@ -168,7 +172,9 @@ const getGearUsedCount = (gear: Gear, trips: Trip[]): number => {
  * If a field is not present in the form state, it will not be included in the result, hence
  * it is safe to use this function to update the gear without worrying about missing fields.
  *
- * Invlaid fields will be set to undefined, and then deleted by the database update function.
+ * Empty fields will be set to undefined, and then deleted by the database update function.
+ *
+ * !! We don't do validation here, as the form validation should handle it !!
  */
 const formatFormStateToEditingGear = (formState: any): EditingGear => {
     const gearData: EditingGear = {};
@@ -176,9 +182,7 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // name (required)
     if ('name' in formState) {
         gearData.name =
-            typeof formState?.name === 'string'
-                ? _trim(formState.name) || ''
-                : '';
+            typeof formState?.name === 'string' ? formState.name : '';
     }
 
     // weight (required)
@@ -216,19 +220,28 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // description (optional)
     if ('description' in formState) {
         gearData.description =
-            typeof formState?.description === 'string'
-                ? _trim(formState.description) || undefined
+            typeof formState?.description === 'string' &&
+            formState.description.length > 0
+                ? formState.description
                 : undefined;
     }
 
     // currency and price (optional)
     if ('price' in formState && 'currency' in formState) {
+        const parsedPrice =
+            typeof formState?.price === 'number'
+                ? formState.price
+                : typeof formState?.price === 'string'
+                  ? parseFloat(formState.price)
+                  : NaN;
+
         if (
-            isNumber(formState?.price) &&
+            !isNaN(parsedPrice) &&
+            parsedPrice >= 0 &&
             typeof formState?.currency === 'string' &&
             constants.CURRENCY_CODES.includes(formState.currency)
         ) {
-            gearData.price = formState.price;
+            gearData.price = parsedPrice;
             gearData.currency = formState.currency;
         } else {
             gearData.price = undefined;
@@ -239,16 +252,49 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
     // acquiredDate (optional)
     if ('acquiredDate' in formState) {
         if (
+            // date
             formState?.acquiredDate instanceof Date &&
             !isNaN(formState.acquiredDate.getTime())
         ) {
             gearData.acquiredDate = formatDateToString(formState.acquiredDate);
+        } else if (
+            // string
+            typeof formState?.acquiredDate === 'string' &&
+            validateDateString(formState.acquiredDate)
+        ) {
+            gearData.acquiredDate = formState.acquiredDate;
         } else {
             gearData.acquiredDate = undefined;
         }
     }
 
+    // imgUrl (optional)
+    if ('imgUrlSm' in formState && 'imgUrlLg' in formState) {
+        if (
+            typeof formState.imgUrlSm === 'string' &&
+            typeof formState.imgUrlLg === 'string'
+        ) {
+            gearData.imgUrl = {
+                sm: formState.imgUrlSm,
+                lg: formState.imgUrlLg,
+            };
+        } else {
+            gearData.imgUrl = undefined;
+        }
+    }
+
     return gearData;
+};
+
+const convertedEditingGearToTempGear = (editingGear: EditingGear): Gear => {
+    return {
+        ...editingGear,
+        id: _uniqueId(),
+        role: {},
+        name: editingGear.name || '',
+        weight: editingGear.weight || 0,
+        category: editingGear.category || ('others' as GearCategory),
+    };
 };
 
 export default {
@@ -272,4 +318,5 @@ export default {
     getWeightSortedItems,
     getGearUsedCount,
     formatFormStateToEditingGear,
+    convertedEditingGearToTempGear,
 };

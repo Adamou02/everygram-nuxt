@@ -87,7 +87,7 @@ const days = computed(() => dataUtils.getTripDays(props.trip));
 .trip-card {
     transition-property: box-shadow;
     transition-duration: 0.1s;
-    transition-timing-function: ease-in;
+    transition-timing-function: ease-out;
 
     &__image {
         &,

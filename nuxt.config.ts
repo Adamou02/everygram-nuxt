@@ -85,6 +85,7 @@ export default defineNuxtConfig({
         '/archived-gears': { ssr: false },
         '/trips': { ssr: false },
         '/trip/**': { ssr: false },
+        '/import-gears-from-lighterpack': { ssr: false },
     },
     modules: ['@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/i18n', 'nuxt-primevue'],
     lodash: {

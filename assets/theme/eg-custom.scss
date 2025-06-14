@@ -95,6 +95,10 @@ img {
     text-overflow: ellipsis;
 }
 
+.text-danger {
+    color: var(--red-700) !important;
+}
+
 .surface-glass {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(6px);
@@ -128,6 +132,10 @@ img {
 
 .cursor-pointer {
     cursor: pointer !important;
+}
+
+.user-select-none {
+    user-select: none !important;
 }
 
 .hide-when-empty:empty {

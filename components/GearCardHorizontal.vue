@@ -9,20 +9,22 @@
     >
         <div class="flex align-items-start justify-content-between">
             <GearLabel :gear="gear" :size="isLargeScreen ? 'lg' : 'md'" />
-            <GearActionsMenuButton
-                v-if="actionItems.length"
-                :gear="gear"
-                :actions="actionItems"
-                @gear-edit="$emit('gear-edit', $event)"
-                @gear-edit-archive="$emit('gear-edit-archive', $event)"
-                @gear-edit-quantity="$emit('gear-edit-quantity', $event)"
-                @gear-add-to-gears="$emit('gear-add-to-gears', $event)"
-                @gear-archive="$emit('gear-archive', $event)"
-                @gear-unarchive="$emit('gear-unarchive', $event)"
-                @gear-delete="$emit('gear-delete', $event)"
-                @gear-remove="$emit('gear-remove', $event)"
-                class="gear-card-horizontal__actions"
-            />
+            <slot name="actions">
+                <GearActionsMenuButton
+                    v-if="actionItems?.length"
+                    :gear="gear"
+                    :actions="actionItems"
+                    @gear-edit="$emit('gear-edit', $event)"
+                    @gear-edit-archive="$emit('gear-edit-archive', $event)"
+                    @gear-edit-quantity="$emit('gear-edit-quantity', $event)"
+                    @gear-add-to-gears="$emit('gear-add-to-gears', $event)"
+                    @gear-archive="$emit('gear-archive', $event)"
+                    @gear-unarchive="$emit('gear-unarchive', $event)"
+                    @gear-delete="$emit('gear-delete', $event)"
+                    @gear-remove="$emit('gear-remove', $event)"
+                    class="gear-card-horizontal__actions"
+                />
+            </slot>
         </div>
         <div class="flex align-items-center justify-content-between gap-2">
             <slot name="info-left"></slot>
@@ -34,7 +36,7 @@
 <script setup lang="ts">
 defineProps<{
     gear: Gear;
-    actionItems: GearAction[];
+    actionItems?: GearAction[];
 }>();
 
 defineEmits<{
@@ -54,6 +56,9 @@ const { isLargeScreen } = useDeviceMeta();
 <style lang="scss">
 @import '~/assets/theme/primeflex/core/_variables.scss';
 .gear-card-horizontal {
+    transition-property: box-shadow;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
     &__actions {
         position: relative;
         top: -0.25rem;

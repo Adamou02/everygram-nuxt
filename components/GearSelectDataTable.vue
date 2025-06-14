@@ -21,11 +21,7 @@
             class="w-3rem"
         >
             <template #body="{ data }">
-                <GearPhoto
-                    :gear="data"
-                    readonly
-                    :size="isLargeScreen ? 'sm' : 'xs'"
-                />
+                <GearPhoto :gear="data" :size="isLargeScreen ? 'sm' : 'xs'" />
             </template>
         </PrimeColumn>
         <!-- name -->

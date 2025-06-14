@@ -1,6 +1,6 @@
 import 'firebase/auth';
 import firebaseConfig from '~/firebase.config.json';
-import { initializeApp, getApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 export default defineNuxtPlugin({
     name: 'firebase.client',
     async setup(nuxtApp) {

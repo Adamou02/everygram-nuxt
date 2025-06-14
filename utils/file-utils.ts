@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-const parseCsv = (file: File): Promise<string[][]> => {
+const parseCsvFile = (file: File): Promise<string[][]> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
@@ -42,6 +42,6 @@ const supportsImage = async (imgSrc: string) => {
 };
 
 export default {
-    parseCsv,
+    parseCsvFile,
     supportsImage,
 };

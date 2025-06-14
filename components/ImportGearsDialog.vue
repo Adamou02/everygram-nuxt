@@ -100,7 +100,7 @@
                             })
                         "
                     >
-                        <ul class="text-red-700 pl-3 line-height-3">
+                        <ul class="text-danger pl-3 line-height-3">
                             <li v-for="row in invalidRows">
                                 {{
                                     $t('INFO_INVALID_GEAR_DATA_ROW', {
@@ -190,7 +190,7 @@ const gearNameExists = ref<Record<string, boolean>>({});
 const onFileSelected = async (file: File) => {
     resetData();
     isFormatting.value = true;
-    const parsedContent = await fileUtils.parseCsv(file);
+    const parsedContent = await fileUtils.parseCsvFile(file);
     importedGearRows.value = parsedContent;
     parsedContent.forEach((row, index) => {
         if (formattedGearsData.value.length >= constants.LIMIT.importLimit) {
@@ -349,27 +349,13 @@ const resetData = () => {
 
 const userGearsStore = useUserGearsStore();
 const onImportGears = async () => {
-    const gears = selectedGears.value.map((gear) => {
-        const newGear: EditingGear = {
-            name: gear.name,
-            weight: gear.weight,
-            category: gear.category,
-        };
-
-        // Optional fields
-        if (gear.description) {
-            newGear.description = gear.description;
-        }
-        if (gear.currency && gear.price) {
-            newGear.price = gear.price;
-            newGear.currency = gear.currency;
-        }
-        if (gear.acquiredDate) {
-            newGear.acquiredDate = gear.acquiredDate;
-        }
-
-        return newGear;
-    });
+    const gears = selectedGears.value.map(
+        (gear) =>
+            ({
+                ...dataUtils.formatFormStateToEditingGear(gear),
+                source: 'csv',
+            }) as EditingGear,
+    );
 
     try {
         isImporting.value = true;

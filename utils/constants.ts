@@ -108,6 +108,14 @@ const CURRENCIES: Record<CurrencyCode, Currency> = {
     AUD: { code: 'AUD', label: 'A$', fraction: 2 },
     CAD: { code: 'CAD', label: 'C$', fraction: 2 },
     SGD: { code: 'SGD', label: 'S$', fraction: 2 },
+    NZD: { code: 'NZD', label: 'NZ$', fraction: 2 },
+    SEK: { code: 'SEK', label: 'kr', fraction: 2 },
+    CHF: { code: 'CHF', label: 'CHF', fraction: 2 },
+    THB: { code: 'THB', label: '฿', fraction: 2 },
+    IDR: { code: 'IDR', label: 'Rp', fraction: 0 },
+    MYR: { code: 'MYR', label: 'RM', fraction: 2 },
+    PHP: { code: 'PHP', label: '₱', fraction: 2 },
+    VND: { code: 'VND', label: '₫', fraction: 0 },
 };
 
 const CURRENCY_CODES = Object.keys(CURRENCIES) as CurrencyCode[];
