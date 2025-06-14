@@ -54,17 +54,8 @@
                                 />
                             </NuxtLink>
                             <!-- import gears -->
-                            <PrimeButton
-                                severity="secondary"
-                                rounded
-                                outlined
-                                :label="
-                                    isLargeScreen
-                                        ? $t('ACTION_IMPORT_GEARS')
-                                        : ''
-                                "
-                                icon="pi pi-file-arrow-up"
-                                @click="isOpenImportGearsDialog = true"
+                            <ImportGearsButton
+                                :type="isLargeScreen ? 'text' : 'icon'"
                             />
                             <!-- create gear -->
                             <PrimeButton
@@ -220,23 +211,12 @@
                     icon="pi pi-plus"
                     @click="() => onCreateGear()"
                 />
-                <PrimeButton
-                    severity="secondary"
-                    rounded
-                    outlined
-                    :label="$t('ACTION_IMPORT_GEARS')"
-                    icon="pi pi-file-arrow-up"
-                    @click="isOpenImportGearsDialog = true"
-                />
+                <ImportGearsButton type="text" />
             </div>
         </template>
     </EmptyState>
     <GearEditorDialog />
     <GearArchiveDialog />
-    <ImportGearsDialog
-        :is-open="isOpenImportGearsDialog"
-        @close="isOpenImportGearsDialog = false"
-    />
 </template>
 
 <script setup lang="ts">
@@ -266,9 +246,6 @@ const {
     gearsGroupByCategory,
     displayGearCatergories,
 } = useDisplayGears();
-
-// for ImportGearsDialog
-const isOpenImportGearsDialog = ref<boolean>(false);
 
 onMounted(() => {
     analyticsUtils.log(constants.ANALYTICS_EVENTS.VIEW_GEARS_PAGE);
