@@ -37,7 +37,7 @@ const EMPTY_TRIP_DATA: Omit<Trip, 'id'> = {
     consumables: {},
 };
 
-const LOCALES = ['en', 'zh-tw'];
+const LOCALES = ['en', 'zh-tw', 'ja'];
 
 const LIMIT = {
     minWeight: 0,

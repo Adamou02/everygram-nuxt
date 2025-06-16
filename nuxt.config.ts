@@ -108,7 +108,14 @@ export default defineNuxtConfig({
                 iso: 'zh-TW',
                 file: 'zh-tw.json',
             },
+            {
+                code: 'ja',
+                name: '日本語',
+                iso: 'ja-JP',
+                file: 'ja.json',
+            },
         ],
+        lazy: true,
         defaultLocale: 'en',
         strategy: 'no_prefix',
         detectBrowserLanguage: {
