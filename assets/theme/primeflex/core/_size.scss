@@ -1,6 +1,6 @@
 @use 'sass:map';
 
-@function size-map($default, $prefix, $size: 30) {
+@function size-map($default, $prefix, $size: 50) {
     $size-map: ();
 
     /* Add content type objects to map */

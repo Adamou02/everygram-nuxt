@@ -32,25 +32,23 @@
                 >
                     {{ trip.title }}
                 </h1>
-                <div class="mt-2">
-                    <!-- trip date -->
-                    <div v-if="formattedDate" class="trip-date mr-3">
-                        <!-- calendar icon -->
-                        <i class="pi pi-calendar mr-1 text-600" />
-                        <!-- dates -->
-                        {{ formattedDate }}
-                        <!-- days for multi-day trips -->
-                        <template v-if="trip.dateMode === 'multi'">
-                            ・{{ $t('INFO_DAYS', { num: days }, days) }}
-                        </template>
-                    </div>
-                    <!-- trip description -->
-                    <span
-                        v-if="trip.description"
-                        class="text-color line-height-3 whitespace-pre-wrap"
-                        >{{ trip.description }}</span
-                    >
+                <!-- trip date -->
+                <div v-if="formattedDate" class="trip-date mt-2">
+                    <!-- calendar icon -->
+                    <i class="pi pi-calendar mr-1 text-600" />
+                    <!-- dates -->
+                    {{ formattedDate }}
+                    <!-- days for multi-day trips -->
+                    <template v-if="trip.dateMode === 'multi'">
+                        ・{{ $t('INFO_DAYS', { num: days }, days) }}
+                    </template>
                 </div>
+                <!-- trip description -->
+                <TripDescription
+                    v-if="trip.description"
+                    :trip="trip"
+                    class="mt-2"
+                />
             </div>
             <div
                 class="col-12 lg:col-4 flex align-items-start lg:justify-content-end hide-when-empty"
