@@ -36,6 +36,7 @@
         "firebase": "^11.9.1",
         "firebase-admin": "^12.1.0",
         "firebase-functions": "^5.0.1",
+        "marked": "^15.0.12",
         "papaparse": "^5.4.1",
         "pinia": "^2.1.7",
         "primeicons": "^7.0.0",

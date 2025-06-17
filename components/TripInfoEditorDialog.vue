@@ -5,7 +5,7 @@
             editingTrip ? $t('ACTION_EDIT_TRIP') : $t('ACTION_CREATE_TRIP')
         "
         modal
-        class="w-full mx-2 max-w-20rem"
+        class="w-full mx-2 max-w-50rem"
         @update:visible="
             (value: boolean) => {
                 if (!value) {
@@ -16,73 +16,88 @@
         "
     >
         <template v-if="isOpen" #default>
-            <FormField
-                :label="$t('LABEL_NAME')"
-                :errors="vuelidate.title.$errors"
-                required
-            >
-                <PrimeInputText
-                    v-model="formState.title"
-                    class="w-full"
-                    :minlength="constants.LIMIT.minNameLength"
-                    :maxlength="constants.LIMIT.maxNameLength"
-                    :autofocus="!editingTrip"
-                    :invalid="vuelidate.title.$error"
-                    @keypress.enter="onSubmit"
-                />
-            </FormField>
-            <FormField
-                :label="
-                    formState.dateMode === 'multi'
-                        ? $t('LABEL_TRIP_DATES')
-                        : $t('LABEL_TRIP_DATE')
-                "
-            >
-                <PrimeSelectButton
-                    v-model="formState.dateMode"
-                    :options="dateModeOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    aria-labelledby="Date Mode"
-                    class="mb-2 p-selectbutton--stretch"
-                />
-                <PrimeInputGroup v-if="formState.dateMode === 'multi'">
-                    <PrimeCalendar
-                        v-model="formState.startDate"
-                        :dateFormat="constants.DATE_FORMAT"
-                        :placeholder="constants.DATE_PLACEHOLDER"
-                        class="w-7rem"
-                    />
-                    <PrimeInputGroupAddon class="min-w-0 p-1"
-                        >~</PrimeInputGroupAddon
+            <div class="grid">
+                <!-- primary data: left column -->
+                <div class="col-12 lg:col-5">
+                    <FormField
+                        :label="$t('LABEL_NAME')"
+                        :errors="vuelidate.title.$errors"
+                        required
                     >
-                    <PrimeCalendar
-                        v-model="formState.endDate"
-                        :dateFormat="constants.DATE_FORMAT"
-                        :placeholder="constants.DATE_PLACEHOLDER"
-                        class="w-7rem"
-                    />
-                </PrimeInputGroup>
-                <PrimeCalendar
-                    v-else-if="formState.dateMode === 'single'"
-                    v-model="formState.startDate"
-                    :dateFormat="constants.DATE_FORMAT"
-                    :placeholder="constants.DATE_PLACEHOLDER"
-                    class="w-full"
-                >
-                </PrimeCalendar>
-            </FormField>
-            <!-- textarea form field for trip description -->
-            <FormField :label="$t('LABEL_DESCRIPTION')">
-                <PrimeTextarea
-                    v-model="formState.description"
-                    class="w-full"
-                    rows="2"
-                    autoResize
-                    :invalid="vuelidate.description.$error"
-                    :maxlength="constants.LIMIT.maxTripDescriptionLength"
-                />
-            </FormField>
+                        <PrimeInputText
+                            v-model="formState.title"
+                            class="w-full"
+                            :minlength="constants.LIMIT.minNameLength"
+                            :maxlength="constants.LIMIT.maxNameLength"
+                            :autofocus="!editingTrip"
+                            :invalid="vuelidate.title.$error"
+                            @keypress.enter="onSubmit"
+                        />
+                    </FormField>
+                    <FormField
+                        :label="
+                            formState.dateMode === 'multi'
+                                ? $t('LABEL_TRIP_DATES')
+                                : $t('LABEL_TRIP_DATE')
+                        "
+                    >
+                        <PrimeSelectButton
+                            v-model="formState.dateMode"
+                            :options="dateModeOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            aria-labelledby="Date Mode"
+                            class="mb-2 p-selectbutton--stretch"
+                        />
+                        <PrimeInputGroup v-if="formState.dateMode === 'multi'">
+                            <PrimeCalendar
+                                v-model="formState.startDate"
+                                :dateFormat="constants.DATE_FORMAT"
+                                :placeholder="constants.DATE_PLACEHOLDER"
+                                class="w-7rem"
+                            />
+                            <PrimeInputGroupAddon class="min-w-0 p-1"
+                                >~</PrimeInputGroupAddon
+                            >
+                            <PrimeCalendar
+                                v-model="formState.endDate"
+                                :dateFormat="constants.DATE_FORMAT"
+                                :placeholder="constants.DATE_PLACEHOLDER"
+                                class="w-7rem"
+                            />
+                        </PrimeInputGroup>
+                        <PrimeCalendar
+                            v-else-if="formState.dateMode === 'single'"
+                            v-model="formState.startDate"
+                            :dateFormat="constants.DATE_FORMAT"
+                            :placeholder="constants.DATE_PLACEHOLDER"
+                            class="w-full"
+                        >
+                        </PrimeCalendar>
+                    </FormField>
+                </div>
+                <!-- secondary data: right column -->
+                <div class="col-12 lg:col-7">
+                    <!-- textarea form field for trip description -->
+                    <FormField :label="$t('LABEL_DESCRIPTION')">
+                        <PrimeTextarea
+                            v-model="formState.description"
+                            class="w-full"
+                            rows="6"
+                            autoResize
+                            :invalid="vuelidate.description.$error"
+                            :maxlength="
+                                constants.LIMIT.maxTripDescriptionLength
+                            "
+                        />
+                        <HintInfo
+                            :description="$t('INFO_MARKDOWN_SUPPORTED')"
+                            size="xs"
+                            class="mt-1"
+                        />
+                    </FormField>
+                </div>
+            </div>
         </template>
         <template #footer>
             <PrimeButton
