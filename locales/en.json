@@ -219,8 +219,6 @@
     "LABEL_DISPLAY_NAME": "Display Name",
     "LABEL_EMAIL": "Email",
     "LABEL_END_DATE": "End Date",
-    "LABEL_GEARS_WEIGHT": "Gears Weight",
-    "LABEL_GEARS": "Gears",
     "LABEL_LIGHTERPACK_CURRENCY": "Currency used for gear price in LighterPack",
     "LABEL_LIGHTERPACK_URL": "LighterPack share link",
     "LABEL_LOCALE_CURRENT": "Language - {locale}",
