@@ -5,6 +5,7 @@ export type UserMeta = {
     locale: Locale | null;
     currency: CurrencyCode | null;
     gearCount: number;
+    archivedGearCount: number;
     tripCount: number;
     tripShareCount: number;
     lastUpdated?: Timestamp;

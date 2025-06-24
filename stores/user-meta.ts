@@ -23,13 +23,17 @@ export const useUserMetaStore = defineStore('userMetaStore', () => {
             userMeta.value = docSnap.data() as UserMeta;
         } else {
             // Create a new userMeta doc with default values
-            await setDoc(docRef, {
+            const defaultMeta: Omit<UserMeta, 'lastUpdated'> = {
                 userId: user.value.uid,
                 locale: null,
                 currency: null,
                 gearCount: 0,
+                archivedGearCount: 0,
                 tripCount: 0,
                 tripShareCount: 0,
+            };
+            await setDoc(docRef, {
+                ...defaultMeta,
                 lastUpdated: serverTimestamp(),
             });
             const newDocSnap = await getDoc(docRef);
@@ -47,17 +51,17 @@ export const useUserMetaStore = defineStore('userMetaStore', () => {
         isInitialized.value = true;
     };
 
-    const updateUserMeta = async (profileData: Partial<UserMeta>) => {
-        if (!user.value) return;
+    const updateUserMeta = async (userMetaData: Partial<UserMeta>) => {
+        if (!user.value || !userMeta.value) return;
         const docRef = doc(db, 'userMeta', user.value.uid);
         await updateDoc(docRef, {
-            ...profileData,
+            ...userMetaData,
             lastUpdated: serverTimestamp(),
         });
-        const newDocSnap = await getDoc(docRef);
-        if (newDocSnap.exists()) {
-            userMeta.value = newDocSnap.data() as UserMeta;
-        }
+        userMeta.value = {
+            ...userMeta.value,
+            ...userMetaData,
+        };
     };
 
     const destroy = () => {
