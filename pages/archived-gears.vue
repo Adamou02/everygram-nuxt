@@ -128,4 +128,8 @@ const onUnarchiveGear = async (gear: Gear) => {
         life: constants.TOAST_TTL,
     });
 };
+
+useHead({
+    title: i18n.t('PAGE_ARCHIVED_GEARS'),
+});
 </script>

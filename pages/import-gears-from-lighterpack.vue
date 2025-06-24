@@ -217,4 +217,8 @@ const onStart = async () => {
         isLoading.value = false;
     }
 };
+
+useHead({
+    title: i18n.t('PAGE_IMPORT_GEARS'),
+});
 </script>
