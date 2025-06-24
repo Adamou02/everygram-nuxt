@@ -136,7 +136,7 @@ const convertedGears = ref<EditingGear[]>([]);
 const importableGears = ref<Gear[]>([]);
 const formState = reactive({
     lighterpackUrl: '',
-    currency: userMeta.value?.currency || constants.DEFAULT_CURRENCY_CODE,
+    currency: constants.DEFAULT_CURRENCY_CODE as CurrencyCode,
 });
 
 // form validation
@@ -162,6 +162,11 @@ const getLighterPackPackData = async (listId: string): Promise<any[][]> => {
     // result.data is { lighterpackGears: any[][] }
     return (result.data as any).lighterpackGears || [];
 };
+
+onMounted(async () => {
+    formState.currency =
+        userMeta.value?.currency || constants.DEFAULT_CURRENCY_CODE;
+});
 
 const onBack = () => {
     activeStep.value = 0;

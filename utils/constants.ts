@@ -125,6 +125,7 @@ const DATE_FORMAT = 'yy-mm-dd';
 const DATE_PLACEHOLDER = 'yyyy-mm-dd';
 
 const TOAST_TTL = 3000; // 3 seconds
+const UPDATE_META_DEBOUNCE_TIME = 5000; // 5 second
 
 export default {
     ROLES,
@@ -154,4 +155,5 @@ export default {
     DATE_FORMAT,
     DATE_PLACEHOLDER,
     TOAST_TTL,
+    UPDATE_META_DEBOUNCE_TIME,
 };

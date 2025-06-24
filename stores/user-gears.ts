@@ -15,8 +15,6 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = firebaseUtils.getFirestoreDB();
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
-    const userMetaStore = useUserMetaStore();
-    const { userMeta } = storeToRefs(userMetaStore);
     const gearCollectionRef = collection(db, 'gear');
     const gearMap = ref<UserGears>({}); // gearMap is the local state that holds all user's gears
     const gears = computed(() => Object.values(gearMap.value));
@@ -151,14 +149,6 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
                 if (isFirstFetching.value) {
                     isFirstFetching.value = false;
-                }
-
-                // update userMeta with gear count
-                const gearCount = Object.keys(userGears).length;
-                if (userMeta.value && userMeta.value.gearCount !== gearCount) {
-                    userMetaStore.updateUserMeta({
-                        gearCount: Object.keys(userGears).length,
-                    });
                 }
             },
             (error) => {
@@ -359,6 +349,25 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
             throw error;
         }
     };
+
+    // update userMeta with gear count
+    const userMetaStore = useUserMetaStore();
+    const { userMeta } = storeToRefs(userMetaStore);
+    const updateGearCount = _debounce((_gears: Gear[]) => {
+        const gearCount = _gears.length;
+        if (userMeta.value && userMeta.value.gearCount !== gearCount) {
+            userMetaStore.updateUserMeta({
+                gearCount,
+            });
+        }
+    }, constants.UPDATE_META_DEBOUNCE_TIME);
+
+    watch(gears, (newGears) => {
+        if (isFirstFetching.value) {
+            return;
+        }
+        updateGearCount(newGears);
+    });
 
     return {
         gears,

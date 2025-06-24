@@ -413,9 +413,16 @@ const onSubmit = async () => {
             (!editingGear.value ||
                 editingGear.value.currency !== gearData.currency)
         ) {
-            userMetaStore.updateUserMeta({
-                currency: gearData.currency,
-            });
+            try {
+                userMetaStore.updateUserMeta({
+                    currency: gearData.currency,
+                });
+            } catch (error) {
+                console.error(
+                    'Failed to update user meta with selected currency:',
+                    error,
+                );
+            }
         }
     } catch (error) {
         console.error(error);

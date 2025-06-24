@@ -11,7 +11,11 @@ export default function () {
         },
         setLocale: (locale: Locale) => {
             i18n.setLocale(locale);
-            userMetaStore.updateUserMeta({ locale });
+            try {
+                userMetaStore.updateUserMeta({ locale });
+            } catch (error) {
+                console.error('Failed to update user meta locale:', error);
+            }
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CHANGE_LOCALE, {
                 locale,
             });
