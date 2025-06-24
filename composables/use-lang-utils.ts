@@ -1,15 +1,21 @@
 export default function () {
     const i18n = useI18n();
+    const userMetaStore = useUserMetaStore();
 
     return {
         getCurrentLocale: () => {
-            return i18n.locale.value;
+            return i18n.locale.value as Locale;
         },
         localeToLabel: (locale: string) => {
             return i18n.t(`LABEL_LOCALE_${_snakeCase(locale).toUpperCase()}`);
         },
-        setLocale: (locale: string) => {
+        setLocale: async (locale: Locale) => {
             i18n.setLocale(locale);
+            try {
+                await userMetaStore.updateUserMeta({ locale });
+            } catch (error) {
+                console.error('Failed to update user meta locale:', error);
+            }
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CHANGE_LOCALE, {
                 locale,
             });

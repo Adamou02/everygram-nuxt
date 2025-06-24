@@ -37,7 +37,7 @@ const EMPTY_TRIP_DATA: Omit<Trip, 'id'> = {
     consumables: {},
 };
 
-const LOCALES = ['en', 'zh-tw', 'ja'];
+const LOCALES: Locale[] = ['en', 'zh-tw', 'ja'];
 
 const LIMIT = {
     minWeight: 0,
@@ -119,11 +119,13 @@ const CURRENCIES: Record<CurrencyCode, Currency> = {
 };
 
 const CURRENCY_CODES = Object.keys(CURRENCIES) as CurrencyCode[];
+const DEFAULT_CURRENCY_CODE: CurrencyCode = 'TWD';
 
 const DATE_FORMAT = 'yy-mm-dd';
 const DATE_PLACEHOLDER = 'yyyy-mm-dd';
 
 const TOAST_TTL = 3000; // 3 seconds
+const UPDATE_META_DEBOUNCE_TIME = 5000; // 5 second
 
 export default {
     ROLES,
@@ -149,7 +151,9 @@ export default {
     PUBLIC_TRIPS_PAGE_SIZE,
     CURRENCIES,
     CURRENCY_CODES,
+    DEFAULT_CURRENCY_CODE,
     DATE_FORMAT,
     DATE_PLACEHOLDER,
     TOAST_TTL,
+    UPDATE_META_DEBOUNCE_TIME,
 };

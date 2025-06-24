@@ -127,6 +127,8 @@ const { hasLastVisited } = useNavigation();
 const i18n = useI18n();
 const currencyOptions = Object.values(constants.CURRENCIES);
 
+const userMetaStore = useUserMetaStore();
+const { userMeta } = storeToRefs(userMetaStore);
 const activeStep = ref(0);
 const isLoading = ref(false);
 const hasErrorInProcess = ref(false);
@@ -134,7 +136,7 @@ const convertedGears = ref<EditingGear[]>([]);
 const importableGears = ref<Gear[]>([]);
 const formState = reactive({
     lighterpackUrl: '',
-    currency: preferenceUtils.getSelectedCurrencyCode() || 'TWD',
+    currency: constants.DEFAULT_CURRENCY_CODE as CurrencyCode,
 });
 
 // form validation
@@ -160,6 +162,11 @@ const getLighterPackPackData = async (listId: string): Promise<any[][]> => {
     // result.data is { lighterpackGears: any[][] }
     return (result.data as any).lighterpackGears || [];
 };
+
+onMounted(async () => {
+    formState.currency =
+        userMeta.value?.currency || constants.DEFAULT_CURRENCY_CODE;
+});
 
 const onBack = () => {
     activeStep.value = 0;
@@ -215,6 +222,17 @@ const onStart = async () => {
         hasErrorInProcess.value = true;
     } finally {
         isLoading.value = false;
+
+        // update user meta with the selected currency
+        if (userMeta.value && formState.currency !== userMeta.value.currency) {
+            try {
+                await userMetaStore.updateUserMeta({
+                    currency: formState.currency,
+                });
+            } catch (error) {
+                console.error('Failed to update user meta currency:', error);
+            }
+        }
     }
 };
 

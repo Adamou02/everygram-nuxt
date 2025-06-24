@@ -1,13 +1,18 @@
 import type { Timestamp } from '@firebase/firestore';
 
 declare global {
-    type Member = {
+    type UserMeta = {
         userId: string;
-        email: string;
-        locale: string;
-        displayName: string;
-        photoUrl: string;
+        locale: Locale | null;
+        currency: CurrencyCode | null;
+        gearCount: number;
+        archivedGearCount: number;
+        tripCount: number;
+        tripShareCount: number;
+        lastUpdated: Timestamp;
     };
+
+    type Locale = 'en' | 'zh-tw' | 'ja';
 
     type CategoryData = { icon: string; color: string };
 

@@ -350,6 +350,35 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         }
     };
 
+    // update userMeta with gear count
+    const userMetaStore = useUserMetaStore();
+    const { userMeta } = storeToRefs(userMetaStore);
+    const updateGearCount = _debounce((_gears: Gear[]) => {
+        if (!userMeta.value) {
+            return;
+        }
+        const gearCount = _gears.length;
+        const archivedGearCount = _gears.filter(
+            (gear) => gear.isArchived,
+        ).length;
+        if (
+            userMeta.value.gearCount !== gearCount ||
+            userMeta.value.archivedGearCount !== archivedGearCount
+        ) {
+            userMetaStore.updateUserMeta({
+                gearCount,
+                archivedGearCount,
+            });
+        }
+    }, constants.UPDATE_META_DEBOUNCE_TIME);
+
+    watch(gears, (newGears) => {
+        if (isFirstFetching.value) {
+            return;
+        }
+        updateGearCount(newGears);
+    });
+
     return {
         gears,
         gearMap,
