@@ -1,12 +1,16 @@
 import type { Timestamp } from '@firebase/firestore';
 
-export type Member = {
+export type UserMeta = {
     userId: string;
-    email: string;
-    locale: string;
-    displayName: string;
-    photoUrl: string;
+    locale: Locale | null;
+    currency: CurrencyCode | null;
+    gearCount: number;
+    tripCount: number;
+    tripShareCount: number;
+    lastUpdated?: Timestamp;
 };
+
+export type Locale = 'en' | 'zh-tw' | 'ja';
 
 export type CategoryData = { icon: string; color: string };
 

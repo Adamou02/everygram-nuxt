@@ -127,6 +127,8 @@ const { hasLastVisited } = useNavigation();
 const i18n = useI18n();
 const currencyOptions = Object.values(constants.CURRENCIES);
 
+const userMetaStore = useUserMetaStore();
+const { userMeta } = storeToRefs(userMetaStore);
 const activeStep = ref(0);
 const isLoading = ref(false);
 const hasErrorInProcess = ref(false);
@@ -134,7 +136,7 @@ const convertedGears = ref<EditingGear[]>([]);
 const importableGears = ref<Gear[]>([]);
 const formState = reactive({
     lighterpackUrl: '',
-    currency: preferenceUtils.getSelectedCurrencyCode() || 'TWD',
+    currency: userMeta.value?.currency || constants.DEFAULT_CURRENCY_CODE,
 });
 
 // form validation
@@ -215,6 +217,13 @@ const onStart = async () => {
         hasErrorInProcess.value = true;
     } finally {
         isLoading.value = false;
+
+        // update user meta with the selected currency
+        if (userMeta.value && formState.currency !== userMeta.value.currency) {
+            userMetaStore.updateUserMeta({
+                currency: formState.currency,
+            });
+        }
     }
 };
 

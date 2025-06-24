@@ -15,6 +15,8 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
     const db = firebaseUtils.getFirestoreDB();
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
+    const userMetaStore = useUserMetaStore();
+    const { userMeta } = storeToRefs(userMetaStore);
     const gearCollectionRef = collection(db, 'gear');
     const gearMap = ref<UserGears>({}); // gearMap is the local state that holds all user's gears
     const gears = computed(() => Object.values(gearMap.value));
@@ -149,6 +151,14 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
 
                 if (isFirstFetching.value) {
                     isFirstFetching.value = false;
+                }
+
+                // update userMeta with gear count
+                const gearCount = Object.keys(userGears).length;
+                if (userMeta.value && userMeta.value.gearCount !== gearCount) {
+                    userMetaStore.updateUserMeta({
+                        gearCount: Object.keys(userGears).length,
+                    });
                 }
             },
             (error) => {

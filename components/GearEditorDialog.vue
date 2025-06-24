@@ -263,7 +263,7 @@ const initialFormState = {
     addToGears: true,
     description: '',
     price: undefined as number | undefined,
-    currency: 'TWD' as CurrencyCode,
+    currency: constants.DEFAULT_CURRENCY_CODE as CurrencyCode,
     acquiredDate: undefined as Date | undefined,
 };
 const formState = reactive({ ...initialFormState });
@@ -314,8 +314,7 @@ watch(isOpen, (newValue) => {
         formState.price = editingGear.value?.price ?? initialFormState.price;
         formState.currency =
             editingGear.value?.currency ??
-            (preferenceUtils.getSelectedCurrencyCode() ||
-                initialFormState.currency);
+            (userMeta.value?.currency || initialFormState.currency);
         formState.acquiredDate = editingGear.value?.acquiredDate
             ? new Date(editingGear.value.acquiredDate)
             : initialFormState.acquiredDate;
@@ -325,6 +324,8 @@ watch(isOpen, (newValue) => {
 });
 
 const isSaving = ref<boolean>(false);
+const userMetaStore = useUserMetaStore();
+const { userMeta } = storeToRefs(userMetaStore);
 const userGearsStore = useUserGearsStore();
 const { gears } = storeToRefs(userGearsStore);
 const gearPhotoUrl = computed(() =>
@@ -371,15 +372,6 @@ const onSubmit = async () => {
                 'complete-edit',
                 userGearsStore.getGearById(editingGear.value.id),
             );
-
-            // save selected currency to local storage if currency is updated
-            if (
-                gearData.currency &&
-                editingGear.value.currency !== gearData.currency
-            ) {
-                preferenceUtils.saveSelectedCurrency(gearData.currency);
-            }
-
             onCompleteEditGear();
         } else {
             // create new gear first
@@ -409,15 +401,20 @@ const onSubmit = async () => {
             }
             emit('complete-create', newGear);
             onCompleteCreateGear();
-
-            // save selected currency to local storage if it is set
-            if (gearData.currency) {
-                preferenceUtils.saveSelectedCurrency(gearData.currency);
-            }
-
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CREATE_GEAR, {
                 gear_category: gearData.category,
                 user_gear_num: gears.value.length,
+            });
+        }
+
+        // save selected currency to user profile
+        if (
+            gearData.currency &&
+            (!editingGear.value ||
+                editingGear.value.currency !== gearData.currency)
+        ) {
+            userMetaStore.updateUserMeta({
+                currency: gearData.currency,
             });
         }
     } catch (error) {

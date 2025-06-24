@@ -15,6 +15,8 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
     const db = firebaseUtils.getFirestoreDB();
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
+    const userMetaStore = useUserMetaStore();
+    const { userMeta } = storeToRefs(userMetaStore);
     const tripCollectionRef = collection(db, 'trip');
     const trips = ref<Trip[]>([]);
     const tripMap = computed(() => _keyBy(trips.value, 'id'));
@@ -45,6 +47,22 @@ export const useUserTripsStore = defineStore('userTripsStore', () => {
                 );
                 if (isFirstFetching.value) {
                     isFirstFetching.value = false;
+                }
+
+                // Update user meta with trip count
+                const tripCount = trips.value.length;
+                const tripShareCount = trips.value.filter(
+                    (trip) => trip.isPublished,
+                ).length;
+                if (
+                    userMeta.value &&
+                    (userMeta.value.tripCount !== tripCount ||
+                        userMeta.value.tripShareCount !== tripShareCount)
+                ) {
+                    userMetaStore.updateUserMeta({
+                        tripCount,
+                        tripShareCount,
+                    });
                 }
             },
         );
