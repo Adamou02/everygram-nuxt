@@ -225,9 +225,13 @@ const onStart = async () => {
 
         // update user meta with the selected currency
         if (userMeta.value && formState.currency !== userMeta.value.currency) {
-            userMetaStore.updateUserMeta({
-                currency: formState.currency,
-            });
+            try {
+                await userMetaStore.updateUserMeta({
+                    currency: formState.currency,
+                });
+            } catch (error) {
+                console.error('Failed to update user meta currency:', error);
+            }
         }
     }
 };

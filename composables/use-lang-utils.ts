@@ -9,10 +9,10 @@ export default function () {
         localeToLabel: (locale: string) => {
             return i18n.t(`LABEL_LOCALE_${_snakeCase(locale).toUpperCase()}`);
         },
-        setLocale: (locale: Locale) => {
+        setLocale: async (locale: Locale) => {
             i18n.setLocale(locale);
             try {
-                userMetaStore.updateUserMeta({ locale });
+                await userMetaStore.updateUserMeta({ locale });
             } catch (error) {
                 console.error('Failed to update user meta locale:', error);
             }
