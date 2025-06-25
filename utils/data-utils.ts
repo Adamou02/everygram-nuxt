@@ -126,7 +126,8 @@ const getGearPhotoUrl = (gear: Gear, size?: ThumbnailSize): string => {
         return (size && gear.photo.thumbnails?.[size].url) || gear.photo.url;
     }
     if (gear.imgUrl) {
-        return gear.imgUrl.sm;
+        // sm if thumbnail size is specified, otherwise lg
+        return size ? gear.imgUrl.sm : gear.imgUrl.lg;
     }
     return '';
 };

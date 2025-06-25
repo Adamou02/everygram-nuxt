@@ -8,7 +8,11 @@
         ]"
     >
         <div class="flex align-items-start justify-content-between">
-            <GearLabel :gear="gear" :size="isLargeScreen ? 'lg' : 'md'" />
+            <GearLabel
+                :gear="gear"
+                :size="isLargeScreen ? 'lg' : 'md'"
+                :photoClickable="photoClickable"
+            />
             <slot name="actions">
                 <GearActionsMenuButton
                     v-if="actionItems?.length"
@@ -37,6 +41,7 @@
 defineProps<{
     gear: Gear;
     actionItems?: GearAction[];
+    photoClickable?: boolean;
 }>();
 
 defineEmits<{

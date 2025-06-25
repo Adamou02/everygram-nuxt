@@ -32,6 +32,7 @@
                                         'unarchive',
                                         'delete',
                                     ]"
+                                    photoClickable
                                     @gear-edit="onEditGear"
                                     @gear-edit-archive="onEditArchivedGear"
                                     @gear-unarchive="onUnarchiveGear"

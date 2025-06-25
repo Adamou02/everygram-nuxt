@@ -11,6 +11,7 @@
                     :gear="data"
                     :readonly="!editable"
                     :size="isLargeScreen ? 'sm' : 'xs'"
+                    clickable
                 />
             </template>
         </PrimeColumn>

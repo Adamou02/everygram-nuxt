@@ -167,6 +167,7 @@
                                         'archive',
                                         'delete',
                                     ]"
+                                    photoClickable
                                     @gear-edit="onEditGear"
                                     @gear-archive="onArchiveGear"
                                     @gear-delete="confirmDeleteGear"

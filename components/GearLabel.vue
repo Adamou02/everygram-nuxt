@@ -9,6 +9,7 @@
             class="flex-shrink-0"
             :gear="gear"
             :size="size === 'lg' ? 'md' : 'sm'"
+            :clickable="photoClickable"
         />
         <GearNameWithBrand :gear="gear" :size="size" />
     </div>
@@ -18,5 +19,6 @@
 defineProps<{
     gear: Gear;
     size?: 'md' | 'lg';
+    photoClickable?: boolean;
 }>();
 </script>

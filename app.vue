@@ -4,6 +4,7 @@
     </NuxtLayout>
     <PrimeToast position="top-center" />
     <PrimeConfirmDialog />
+    <GearCardDialog />
 </template>
 
 <script setup lang="ts">
