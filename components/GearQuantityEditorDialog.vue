@@ -1,6 +1,7 @@
 <template>
     <PrimeDialog
         modal
+        class="w-full mx-2 max-w-20rem"
         :visible="isOpen"
         :header="$t('ACTION_EDIT_QUANTITY')"
         @update:visible="(value: boolean) => !value && onCancel()"

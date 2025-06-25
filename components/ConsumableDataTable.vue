@@ -14,7 +14,17 @@
             class="text-right white-space-nowrap"
         >
             <template #body="{ data }">
-                {{ data.weight ? formatWeight(data.weight) : '-' }}
+                <div class="flex flex-column gap-1 lg:gap-2">
+                    <div>
+                        {{ data.weight ? formatWeight(data.weight) : '-' }}
+                    </div>
+                    <div
+                        v-if="data.quantity && data.quantity > 1"
+                        class="text-color-light"
+                    >
+                        x {{ data.quantity }}
+                    </div>
+                </div>
             </template>
         </PrimeColumn>
 
