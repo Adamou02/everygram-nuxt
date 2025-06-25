@@ -121,7 +121,7 @@ declare global {
     };
     type EditingTrip = Partial<Trip>;
 
-    type TripShare = Omit<Trip, 'gears' | 'wornGears' | 'viewCount'> & {
+    type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
         gears: Record<string, GearWithQuantity>;
         wornGears: Record<string, GearWithQuantity>;
         owner: UserInfo;

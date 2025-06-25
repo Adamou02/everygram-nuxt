@@ -115,7 +115,6 @@ export const publishTrip = async (tripId: string) => {
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);
     await tripShareDocRef.set({
         ...tripShare,
-        viewCount: FieldValue.delete(),
         tripShareCreated: FieldValue.serverTimestamp(),
     });
 };
