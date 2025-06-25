@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
-// Callable function to increment viewCount of a tripShare document by id
+// Callable function to increment viewCount of a trip document by id
 export const incrementTripShareView = functions
     .region('asia-northeast1')
     .https.onCall(async (data, context) => {
@@ -14,7 +14,7 @@ export const incrementTripShareView = functions
         }
 
         const db = getFirestore();
-        const tripRef = db.collection('tripShare').doc(tripId);
+        const tripRef = db.collection('trip').doc(tripId);
 
         try {
             await tripRef.update({
@@ -25,7 +25,7 @@ export const incrementTripShareView = functions
         } catch (error: any) {
             throw new functions.https.HttpsError(
                 'not-found',
-                'TripShare not found or update failed',
+                'Trip not found or update failed',
                 error.message,
             );
         }

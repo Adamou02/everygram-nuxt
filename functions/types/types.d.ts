@@ -106,10 +106,11 @@ export type Trip = {
     consumables: Record<string, Consumable>;
     isPublished?: boolean;
     bannerImage?: StorageImage;
+    viewCount?: number;
 };
 export type EditingTrip = Partial<Trip>;
 
-export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
+export type TripShare = Omit<Trip, 'gears' | 'wornGears' | 'viewCount'> & {
     gears: Record<string, GearWithQuantity>;
     wornGears: Record<string, GearWithQuantity>;
     owner: UserInfo;
@@ -118,7 +119,6 @@ export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
     packWeight: number;
     wornWeight: number;
     tripShareCreated?: Timestamp;
-    viewCount?: number;
 };
 
 export type UserInfo = {

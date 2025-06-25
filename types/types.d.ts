@@ -117,10 +117,11 @@ declare global {
         consumables: Record<string, Consumable>;
         isPublished?: boolean;
         bannerImage?: StorageImage;
+        viewCount?: number;
     };
     type EditingTrip = Partial<Trip>;
 
-    type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
+    type TripShare = Omit<Trip, 'gears' | 'wornGears' | 'viewCount'> & {
         gears: Record<string, GearWithQuantity>;
         wornGears: Record<string, GearWithQuantity>;
         owner: UserInfo;
@@ -129,7 +130,6 @@ declare global {
         packWeight: number;
         wornWeight: number;
         tripShareCreated?: Timestamp;
-        viewCount?: number;
     };
 
     type UserInfo = {

@@ -6,18 +6,19 @@
         class="gear-card-dialog w-full mx-2 p-0 max-w-40rem"
         @update:visible="(value) => !value && closeGearCardDialog()"
     >
-        <template
-            v-if="isOpenGearCardDialog && displayingGear && displayImageUrl"
-            #container
-        >
+        <template v-if="isOpenGearCardDialog && displayingGear" #container>
             <div
                 class="flex flex-column border-round-lg overflow-auto bg-white"
             >
                 <!-- show a square placeholder with loading -->
-                <div v-if="!isImgLoaded" class="gear-card-dialog__loading">
+                <div
+                    v-if="!isImgLoaded || !displayImageUrl"
+                    class="gear-card-dialog__loading"
+                >
                     <PrimeSkeleton class="w-full h-full" />
                 </div>
                 <img
+                    v-if="displayImageUrl"
                     :src="displayImageUrl"
                     :alt="displayingGear.name"
                     :class="{
