@@ -16,6 +16,9 @@ const groupConsumablesByCategory = <T extends Consumable>(
             : 'others',
     );
 
+const getConsumableWeight = (consumable: Consumable): number =>
+    +consumable.weight * (consumable?.quantity || 1) || 0;
+
 const getTripGearsWeight = (
     trip: Trip,
     gearMap: Record<string, Gear>,
@@ -41,7 +44,7 @@ const getTripWornGearsWeight = (
     );
 
 const getTripConsumablessWeight = (trip: Trip): number =>
-    _sum(_map(trip.consumables || [], (consumable) => +consumable.weight || 0));
+    _sum(_map(trip.consumables || [], getConsumableWeight));
 
 const getTripBaseWeight = (trip: Trip, gearMap: Record<string, Gear>): number =>
     getTripGearsWeight(trip, gearMap) + getTripConsumablessWeight(trip);
@@ -300,6 +303,7 @@ const convertedEditingGearToTempGear = (editingGear: EditingGear): Gear => {
 export default {
     groupGearsByCategory,
     groupConsumablesByCategory,
+    getConsumableWeight,
     getTripGearsWeight,
     getTripWornGearsWeight,
     getTripConsumablessWeight,

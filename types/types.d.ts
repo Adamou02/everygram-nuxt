@@ -150,6 +150,7 @@ declare global {
         name: string;
         weight: number; // grams
         category: ConsumableCategory;
+        quantity?: number;
     };
     type EditingConsumable = Partial<Consumable>;
 

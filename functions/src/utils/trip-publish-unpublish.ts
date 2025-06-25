@@ -87,7 +87,7 @@ export const publishTrip = async (tripId: string) => {
     );
     const consumablesWeight = _.sumBy(
         _.values(trip.consumables),
-        (consumable) => +consumable.weight || 0,
+        (consumable) => +consumable.weight * (consumable?.quantity || 1) || 0,
     );
     const packWeight = baseWeight + consumablesWeight;
     const wornWeight = Object.values(tripShareWornGears).reduce(

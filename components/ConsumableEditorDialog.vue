@@ -18,6 +18,7 @@
         "
     >
         <template v-if="isOpen" #default>
+            <!-- name -->
             <FormField
                 :label="$t('LABEL_NAME')"
                 :errors="vuelidate.name.$errors"
@@ -33,6 +34,7 @@
                     @keypress.enter="onSubmit"
                 />
             </FormField>
+            <!-- weight -->
             <FormField
                 :label="$t('LABEL_WEIGHT')"
                 :errors="vuelidate.weight.$errors"
@@ -50,6 +52,27 @@
                     <WeightUnitAddon />
                 </PrimeInputGroup>
             </FormField>
+            <!-- quantity -->
+            <FormField :label="$t('LABEL_QUANTITY')">
+                <PrimeInputNumber
+                    v-model="formState.quantity"
+                    :min="constants.LIMIT.minQuantity"
+                    :max="constants.LIMIT.maxQuantity"
+                    class="text-right flex w-full"
+                    @keypress.enter="onSubmit"
+                    showButtons
+                    buttonLayout="horizontal"
+                    :step="1"
+                >
+                    <template #incrementbuttonicon>
+                        <span class="pi pi-plus" />
+                    </template>
+                    <template #decrementbuttonicon>
+                        <span class="pi pi-minus" />
+                    </template>
+                </PrimeInputNumber>
+            </FormField>
+            <!-- category -->
             <FormField :label="$t('LABEL_CATEGORY')">
                 <PrimeDropdown
                     v-model="formState.category"
@@ -141,11 +164,13 @@ const initialFormState = {
     name: '',
     weight: undefined,
     category: undefined,
+    quantity: undefined,
 };
 const formState = reactive<{
     name: string;
     weight: number | undefined;
     category: ConsumableCategory | undefined;
+    quantity: number | undefined;
 }>({ ...initialFormState });
 const formValidators = useFormValidators();
 const formRules = {
@@ -157,6 +182,10 @@ const formRules = {
     weight: {
         minValue: formValidators.minValue(constants.LIMIT.minWeight),
         maxValue: formValidators.maxValue(constants.LIMIT.maxWeight),
+    },
+    quantity: {
+        minValue: formValidators.minValue(constants.LIMIT.minQuantity),
+        maxValue: formValidators.maxValue(constants.LIMIT.maxQuantity),
     },
 };
 const vuelidate = useVuelidate(formRules, formState, { $autoDirty: true });
@@ -170,6 +199,8 @@ watch(isOpen, (newValue) => {
             editingConsumable.value?.category ||
             defaultConsumableCategory.value ||
             initialFormState.category;
+        formState.quantity =
+            editingConsumable.value?.quantity || initialFormState.quantity;
         vuelidate.value.$reset();
     }
 });
@@ -181,12 +212,16 @@ const onSubmit = async () => {
         return;
     }
 
-    const consumableData = {
+    const consumableData: Consumable = {
         id: editingConsumable.value?.id || uuid(),
         name: formState.name,
         weight: formState.weight || 0,
         category: formState.category || 'others',
     };
+
+    if (formState.quantity !== undefined && formState.quantity > 0) {
+        consumableData.quantity = formState.quantity;
+    }
 
     try {
         isSaving.value = true;

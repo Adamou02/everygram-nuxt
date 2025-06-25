@@ -72,7 +72,7 @@ const consumablesByCategory = computed(() =>
 );
 const consumableWeightByCategory = computed(() =>
     _mapValues(consumablesByCategory.value, (consumables) =>
-        _sumBy(consumables, (consumable) => +consumable.weight || 0),
+        _sumBy(consumables, dataUtils.getConsumableWeight),
     ),
 );
 const consumablesWeightItems = computed<WeightBarChartSubItem[]>(() =>
@@ -83,7 +83,9 @@ const consumablesWeightItems = computed<WeightBarChartSubItem[]>(() =>
         }))
         .sort((a, b) => b.weight - a.weight),
 );
-const consumablesWeight = computed(() => _sumBy(props.consumables, 'weight'));
+const consumablesWeight = computed(() =>
+    _sumBy(props.consumables, dataUtils.getConsumableWeight),
+);
 
 // gears
 const gearsByCategory = computed(() =>

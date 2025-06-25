@@ -156,7 +156,7 @@ const gearsWeight = _sumBy(
 );
 const consumablesWeight = _sumBy(
     consumablesInTrip,
-    (consumable) => +consumable.weight || 0,
+    dataUtils.getConsumableWeight,
 );
 const wornGearsWeight = _sumBy(
     wornGearsInTrip,

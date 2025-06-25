@@ -139,6 +139,7 @@ export type Consumable = {
     name: string;
     weight: number; // grams
     category: ConsumableCategory;
+    quantity?: number;
 };
 export type EditingConsumable = Partial<Consumable>;
 

@@ -53,7 +53,7 @@ const displayConsumableCatergories = computed(() =>
 
 const consumableWeightByCategory = computed(() =>
     _mapValues(consumablesByCategory.value, (consumables) =>
-        _sumBy(consumables, (consumable) => +consumable.weight || 0),
+        _sumBy(consumables, dataUtils.getConsumableWeight),
     ),
 );
 </script>
