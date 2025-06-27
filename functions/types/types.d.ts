@@ -117,6 +117,7 @@ export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
     consumablesWeight: number;
     packWeight: number;
     wornWeight: number;
+    locale?: Locale;
     tripShareCreated?: Timestamp;
 };
 

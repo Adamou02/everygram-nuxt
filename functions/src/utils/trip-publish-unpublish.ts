@@ -110,6 +110,17 @@ export const publishTrip = async (tripId: string) => {
         wornWeight,
     };
 
+    // get owner's locale from userMeta
+    const userMetaDoc = await admin
+        .firestore()
+        .collection('userMeta')
+        .doc(ownerUid)
+        .get();
+    const userMetaData = userMetaDoc.data();
+    if (userMetaData?.locale) {
+        tripShare.locale = userMetaData.locale;
+    }
+
     // write trip share data to firestore in tripShare collection
     const tripShareCollectionRef = admin.firestore().collection('tripShare');
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);

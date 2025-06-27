@@ -128,6 +128,7 @@ declare global {
         consumablesWeight: number;
         packWeight: number;
         wornWeight: number;
+        locale?: Locale;
         tripShareCreated?: Timestamp;
     };
 

@@ -166,6 +166,11 @@ const wornGearsWeight = _sumBy(
 
 // SEO and meta
 const i18n = useI18n();
+const originalLocale = i18n.locale.value as Locale; // save original locale
+if (tripShare?.locale && constants.LOCALES.includes(tripShare.locale)) {
+    // use trip's locale for meta data
+    i18n.setLocale(tripShare.locale);
+}
 const { formatWeight } = useLangUtils();
 const metaTitle = tripShare
     ? i18n.t('META_TRIP_SHARE_TITLE', {
@@ -190,6 +195,10 @@ const metaDescription = tripShare
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_DESCRIPTION');
 const defaultBannerImageUrl =
     constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
+// reset locale to original after setting meta
+if (originalLocale && constants.LOCALES.includes(originalLocale)) {
+    i18n.setLocale(originalLocale);
+}
 
 useHead({
     link: [
