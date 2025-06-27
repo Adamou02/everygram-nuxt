@@ -219,7 +219,7 @@ onMounted(() => {
 });
 
 function incrementTripShareViewIfFirstVisit(tripId: string) {
-    const STORAGE_KEY = 'eg_viewed_trip_ids';
+    const STORAGE_KEY = 'eg_viewed_tids';
     let viewedIds: Set<string>;
 
     // try to get viewed trip IDs from localStorage

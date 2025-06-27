@@ -117,7 +117,6 @@ declare global {
         consumables: Record<string, Consumable>;
         isPublished?: boolean;
         bannerImage?: StorageImage;
-        viewCount?: number;
     };
     type EditingTrip = Partial<Trip>;
 
@@ -130,6 +129,11 @@ declare global {
         packWeight: number;
         wornWeight: number;
         tripShareCreated?: Timestamp;
+    };
+
+    type TripMeta = {
+        tripId: string;
+        viewCount: number;
     };
 
     type UserInfo = {

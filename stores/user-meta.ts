@@ -43,9 +43,18 @@ export const useUserMetaStore = defineStore('userMetaStore', () => {
         }
 
         // Set the locale for i18n if available
+        const { $i18n } = useNuxtApp();
+        const currentLocale = $i18n.locale.value as Locale;
         if (userMeta.value?.locale) {
-            const { $i18n } = useNuxtApp();
+            console.log('Setting locale from userMeta:', userMeta.value.locale);
+            // Set the locale from userMeta
             $i18n.setLocale(userMeta.value.locale);
+        } else if (constants.LOCALES.includes(currentLocale)) {
+            console.log('Setting locale to userMeta:', currentLocale);
+            // get locale and set it to userMeta
+            updateUserMeta({
+                locale: currentLocale,
+            });
         }
 
         isInitialized.value = true;

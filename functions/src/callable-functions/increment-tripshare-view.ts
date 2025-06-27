@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
-// Callable function to increment viewCount of a trip document by id
+// Callable function to increment viewCount of a trip
 export const incrementTripShareView = functions
     .region('asia-northeast1')
     .https.onCall(async (data, context) => {
@@ -14,12 +14,18 @@ export const incrementTripShareView = functions
         }
 
         const db = getFirestore();
-        const tripRef = db.collection('trip').doc(tripId);
+        const tripRef = db.collection('tripMeta').doc(tripId);
 
         try {
-            await tripRef.update({
-                viewCount: FieldValue.increment(1),
-            });
+            await tripRef.set(
+                {
+                    tripId,
+                    viewCount: FieldValue.increment(1),
+                },
+                {
+                    merge: true, // Use merge to avoid overwriting other fields
+                },
+            );
 
             return { success: true };
         } catch (error: any) {
