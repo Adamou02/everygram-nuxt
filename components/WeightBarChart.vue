@@ -1,31 +1,5 @@
 <template>
     <div class="weight-bar-chart flex flex-column gap-3">
-        <!-- bar -->
-        <div class="weight-bar-chart__bar">
-            <div
-                v-if="barSectionItems.length && totalWeight > 0"
-                v-for="item in barSectionItems"
-                v-tooltip.top="
-                    `${item.label} ${formatWeight(item.weight)} (${_round((item.weight / totalWeight) * 100)}%)`
-                "
-                :class="[
-                    'weight-bar-chart__section',
-                    { 'border-1 border-solid border-500': item.addBorder },
-                ]"
-                :style="{
-                    backgroundColor: item.color,
-                    width: `${(item.weight / totalWeight) * 100}%`,
-                }"
-            />
-            <div
-                v-else
-                class="weight-bar-chart__section w-full"
-                :style="{
-                    backgroundColor: constants.COLORS.EMPTY_WEIGHT,
-                }"
-            ></div>
-        </div>
-
         <!-- labels -->
         <div v-if="showLabel" class="flex flex-column gap-1">
             <div v-for="(item, index) in sortedItems" :key="item.label">
@@ -37,16 +11,16 @@
                     @click="itemsToggle[index] = !itemsToggle[index]"
                 >
                     <div
-                        :class="[
-                            'weight-bar-chart__dot',
-                            {
-                                'border-1 border-solid border-500':
-                                    item.addBorder,
-                            },
-                        ]"
-                        :style="{ backgroundColor: item.color }"
+                        class="weight-bar-chart__bar"
+                        :style="{
+                            backgroundColor: item.color,
+                            width: getBarWidth(item.weight),
+                            outline: item.addBorder
+                                ? '1px solid var(--gray-500)'
+                                : '',
+                        }"
                     ></div>
-                    <div>
+                    <div class="text-ellipsis flex-shrink-1">
                         {{ item.label }}
                         <span
                             v-if="item.subItems"
@@ -60,8 +34,12 @@
                         ></span>
                     </div>
                     <DashedLine />
-                    <div>{{ formatWeight(item.weight) }}</div>
-                    <div class="w-2rem text-color-light text-right">
+                    <div class="white-space-nowrap">
+                        {{ formatWeight(item.weight) }}
+                    </div>
+                    <div
+                        class="w-2rem text-color-light text-right white-space-nowrap"
+                    >
                         {{
                             _round(
                                 (totalWeight ? item.weight / totalWeight : 0) *
@@ -113,9 +91,6 @@ const totalWeight = computed(() =>
 const sortedItems = computed(() =>
     props.items.sort((a, b) => b.weight - a.weight),
 );
-const barSectionItems = computed(() =>
-    sortedItems.value.filter((item) => item.weight > 0),
-);
 const itemsToggle = ref<Record<number, boolean>>(
     props.items.reduce(
         (acc, item, index) => {
@@ -125,15 +100,23 @@ const itemsToggle = ref<Record<number, boolean>>(
         {} as Record<number, boolean>,
     ),
 );
+const maxItemWeight = computed(() =>
+    Math.max(...props.items.map((item) => item.weight), 0),
+);
+const getBarWidth = (weight: number) => {
+    if (
+        props.items.length <= 1 ||
+        totalWeight.value === 0 ||
+        maxItemWeight.value === 0
+    ) {
+        return '';
+    }
+    return `${(weight / maxItemWeight.value) * 140}px`;
+};
 </script>
 
 <style lang="scss">
 .weight-bar-chart {
-    &__bar {
-        display: flex;
-        gap: 2px;
-        height: 16px;
-    }
     &__section {
         flex: 1 1 auto;
         transition: all 0.3s;
@@ -150,10 +133,13 @@ const itemsToggle = ref<Record<number, boolean>>(
             transform: scaleY(1.2);
         }
     }
-    &__dot {
-        width: 6px;
+    &__bar {
+        max-width: 140px;
+        min-width: 6px;
         height: 12px;
         border-radius: 2px;
+        flex-shrink: 0;
+        transition: all 0.3s;
     }
 }
 </style>

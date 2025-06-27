@@ -97,6 +97,7 @@
 
             <!-- worn gears -->
             <TripGearSection
+                v-if="wornGearsInTrip.length > 0"
                 :title="$t('LABEL_WORN_GEARS')"
                 :gears="wornGearsInTrip"
             >
