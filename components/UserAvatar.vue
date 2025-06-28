@@ -22,7 +22,7 @@ const avatarImgSize = computed(() => {
         case 'lg':
             return 48;
         case 'xl':
-            return 64;
+            return 96;
         case 'md':
         default:
             return 40;

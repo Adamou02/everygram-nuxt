@@ -4,7 +4,8 @@ import { generateTripOgImageAndUpdateMeta } from '../callable-functions/generate
 export const onTripShareUpdated = onDocumentUpdated(
     {
         document: 'tripShare/{tripId}',
-        memory: '512MiB',
+        memory: '1GiB',
+        timeoutSeconds: 60,
     },
     async (event) => {
         const tripId = event.params.tripId;

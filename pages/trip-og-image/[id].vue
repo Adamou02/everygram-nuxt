@@ -6,30 +6,35 @@
         <div
             :class="[
                 'trip-og-image__trip-info',
-                'flex flex-column h-full justify-content-center',
+                'flex flex-column h-full justify-content-center align-items-start',
             ]"
         >
+            <!-- app logo -->
             <img
                 src="/image/logo-horizontal.svg"
                 alt="App Logo"
                 height="72px"
             />
+            <!-- trip title -->
             <h1 class="text-6xl mt-6">
                 {{ tripShare.title }}
             </h1>
-            <TripDate :trip="tripShare" class="text-2xl mt-2" />
-            <UserLabel
-                :user="tripShare.owner"
-                avatar-size="xl"
-                class="text-4xl mt-6"
+            <!-- owner -->
+            <div class="flex gap-4 align-items-center min-w-0 text-5xl mt-6">
+                <UserAvatar :user="tripShare.owner" avatar-size="xl" />
+                <div class="text-ellipsis text-color">
+                    {{ tripShare.owner.displayName }}
+                </div>
+            </div>
+        </div>
+        <div class="flex-shrink-0" :style="{ width: '640px' }">
+            <TripWeightInfo
+                :gears="gearsInTrip"
+                :wornGears="wornGearsInTrip"
+                :consumables="consumablesInTrip"
+                class="trip-og-image__weight-info"
             />
         </div>
-        <TripWeightInfo
-            :gears="gearsInTrip"
-            :wornGears="wornGearsInTrip"
-            :consumables="consumablesInTrip"
-            class="trip-og-image__weight-info"
-        />
     </div>
 </template>
 
