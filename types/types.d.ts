@@ -135,6 +135,7 @@ declare global {
     type TripMeta = {
         tripId: string;
         viewCount: number;
+        ogImageUrl?: string;
     };
 
     type UserInfo = {

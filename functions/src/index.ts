@@ -21,6 +21,7 @@ export { onGearUpdated } from './event-handlers/on-gear-updated';
 export { onGearDeleted } from './event-handlers/on-gear-deleted';
 export { onTripUpdated } from './event-handlers/on-trip-updated';
 export { onTripDeleted } from './event-handlers/on-trip-deleted';
+export { onTripShareUpdated } from './event-handlers/on-trip-share-updated';
 
 // callable functions
 export { incrementTripShareView } from './callable-functions/increment-tripshare-view';

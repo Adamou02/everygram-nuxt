@@ -49,13 +49,29 @@ const gearsInTrip: GearWithQuantity[] = _values(tripShare?.gears || []);
 const wornGearsInTrip: GearWithQuantity[] = _values(tripShare?.wornGears || []);
 const consumablesInTrip: Consumable[] = _values(tripShare?.consumables || []);
 
+// set locale
+const i18n = useI18n();
+const { isLikelyServerClient } = useDeviceMeta();
+if (
+    isLikelyServerClient.value &&
+    tripShare.locale &&
+    constants.LOCALES.includes(tripShare.locale)
+) {
+    i18n.setLocale(tripShare.locale);
+}
+
 useSeoMeta({
     robots: 'noindex, nofollow',
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/theme/_eg-colors.scss';
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
 body {
     width: 1200px;
     height: 630px;

@@ -13,19 +13,20 @@ export const incrementTripShareView = functions
             );
         }
 
-        const db = getFirestore();
-        const tripRef = db.collection('tripMeta').doc(tripId);
-
         try {
-            await tripRef.set(
-                {
-                    tripId,
-                    viewCount: FieldValue.increment(1),
-                },
-                {
-                    merge: true, // Use merge to avoid overwriting other fields
-                },
-            );
+            const db = getFirestore();
+            await db
+                .collection('tripMeta')
+                .doc(tripId)
+                .set(
+                    {
+                        tripId,
+                        viewCount: FieldValue.increment(1),
+                    },
+                    {
+                        merge: true, // Use merge to avoid overwriting other fields
+                    },
+                );
 
             return { success: true };
         } catch (error: any) {

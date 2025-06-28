@@ -135,8 +135,13 @@ const db = getFirestore(app);
 const route = useRoute();
 const tripId = route.params.id as string;
 const tripShareRef = doc(db, 'tripShare', tripId);
-const tripShareSnap = await getDoc(tripShareRef);
+const tripMetaRef = doc(db, 'tripMeta', tripId);
+const [tripShareSnap, tripMetaSnap] = await Promise.all([
+    getDoc(tripShareRef),
+    getDoc(tripMetaRef),
+]);
 const tripShare: TripShare | null = (tripShareSnap.data() as TripShare) || null;
+const tripMeta: TripMeta | null = (tripMetaSnap.data() as TripMeta) || null;
 const gearsInTrip: GearWithQuantity[] = _values(tripShare?.gears || []);
 const wornGearsInTrip: GearWithQuantity[] = _values(tripShare?.wornGears || []);
 const consumablesInTrip: Consumable[] = _values(tripShare?.consumables || []);
@@ -156,7 +161,12 @@ const wornGearsWeight = _sumBy(
 // SEO and meta
 const i18n = useI18n();
 const originalLocale = i18n.locale.value as Locale; // save original locale
-if (tripShare?.locale && constants.LOCALES.includes(tripShare.locale)) {
+const { isLikelyServerClient } = useDeviceMeta();
+if (
+    isLikelyServerClient.value &&
+    tripShare?.locale &&
+    constants.LOCALES.includes(tripShare.locale)
+) {
     // use trip's locale for meta data
     i18n.setLocale(tripShare.locale);
 }
@@ -203,9 +213,12 @@ useSeoMeta({
     ogTitle: metaOgTitle,
     description: metaDescription,
     ogDescription: metaDescription,
-    ogImage: tripShare?.bannerImage
-        ? tripShare.bannerImage.thumbnails?.md.url || tripShare.bannerImage.url
-        : defaultBannerImageUrl,
+    ogImage:
+        tripMeta?.ogImageUrl ||
+        (tripShare?.bannerImage
+            ? tripShare.bannerImage.thumbnails?.md.url ||
+              tripShare.bannerImage.url
+            : defaultBannerImageUrl),
     robots: tripShare ? 'index, follow' : 'noindex, nofollow',
 });
 

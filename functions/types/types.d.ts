@@ -124,6 +124,7 @@ export type TripShare = Omit<Trip, 'gears' | 'wornGears'> & {
 export type TripMeta = {
     tripId: string;
     viewCount: number;
+    ogImageUrl?: string;
 };
 
 export type UserInfo = {
