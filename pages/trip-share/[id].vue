@@ -4,21 +4,10 @@
             <TripHeader :trip="tripShare">
                 <template #actions>
                     <div class="flex align-items-center gap-2">
-                        <div class="flex align-items-center gap-1">
-                            <UserLabel
-                                :user="{
-                                    ...tripShare.owner,
-                                    ...(isOwnerViewing
-                                        ? {
-                                              displayName: $t('LABEL_YOU'),
-                                          }
-                                        : {}),
-                                }"
-                            />
-                            <div class="text-color-lighter">
-                                {{ $t('INFO_CREATED_THIS_TRIP') }}
-                            </div>
-                        </div>
+                        <TripShareOwnerLabel
+                            :tripShare="tripShare"
+                            :displayName="isOwnerViewing ? $t('LABEL_YOU') : ''"
+                        />
                         <template v-if="isOwnerViewing">
                             <VerticalSeparatorLine class="text-color-lighter" />
                             <NuxtLink

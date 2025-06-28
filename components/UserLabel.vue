@@ -10,6 +10,6 @@
 <script setup lang="ts">
 const props = defineProps<{
     user: UserInfo;
-    avatarSize?: 'xs' | 'sm' | 'md' | 'lg';
+    avatarSize?: UserAvatarSize;
 }>();
 </script>

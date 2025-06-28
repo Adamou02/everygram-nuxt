@@ -142,6 +142,8 @@ declare global {
         photoURL: string;
     };
 
+    type UserAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
     type ConsumableCategory =
         | 'food'
         | 'drinks'

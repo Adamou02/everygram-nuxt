@@ -96,4 +96,8 @@ onMounted(() => {
     });
     publicTripsStore.searchTrips();
 });
+
+useSeoMeta({
+    robots: 'noindex, nofollow',
+});
 </script>

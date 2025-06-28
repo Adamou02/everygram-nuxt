@@ -11,7 +11,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     user: UserInfo;
-    avatarSize?: 'xs' | 'sm' | 'md' | 'lg';
+    avatarSize?: UserAvatarSize;
 }>();
 const avatarImgSize = computed(() => {
     switch (props.avatarSize) {
@@ -21,6 +21,8 @@ const avatarImgSize = computed(() => {
             return 32;
         case 'lg':
             return 48;
+        case 'xl':
+            return 64;
         case 'md':
         default:
             return 40;
