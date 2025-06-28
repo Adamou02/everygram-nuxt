@@ -57,6 +57,7 @@ const consumablesInTrip: Consumable[] = _values(tripShare?.consumables || []);
 // set locale
 const i18n = useI18n();
 if (tripShare.locale && constants.LOCALES.includes(tripShare.locale)) {
+    await i18n.loadLocaleMessages(tripShare.locale);
     i18n.setLocale(tripShare.locale);
 }
 
