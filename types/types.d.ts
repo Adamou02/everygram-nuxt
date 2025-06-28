@@ -135,12 +135,15 @@ declare global {
     type TripMeta = {
         tripId: string;
         viewCount: number;
+        ogImageUrl?: string;
     };
 
     type UserInfo = {
         displayName: string;
         photoURL: string;
     };
+
+    type UserAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
     type ConsumableCategory =
         | 'food'

@@ -33,16 +33,7 @@
                     {{ trip.title }}
                 </h1>
                 <!-- trip date -->
-                <div v-if="formattedDate" class="trip-date mt-2">
-                    <!-- calendar icon -->
-                    <i class="pi pi-calendar mr-1 text-600" />
-                    <!-- dates -->
-                    {{ formattedDate }}
-                    <!-- days for multi-day trips -->
-                    <template v-if="trip.dateMode === 'multi'">
-                        ・{{ $t('INFO_DAYS', { num: days }, days) }}
-                    </template>
-                </div>
+                <TripDate :trip="trip" class="mt-2" />
                 <!-- trip description -->
                 <TripDescription
                     v-if="trip.description"
@@ -100,14 +91,5 @@ const desktopBannerImage = computed(() =>
             object-position: center;
         }
     }
-}
-
-.trip-date {
-    display: inline-block;
-    font-size: 14px;
-    color: $eg-c-text;
-    background-color: $eg-c-gray-200;
-    padding: 2px 4px;
-    border-radius: 2px;
 }
 </style>
