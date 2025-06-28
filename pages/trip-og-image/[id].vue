@@ -1,11 +1,12 @@
 <template>
     <div
-        :class="['trip-og-image', 'flex gap-7 px-5 py-5 overflow-hidden']"
+        :class="['trip-og-image', 'flex overflow-hidden']"
         :style="{ width: '1200px', height: '630px' }"
     >
         <div
             :class="[
                 'trip-og-image__trip-info',
+                'p-5 gap-6',
                 'flex flex-column h-full justify-content-center align-items-start',
             ]"
         >
@@ -16,11 +17,11 @@
                 height="72px"
             />
             <!-- trip title -->
-            <h1 class="text-6xl mt-6">
+            <h1 class="text-6xl">
                 {{ tripShare.title }}
             </h1>
             <!-- owner -->
-            <div class="flex gap-4 align-items-center min-w-0 text-5xl mt-6">
+            <div class="flex gap-4 align-items-center min-w-0 text-5xl">
                 <UserAvatar :user="tripShare.owner" avatar-size="xl" />
                 <div class="text-ellipsis text-color">
                     {{ tripShare.owner.displayName }}
@@ -78,7 +79,10 @@ body {
     height: 630px;
 }
 .trip-og-image {
-    background-color: $eg-c-brown-200;
+    background: white;
+    &__trip-info {
+        background-color: $eg-c-brown-200;
+    }
     &__weight-info {
         width: 400px;
         transform: scale(1.6);

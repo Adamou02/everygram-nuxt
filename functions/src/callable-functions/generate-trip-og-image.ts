@@ -30,6 +30,8 @@ export const generateTripOgImageAndUpdateMeta = async (
         waitUntil: 'domcontentloaded',
         timeout: 60000, // Increased timeout to 60 seconds
     });
+    // Add delay to ensure all assets are loaded/rendered
+    await page.waitForTimeout(5000);
 
     // 2. Save screenshot to temp file
     const tempFilePath = `/tmp/og-image-${tripId}.jpeg`;
