@@ -56,12 +56,7 @@ const consumablesInTrip: Consumable[] = _values(tripShare?.consumables || []);
 
 // set locale
 const i18n = useI18n();
-const { isLikelyServerClient } = useDeviceMeta();
-if (
-    isLikelyServerClient.value &&
-    tripShare.locale &&
-    constants.LOCALES.includes(tripShare.locale)
-) {
+if (tripShare.locale && constants.LOCALES.includes(tripShare.locale)) {
     i18n.setLocale(tripShare.locale);
 }
 

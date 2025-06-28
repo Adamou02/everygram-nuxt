@@ -159,45 +159,47 @@ const wornGearsWeight = _sumBy(
 );
 
 // SEO and meta
-const i18n = useI18n();
-const originalLocale = i18n.locale.value as Locale; // save original locale
-const { isLikelyServerClient } = useDeviceMeta();
-if (
-    isLikelyServerClient.value &&
-    tripShare?.locale &&
-    constants.LOCALES.includes(tripShare.locale)
-) {
-    // use trip's locale for meta data
-    i18n.setLocale(tripShare.locale);
-}
 const { formatWeight } = useLangUtils();
+const i18n = useI18n();
+if (tripShare.locale && tripShare.locale !== i18n.locale.value) {
+    // load trip locale for og title and description
+    await i18n.loadLocaleMessages(tripShare.locale);
+}
 const metaTitle = tripShare
     ? i18n.t('META_TRIP_SHARE_TITLE', {
           title: tripShare.title,
       })
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_TITLE');
 const metaOgTitle = tripShare
-    ? i18n.t('META_TRIP_SHARE_OG_TITLE', {
-          title: tripShare.title,
-          owner: tripShare.owner.displayName,
-      })
+    ? i18n.t(
+          'META_TRIP_SHARE_OG_TITLE',
+          {
+              title: tripShare.title,
+              owner: tripShare.owner.displayName,
+          },
+          {
+              locale: tripShare.locale || i18n.locale.value,
+          },
+      )
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_OG_TITLE');
 const metaDescription = tripShare
-    ? i18n.t('META_TRIP_SHARE_DESCRIPTION', {
-          title: tripShare.title,
-          owner: tripShare.owner.displayName,
-          packWeight: formatWeight(gearsWeight + consumablesWeight),
-          baseWeight: formatWeight(gearsWeight),
-          consumablesWeight: formatWeight(consumablesWeight),
-          date: dataUtils.formatTripDate(tripShare),
-      })
+    ? i18n.t(
+          'META_TRIP_SHARE_DESCRIPTION',
+          {
+              title: tripShare.title,
+              owner: tripShare.owner.displayName,
+              packWeight: formatWeight(gearsWeight + consumablesWeight),
+              baseWeight: formatWeight(gearsWeight),
+              consumablesWeight: formatWeight(consumablesWeight),
+              date: dataUtils.formatTripDate(tripShare),
+          },
+          {
+              locale: tripShare.locale || i18n.locale.value,
+          },
+      )
     : i18n.t('META_TRIP_SHARE_NOT_FOUND_DESCRIPTION');
 const defaultBannerImageUrl =
     constants.SITE_DOMAIN + constants.DEFAULT_TRIP_BANNER_IMAGE_PATH;
-// reset locale to original after setting meta
-if (originalLocale && constants.LOCALES.includes(originalLocale)) {
-    i18n.setLocale(originalLocale);
-}
 
 useHead({
     link: [

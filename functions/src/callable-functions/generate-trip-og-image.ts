@@ -17,12 +17,7 @@ export const generateTripOgImageAndUpdateMeta = async (
         throw new Error('tripId is required and must be a string');
     }
 
-    // 1. Remove existing og image(s)
-    const bucket = admin.storage().bucket();
-    const ogImagePath = `trip/${tripId}/og-image`;
-    await bucket.deleteFiles({ prefix: ogImagePath });
-
-    // 2. Launch Puppeteer
+    // 1. Launch Puppeteer
     const executablePath = await chromium.executablePath;
     const browser = await puppeteer.launch({
         args: chromium.args,
@@ -32,10 +27,11 @@ export const generateTripOgImageAndUpdateMeta = async (
     });
     const page = await browser.newPage();
     await page.goto(`https://everygram.app/trip-og-image/${tripId}`, {
-        waitUntil: 'networkidle0',
+        waitUntil: 'domcontentloaded',
+        timeout: 60000, // Increased timeout to 60 seconds
     });
 
-    // 3. Save screenshot to temp file
+    // 2. Save screenshot to temp file
     const tempFilePath = `/tmp/og-image-${tripId}.jpeg`;
     await page.screenshot({
         path: tempFilePath as `${string}.jpeg`,
@@ -45,20 +41,22 @@ export const generateTripOgImageAndUpdateMeta = async (
     });
     await browser.close();
 
-    // 4. Upload to Firebase Storage
+    // 3. Upload to Firebase Storage
+    const bucket = admin.storage().bucket();
+    const ogImagePath = `trip/${tripId}/og-image`;
     const file = bucket.file(`${ogImagePath}/og-image.jpeg`);
     await bucket.upload(tempFilePath, {
         destination: file,
         metadata: { contentType: 'image/jpeg' },
     });
 
-    // 5. Get download URL
+    // 4. Get download URL
     const [url] = await file.getSignedUrl({
         action: 'read',
         expires: '01-01-2500',
     });
 
-    // 6. Update tripMeta.ogImageUrl
+    // 5. Update tripMeta.ogImageUrl
     await admin
         .firestore()
         .collection('tripMeta')
