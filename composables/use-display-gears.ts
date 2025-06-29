@@ -82,7 +82,7 @@ export default function () {
 
         visibleGears.value.forEach((gear) => {
             if (!gear.acquiredDate) {
-                return false; // Skip gears without an accquired date
+                return false; // Skip gears without an acquired date
             }
 
             // find gears that acquired date is the same as today, but acquired date's year is in the past
