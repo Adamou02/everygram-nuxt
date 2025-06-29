@@ -1,14 +1,18 @@
 <template>
-    <div class="gear-card-list">
+    <div
+        class="gear-card-list"
+        :style="{ '--min-card-width': minCardWidth || '375px' }"
+    >
         <div v-for="(gear, index) in gears" :key="gear.id">
             <slot name="gear-card" :gear="gear" :index="index"></slot>
         </div>
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends Gear">
 defineProps<{
-    gears: Gear[];
+    gears: T[];
+    minCardWidth?: string; // Optional prop to set minimum card width
 }>();
 </script>
 
@@ -19,7 +23,10 @@ defineProps<{
     display: grid;
     gap: 0.75rem;
     @media (min-width: $lg) {
-        grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
+        grid-template-columns: repeat(
+            auto-fill,
+            minmax(var(--min-card-width), 1fr)
+        );
         gap: 1rem;
     }
 }

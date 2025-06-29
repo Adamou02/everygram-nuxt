@@ -117,6 +117,17 @@
             <!-- main -->
             <div :class="mainClass">
                 <div class="flex flex-column gap-4">
+                    <TapePanel
+                        v-if="
+                            !isFiltered &&
+                            (anniversaryGearList.length > 0 ||
+                                upcomingAnniversaryGears.length > 0)
+                        "
+                    >
+                        <AnniversaryGearList
+                            @gear-clicked="scrollGearCardIntoView"
+                        />
+                    </TapePanel>
                     <div
                         v-for="category in displayGearCatergories"
                         :id="`category-section-${category}`"
@@ -161,6 +172,7 @@
                             <!-- pb-2 for avoiding card shadow from leaking -->
                             <template #gear-card="{ gear }">
                                 <GearCardHorizontal
+                                    :id="`gear-card-${gear.id}`"
                                     :gear="gear"
                                     :action-items="[
                                         'edit',
@@ -248,6 +260,8 @@ const {
     displayGears,
     gearsGroupByCategory,
     displayGearCatergories,
+    anniversaryGearList,
+    upcomingAnniversaryGears,
 } = useDisplayGears();
 
 onMounted(() => {
@@ -265,6 +279,17 @@ const scrollToCategory = (category: string) => {
     sectionElement.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
+    });
+};
+
+const scrollGearCardIntoView = (gear: Gear) => {
+    const gearCardElement = document.getElementById(`gear-card-${gear.id}`);
+    if (!gearCardElement) {
+        return;
+    }
+    gearCardElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
     });
 };
 
