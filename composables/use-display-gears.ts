@@ -82,7 +82,7 @@ export default function () {
 
         visibleGears.value.forEach((gear) => {
             if (!gear.acquiredDate) {
-                return false; // Skip gears without an acquired date
+                return; // Skip gears without an acquired date
             }
 
             // find gears that acquired date is the same as today, but acquired date's year is in the past
@@ -115,7 +115,7 @@ export default function () {
         // Change from anniversaryGearList.value to visibleGears.value
         visibleGears.value.forEach((gear) => {
             if (!gear.acquiredDate) {
-                return false; // Skip gears without an acquired date
+                return; // Skip gears without an acquired date
             }
             const acquiredDate = new Date(gear.acquiredDate);
             const nextAnniversaryDate =
