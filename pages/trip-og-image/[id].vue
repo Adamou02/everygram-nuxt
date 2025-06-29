@@ -28,14 +28,12 @@
                 </div>
             </div>
         </div>
-        <div class="flex-shrink-0" :style="{ width: '640px' }">
-            <TripWeightInfo
-                :gears="gearsInTrip"
-                :wornGears="wornGearsInTrip"
-                :consumables="consumablesInTrip"
-                class="trip-og-image__weight-info"
-            />
-        </div>
+        <TripWeightInfo
+            :gears="gearsInTrip"
+            :wornGears="wornGearsInTrip"
+            :consumables="consumablesInTrip"
+            class="trip-og-image__weight-info"
+        />
     </div>
 </template>
 
@@ -81,6 +79,7 @@ body {
 .trip-og-image {
     background: white;
     &__trip-info {
+        width: 540px;
         background-color: $eg-c-brown-200;
     }
     &__weight-info {
