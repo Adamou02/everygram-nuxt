@@ -78,6 +78,16 @@ export default function () {
             if (typeof separator !== 'string') separator = '-';
             return date.split('-').join(separator);
         },
+        formatMonthDateString: (date: Date) => {
+            if (!(date instanceof Date) || isNaN(date.getTime())) return '';
+            const options: Intl.DateTimeFormatOptions = {
+                month: 'short',
+                day: 'numeric',
+            };
+            return new Intl.DateTimeFormat(i18n.locale.value, options).format(
+                date,
+            );
+        },
         formatAcquiredDate: (date: string) => {
             if (typeof date !== 'string' || !date) return '';
             const parsedDate = new Date(date);
