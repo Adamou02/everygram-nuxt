@@ -7,11 +7,9 @@
 <script lang="ts" setup>
 const i18n = useI18n();
 const pageTitle = i18n.t('META_RELEASE_NOTES_TITLE');
-const content = ref<string>('');
-
-await(async () => {
-    content.value = (await import('~/content/release-notes.md?raw')).default;
-})();
+const content = ref<string>(
+    (await import('~/content/release-notes.md?raw')).default,
+);
 
 useSeoMeta({
     title: pageTitle,

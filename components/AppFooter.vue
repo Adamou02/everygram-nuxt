@@ -30,17 +30,24 @@
                     to="https://www.facebook.com/everygram"
                     target="_blank"
                     rel="noopener"
+                    :aria-label="$t('PAGE_FACEBOOK_PAGE')"
                 >
                     <PrimeButton rounded text icon="pi pi-facebook" />
                 </NuxtLink>
                 <!-- release notes -->
-                <NuxtLink to="/release-notes">
+                <NuxtLink
+                    to="/release-notes"
+                    :aria-label="$t('PAGE_RELEASE_NOTES')"
+                >
                     <PrimeButton rounded text size="small">
                         {{ $t('PAGE_RELEASE_NOTES') }}
                     </PrimeButton>
                 </NuxtLink>
                 <!-- privacy -->
-                <NuxtLink :to="`/privacy/${$i18n.locale}`">
+                <NuxtLink
+                    :to="`/privacy/${$i18n.locale}`"
+                    :aria-label="$t('PAGE_PRIVACY_POLICY')"
+                >
                     <PrimeButton rounded text size="small">
                         {{ $t('PAGE_PRIVACY_POLICY') }}
                     </PrimeButton>
