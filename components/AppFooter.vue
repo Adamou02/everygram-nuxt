@@ -25,6 +25,15 @@
                 >
             </div>
             <div class="flex gap-2">
+                <!-- facebook page -->
+                <NuxtLink
+                    to="https://www.facebook.com/everygram"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <PrimeButton rounded text icon="pi pi-facebook" />
+                </NuxtLink>
+                <!-- feedback form -->
                 <NuxtLink
                     to="https://docs.google.com/forms/d/e/1FAIpQLSdYyYfy1i7yfBjf-KrqlpD97UVxxtMrAqEyBlRoqWb3INEgeg/viewform"
                     target="_blank"
