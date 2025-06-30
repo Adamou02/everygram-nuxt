@@ -33,6 +33,12 @@
                 >
                     <PrimeButton rounded text icon="pi pi-facebook" />
                 </NuxtLink>
+                <!-- release notes -->
+                <NuxtLink to="/release-notes" target="_blank" rel="noopener">
+                    <PrimeButton rounded text size="small">
+                        {{ $t('PAGE_RELEASE_NOTES') }}
+                    </PrimeButton>
+                </NuxtLink>
                 <!-- privacy -->
                 <NuxtLink
                     :to="`/privacy/${$i18n.locale}`"

@@ -1,5 +1,3 @@
-# Everygram Privacy Policy
-
 Welcome to "Everygram" (hereinafter referred to as "this website"). To ensure you can use all services and information on this website with peace of mind, we hereby explain our privacy policy to protect your rights. Please read the following carefully:
 
 ## 1. Scope of the Privacy Policy
