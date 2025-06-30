@@ -44,9 +44,20 @@ defineProps<{
         top left,
         center right;
     background-repeat: repeat, no-repeat;
+    background-size: auto, contain;
     height: 160px;
 }
 .doc-page-content {
     line-height: 2;
+    h2,
+    h3,
+    h4 {
+        margin-top: 1rem;
+    }
+    hr {
+        margin: 2.5rem 0;
+        border-style: solid;
+        border-color: $eg-c-gray-400;
+    }
 }
 </style>
