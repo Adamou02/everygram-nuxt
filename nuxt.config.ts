@@ -78,6 +78,7 @@ export default defineNuxtConfig({
         '/': { ssr: true },
         '/trip-share/**': { ssr: true },
         '/trip-og-image/**': { ssr: true },
+        '/privacy/**': { ssr: true },
         '/public-trips': { ssr: false },
 
         // pages that require authentication

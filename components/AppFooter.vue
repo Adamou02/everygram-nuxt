@@ -24,7 +24,7 @@
                     {{ $t('APP_NAME') }}</small
                 >
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-2 align-items-center">
                 <!-- facebook page -->
                 <NuxtLink
                     to="https://www.facebook.com/everygram"
@@ -32,6 +32,16 @@
                     rel="noopener"
                 >
                     <PrimeButton rounded text icon="pi pi-facebook" />
+                </NuxtLink>
+                <!-- privacy -->
+                <NuxtLink
+                    :to="`/privacy/${$i18n.locale}`"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <PrimeButton rounded text size="small">
+                        {{ $t('PAGE_PRIVACY_POLICY') }}
+                    </PrimeButton>
                 </NuxtLink>
                 <!-- feedback form -->
                 <NuxtLink
@@ -46,7 +56,7 @@
                             )
                     "
                 >
-                    <PrimeButton rounded text>
+                    <PrimeButton rounded text size="small">
                         {{ $t('ACTION_FEEDBACK') }}
                     </PrimeButton>
                 </NuxtLink>
