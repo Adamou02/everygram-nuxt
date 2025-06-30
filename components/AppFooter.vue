@@ -24,14 +24,33 @@
                     {{ $t('APP_NAME') }}</small
                 >
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-column lg:flex-row gap-2 align-items-center">
                 <!-- facebook page -->
                 <NuxtLink
                     to="https://www.facebook.com/everygram"
                     target="_blank"
                     rel="noopener"
+                    :aria-label="$t('PAGE_FACEBOOK_PAGE')"
                 >
                     <PrimeButton rounded text icon="pi pi-facebook" />
+                </NuxtLink>
+                <!-- release notes -->
+                <NuxtLink
+                    to="/release-notes"
+                    :aria-label="$t('PAGE_RELEASE_NOTES')"
+                >
+                    <PrimeButton rounded text size="small">
+                        {{ $t('PAGE_RELEASE_NOTES') }}
+                    </PrimeButton>
+                </NuxtLink>
+                <!-- privacy -->
+                <NuxtLink
+                    :to="`/privacy/${$i18n.locale}`"
+                    :aria-label="$t('PAGE_PRIVACY_POLICY')"
+                >
+                    <PrimeButton rounded text size="small">
+                        {{ $t('PAGE_PRIVACY_POLICY') }}
+                    </PrimeButton>
                 </NuxtLink>
                 <!-- feedback form -->
                 <NuxtLink
@@ -46,7 +65,7 @@
                             )
                     "
                 >
-                    <PrimeButton rounded text>
+                    <PrimeButton rounded text size="small">
                         {{ $t('ACTION_FEEDBACK') }}
                     </PrimeButton>
                 </NuxtLink>
