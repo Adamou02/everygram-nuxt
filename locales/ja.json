@@ -237,6 +237,7 @@
     "LABEL_PASSWORD": "パスワード",
     "LABEL_PHOTO": "写真",
     "LABEL_PRICE": "価格",
+    "LABEL_PRIVATE_NOTE": "プライベートノート",
     "LABEL_PUBLIC": "公開",
     "LABEL_QUANTITY": "数量",
     "LABEL_START_DATE": "開始日",

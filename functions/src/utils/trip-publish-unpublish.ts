@@ -60,6 +60,8 @@ export const publishTrip = async (tripId: string) => {
                 ...gearMap[gearId],
                 quantity: tripGear.quantity,
             };
+            // remove private note from gear
+            delete acc[gearId].privateNote;
             return acc;
         },
         {} as Record<string, GearWithQuantity>,

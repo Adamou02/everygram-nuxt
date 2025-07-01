@@ -33,10 +33,23 @@
                         'flex flex-column gap-3',
                     ]"
                 >
+                    <!-- gear name and brand -->
                     <GearNameWithBrand
                         :gear="displayingGear"
                         :size="isLargeScreen ? 'lg' : 'md'"
                     />
+                    <!-- private note -->
+                    <div
+                        v-if="displayingGear.privateNote"
+                        :class="['text-color-light text-sm']"
+                    >
+                        <i
+                            class="pi pi-lock text-xs mr-1"
+                            :aria-label="$t('LABEL_PRIVATE_NOTE')"
+                        ></i>
+                        {{ displayingGear.privateNote }}
+                    </div>
+                    <!-- gear infos -->
                     <div
                         class="flex align-items-center justify-content-between gap-2"
                     >

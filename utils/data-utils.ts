@@ -230,6 +230,15 @@ const formatFormStateToEditingGear = (formState: any): EditingGear => {
                 : undefined;
     }
 
+    // privateNote (optional)
+    if ('privateNote' in formState) {
+        gearData.privateNote =
+            typeof formState?.privateNote === 'string' &&
+            formState.privateNote.length > 0
+                ? formState.privateNote
+                : undefined;
+    }
+
     // currency and price (optional)
     if ('price' in formState && 'currency' in formState) {
         const parsedPrice =
