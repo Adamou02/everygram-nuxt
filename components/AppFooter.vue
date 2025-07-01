@@ -34,6 +34,15 @@
                 >
                     <PrimeButton rounded text icon="pi pi-facebook" />
                 </NuxtLink>
+                <!-- instagram -->
+                <NuxtLink
+                    to="https://www.instagram.com/everygram.app/"
+                    target="_blank"
+                    rel="noopener"
+                    :aria-label="$t('PAGE_INSTAGRAM')"
+                >
+                    <PrimeButton rounded text icon="pi pi-instagram" />
+                </NuxtLink>
                 <!-- release notes -->
                 <NuxtLink
                     to="/release-notes"
