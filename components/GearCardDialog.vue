@@ -40,7 +40,12 @@
                     />
                     <!-- private note -->
                     <div
-                        v-if="displayingGear.privateNote"
+                        v-if="
+                            displayingGear.privateNote &&
+                            user &&
+                            displayingGear.role[user.uid] ===
+                                constants.ROLES.OWNER
+                        "
                         :class="['text-color-light text-sm']"
                     >
                         <i
@@ -48,22 +53,6 @@
                             :aria-label="$t('LABEL_PRIVATE_NOTE')"
                         ></i>
                         {{ displayingGear.privateNote }}
-                    </div>
-                    <!-- gear infos -->
-                    <div
-                        class="flex align-items-center justify-content-between gap-2"
-                    >
-                        <GearInfos
-                            :gear="displayingGear"
-                            :size="isLargeScreen ? 'lg' : 'md'"
-                            :infos="['category-avatar', 'weight']"
-                        />
-                        <GearInfos
-                            :gear="displayingGear"
-                            :size="isLargeScreen ? 'lg' : 'md'"
-                            :infos="['usedCount', 'price', 'age']"
-                            class="text-color-lighter"
-                        />
                     </div>
                 </div>
             </div>
@@ -79,6 +68,8 @@ const isImgLoaded = ref(false);
 const displayImageUrl = computed(() =>
     displayingGear.value ? dataUtils.getGearPhotoUrl(displayingGear.value) : '',
 );
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 // reset image loading state when dialog is closed
 watch(isOpenGearCardDialog, (newValue) => {
