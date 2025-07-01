@@ -372,22 +372,37 @@ const onSubmit = async () => {
         if (editingGear.value) {
             // upload gear photo first
             if (compressedPhotoFile.value) {
-                const result = await uploadFile({
-                    path: `${constants.STORAGE_PATH.GEAR}/${editingGear.value.id}`,
-                    file: compressedPhotoFile.value,
-                });
-                if (result) {
-                    gearData.photo = {
-                        url: result.downloadUrl,
-                        fileName: result.fileName,
-                    };
+                try {
+                    const result = await uploadFile({
+                        path: `${constants.STORAGE_PATH.GEAR}/${editingGear.value.id}`,
+                        file: compressedPhotoFile.value,
+                    });
+                    if (result) {
+                        gearData.photo = {
+                            url: result.downloadUrl,
+                            fileName: result.fileName,
+                        };
+                    } else {
+                        throw new Error('Photo upload failed');
+                    }
+                } catch (error) {
+                    console.error('Failed to upload photo:', error);
+                    // Optionally show error to user
+                    isSaving.value = false;
+                    return;
                 }
             }
             // update gear
-            await userGearsStore.updateGear({
-                id: editingGear.value.id,
-                gearData,
-            });
+            try {
+                await userGearsStore.updateGear({
+                    id: editingGear.value.id,
+                    gearData,
+                });
+            } catch (error) {
+                console.error('Failed to update gear:', error);
+                isSaving.value = false;
+                return;
+            }
             emit(
                 'complete-edit',
                 userGearsStore.getGearById(editingGear.value.id),
@@ -395,28 +410,59 @@ const onSubmit = async () => {
             onCompleteEditGear();
         } else {
             // create new gear first
-            const newGear = await userGearsStore.createGear(gearData);
-            if (!newGear) {
-                throw new Error('Failed to add gear');
+            let newGear;
+            try {
+                newGear = await userGearsStore.createGear(gearData);
+                if (!newGear) {
+                    throw new Error('Failed to add gear');
+                }
+            } catch (error) {
+                console.error('Failed to create gear:', error);
+                isSaving.value = false;
+                return;
             }
+
+            if (!newGear) {
+                console.error('New gear creation returned null');
+                isSaving.value = false;
+                return;
+            }
+
             // upload gear photo
             if (compressedPhotoFile.value) {
-                const result = await uploadFile({
-                    path: `${constants.STORAGE_PATH.GEAR}/${newGear.id}`,
-                    file: compressedPhotoFile.value,
-                });
-                if (result) {
-                    const photo = {
-                        url: result.downloadUrl,
-                        fileName: result.fileName,
-                    };
-                    await userGearsStore.updateGear({
-                        id: newGear.id,
-                        gearData: {
-                            photo,
-                        },
+                try {
+                    const result = await uploadFile({
+                        path: `${constants.STORAGE_PATH.GEAR}/${newGear.id}`,
+                        file: compressedPhotoFile.value,
                     });
-                    newGear.photo = photo;
+                    if (result) {
+                        const photo = {
+                            url: result.downloadUrl,
+                            fileName: result.fileName,
+                        };
+                        try {
+                            await userGearsStore.updateGear({
+                                id: newGear.id,
+                                gearData: {
+                                    photo,
+                                },
+                            });
+                            newGear.photo = photo;
+                        } catch (error) {
+                            console.error(
+                                'Failed to update gear photo:',
+                                error,
+                            );
+                            isSaving.value = false;
+                            return;
+                        }
+                    } else {
+                        throw new Error('Photo upload failed');
+                    }
+                } catch (error) {
+                    console.error('Failed to upload photo:', error);
+                    isSaving.value = false;
+                    return;
                 }
             }
             emit('complete-create', newGear);

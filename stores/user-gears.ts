@@ -180,25 +180,26 @@ export const useUserGearsStore = defineStore('userGearsStore', () => {
         if (!user.value) {
             return null;
         }
-        const userId = user.value.uid;
-        let newGear: Gear | null = null;
-        try {
-            await runTransaction(db, async (transaction) => {
-                // Create a new gear document reference with an auto-generated ID
-                const gearDocRef = doc(gearCollectionRef);
-                const gearId = gearDocRef.id;
-                const gearData = buildNewGear(userId, editingGear);
-                transaction.set(gearDocRef, gearData);
 
-                // Add new gear to userGears document
-                const userGearsDocRef = doc(db, 'userGears', userId);
-                const formattedGear = formatDataToGearType(gearId, gearData);
+        try {
+            // Create a new gear document reference with an auto-generated ID
+            const userId = user.value.uid;
+            const gearDocRef = doc(gearCollectionRef);
+            const gearId = gearDocRef.id;
+            const gearData = buildNewGear(userId, editingGear);
+
+            // Add new gear to userGears document
+            const userGearsDocRef = doc(db, 'userGears', userId);
+            const formattedGear = formatDataToGearType(gearId, gearData);
+
+            await runTransaction(db, async (transaction) => {
+                transaction.set(gearDocRef, gearData);
                 transaction.update(userGearsDocRef, {
                     [`gears.${gearId}`]: formattedGear,
                 });
-                newGear = formattedGear;
             });
-            return newGear;
+
+            return formattedGear;
         } catch (error) {
             console.error(error);
             throw error;
