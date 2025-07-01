@@ -164,7 +164,19 @@
                             :maxlength="
                                 constants.LIMIT.maxGearDescriptionLength
                             "
-                            rows="2"
+                            rows="1"
+                            class="w-full"
+                            autoResize
+                        />
+                    </FormField>
+                    <!-- private note -->
+                    <FormField :label="$t('LABEL_PRIVATE_NOTE')">
+                        <PrimeTextarea
+                            v-model="formState.privateNote"
+                            :maxlength="
+                                constants.LIMIT.maxGearDescriptionLength
+                            "
+                            rows="1"
                             class="w-full"
                             autoResize
                         />
@@ -262,6 +274,7 @@ const initialFormState = {
     category: undefined as GearCategory | undefined,
     addToGears: true,
     description: '',
+    privateNote: '',
     price: undefined as number | undefined,
     currency: constants.DEFAULT_CURRENCY_CODE as CurrencyCode,
     acquiredDate: undefined as Date | undefined,
@@ -282,6 +295,11 @@ const formRules = {
         minValue: formValidators.minValue(0),
     },
     description: {
+        maxLength: formValidators.maxLength(
+            constants.LIMIT.maxGearDescriptionLength,
+        ),
+    },
+    privateNote: {
         maxLength: formValidators.maxLength(
             constants.LIMIT.maxGearDescriptionLength,
         ),
@@ -311,6 +329,8 @@ watch(isOpen, (newValue) => {
         formState.addToGears = initialFormState.addToGears;
         formState.description =
             editingGear.value?.description ?? initialFormState.description;
+        formState.privateNote =
+            editingGear.value?.privateNote ?? initialFormState.privateNote;
         formState.price = editingGear.value?.price ?? initialFormState.price;
         formState.currency =
             editingGear.value?.currency ??

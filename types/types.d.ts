@@ -81,6 +81,7 @@ declare global {
         archived?: Timestamp;
         photo?: StorageImage;
         description?: string;
+        privateNote?: string;
         price?: number;
         currency?: CurrencyCode;
         acquiredDate?: string; // ISO string or Date
