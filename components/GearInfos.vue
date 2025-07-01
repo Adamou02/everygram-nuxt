@@ -27,6 +27,7 @@ type GearInfo =
     | 'category'
     | 'weight'
     | 'price'
+    | 'acquiredDate'
     | 'age'
     | 'usedCount'
     | 'archived';
@@ -77,6 +78,16 @@ function getInfoComponent(
                       component: InlineText,
                       props: {
                           text: formattedPrice,
+                          class: isLargeScreen.value ? 'text-sm' : 'text-xs',
+                      },
+                  }
+                : null;
+        case 'acquiredDate':
+            return gear.acquiredDate
+                ? {
+                      component: InlineText,
+                      props: {
+                          text: gear.acquiredDate,
                           class: isLargeScreen.value ? 'text-sm' : 'text-xs',
                       },
                   }

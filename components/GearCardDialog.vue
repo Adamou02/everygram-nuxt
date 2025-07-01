@@ -27,11 +27,31 @@
                     }"
                     @load="isImgLoaded = true"
                 />
-                <div class="p-3 sticky bottom-0 bg-white shadow-2">
+                <div
+                    :class="[
+                        'p-3 sticky bottom-0 bg-white shadow-2',
+                        'flex flex-column gap-3',
+                    ]"
+                >
                     <GearNameWithBrand
                         :gear="displayingGear"
                         :size="isLargeScreen ? 'lg' : 'md'"
                     />
+                    <div
+                        class="flex align-items-center justify-content-between gap-2"
+                    >
+                        <GearInfos
+                            :gear="displayingGear"
+                            :size="isLargeScreen ? 'lg' : 'md'"
+                            :infos="['category-avatar', 'weight']"
+                        />
+                        <GearInfos
+                            :gear="displayingGear"
+                            :size="isLargeScreen ? 'lg' : 'md'"
+                            :infos="['usedCount', 'price', 'age']"
+                            class="text-color-lighter"
+                        />
+                    </div>
                 </div>
             </div>
         </template>
