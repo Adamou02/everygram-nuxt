@@ -5,7 +5,7 @@
 -   **新增裝備私人筆記欄位**  
     現在你可以為每個裝備寫下私人筆記，記錄使用心得、取得管道或其他資訊。這些筆記只會在你登入時可以查看，不會出現在公開的行程裝備。
 -   **新增 Everygram Instagram 帳號**  
-    歡迎關注我們的 [Instagram](https://www.instagram.com/everygram.app)，獲取最新產品消息與跟我們交流使用心得。
+    歡迎追蹤我們的 [Instagram](https://www.instagram.com/everygram.app)，獲取最新產品消息與跟我們交流使用心得。
 
 ### 6/30
 
