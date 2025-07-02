@@ -109,6 +109,7 @@ const emit = defineEmits<{
 const i18n = useI18n();
 const toast = useToast();
 const userGearsStore = useUserGearsStore();
+const { errorToast } = useErrorToast();
 
 const fakeGears = Array.from({ length: 10 }, () =>
     dataUtils.convertedEditingGearToTempGear({}),
@@ -152,7 +153,7 @@ const onImport = async () => {
         });
         emit('complete');
     } catch (error) {
-        console.error(error);
+        errorToast('Failed to import gears', error);
     } finally {
         isImporting.value = false;
     }

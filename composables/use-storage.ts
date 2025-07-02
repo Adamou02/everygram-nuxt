@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 export default function () {
     const storage = getStorage();
     const isUploading = ref(false);
+    const { errorToast } = useErrorToast();
     const uploadFile = async ({
         file,
         path,
@@ -30,7 +31,7 @@ export default function () {
                 downloadUrl,
             };
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to upload file', error);
         } finally {
             isUploading.value = false;
         }

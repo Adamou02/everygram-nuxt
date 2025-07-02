@@ -332,6 +332,7 @@ const userGearsStore = useUserGearsStore();
 const { gearMap } = storeToRefs(userGearsStore);
 const i18n = useI18n();
 const toast = useToast();
+const { errorToast } = useErrorToast();
 
 const route = useRoute();
 const tripId = route.params.id as string;
@@ -451,7 +452,7 @@ const onRemoveGear = async (gear: Gear, type: TripGearType) => {
                     );
                     await userGearsStore.deleteGear(gear.id);
                 } catch (error) {
-                    console.error(error);
+                    errorToast('Failed to remove gear from trip', error);
                 }
             },
         });

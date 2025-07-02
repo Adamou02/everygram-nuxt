@@ -1,6 +1,7 @@
 export default function () {
     const i18n = useI18n();
     const userMetaStore = useUserMetaStore();
+    const { errorToast } = useErrorToast();
 
     return {
         getCurrentLocale: () => {
@@ -14,7 +15,7 @@ export default function () {
             try {
                 await userMetaStore.updateUserMeta({ locale });
             } catch (error) {
-                console.error('Failed to update user meta locale:', error);
+                errorToast('Failed to update user locale', error);
             }
             analyticsUtils.log(constants.ANALYTICS_EVENTS.CHANGE_LOCALE, {
                 locale,

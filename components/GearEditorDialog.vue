@@ -353,6 +353,7 @@ const gearPhotoUrl = computed(() =>
 );
 const compressedPhotoFile = ref<Blob | null>(null);
 const { uploadFile } = useStorage();
+const { errorToast } = useErrorToast();
 const onSubmit = async () => {
     const valid = await vuelidate.value.$validate();
     if (!valid) {
@@ -386,7 +387,7 @@ const onSubmit = async () => {
                         throw new Error('Photo upload failed');
                     }
                 } catch (error) {
-                    console.error('Failed to upload photo:', error);
+                    errorToast('Failed to upload photo', error);
                     // Optionally show error to user
                     isSaving.value = false;
                     return;
@@ -399,7 +400,7 @@ const onSubmit = async () => {
                     gearData,
                 });
             } catch (error) {
-                console.error('Failed to update gear:', error);
+                errorToast('Failed to update gear', error);
                 isSaving.value = false;
                 return;
             }
@@ -417,13 +418,13 @@ const onSubmit = async () => {
                     throw new Error('Failed to add gear');
                 }
             } catch (error) {
-                console.error('Failed to create gear:', error);
+                errorToast('Failed to create gear', error);
                 isSaving.value = false;
                 return;
             }
 
             if (!newGear) {
-                console.error('New gear creation returned null');
+                errorToast('New gear creation returned null');
                 isSaving.value = false;
                 return;
             }
@@ -449,10 +450,7 @@ const onSubmit = async () => {
                             });
                             newGear.photo = photo;
                         } catch (error) {
-                            console.error(
-                                'Failed to update gear photo:',
-                                error,
-                            );
+                            errorToast('Failed to update gear photo', error);
                             isSaving.value = false;
                             return;
                         }
@@ -460,7 +458,7 @@ const onSubmit = async () => {
                         throw new Error('Photo upload failed');
                     }
                 } catch (error) {
-                    console.error('Failed to upload photo:', error);
+                    errorToast('Failed to upload photo', error);
                     isSaving.value = false;
                     return;
                 }
@@ -484,14 +482,11 @@ const onSubmit = async () => {
                     currency: gearData.currency,
                 });
             } catch (error) {
-                console.error(
-                    'Failed to update user meta with selected currency:',
-                    error,
-                );
+                errorToast('Failed to update user currency', error);
             }
         }
     } catch (error) {
-        console.error(error);
+        errorToast('An error occurred while saving the gear', error);
     } finally {
         isSaving.value = false;
     }

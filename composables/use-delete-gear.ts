@@ -2,12 +2,13 @@ export const useDeleteGear = () => {
     const i18n = useI18n();
     const userGearsStore = useUserGearsStore();
     const { confirmDeleteDialog } = useUiUitls();
+    const { errorToast } = useErrorToast();
 
     const onDeleteGear = async (gear: Gear) => {
         try {
             await userGearsStore.deleteGear(gear.id);
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to delete gear', error);
         }
     };
 
