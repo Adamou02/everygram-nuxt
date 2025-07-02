@@ -348,6 +348,7 @@ const resetData = () => {
 };
 
 const userGearsStore = useUserGearsStore();
+const { errorToast } = useErrorToast();
 const onImportGears = async () => {
     const gears = selectedGears.value.map(
         (gear) =>
@@ -365,7 +366,7 @@ const onImportGears = async () => {
             import_gear_num: gears.length,
         });
     } catch (error) {
-        console.error(error);
+        errorToast('Failed to import gears', error);
     } finally {
         isImporting.value = false;
     }

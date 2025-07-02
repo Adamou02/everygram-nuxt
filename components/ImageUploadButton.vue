@@ -32,6 +32,7 @@ const emit = defineEmits<{
     'upload-complete': [{ downloadUrl: string; fileName: string }];
 }>();
 
+const { errorToast } = useErrorToast();
 const {
     fileInput,
     isCompressing,
@@ -59,7 +60,7 @@ const {
                 });
             }
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to upload image', error);
         } finally {
             setTimeout(() => {
                 // hack: wait image to load

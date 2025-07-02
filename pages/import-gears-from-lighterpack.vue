@@ -125,6 +125,7 @@ definePageMeta({
 const { convertLighterpackGears } = useConvertLighterpackGears();
 const { hasLastVisited } = useNavigation();
 const i18n = useI18n();
+const { errorToast } = useErrorToast();
 const currencyOptions = Object.values(constants.CURRENCIES);
 
 const userMetaStore = useUserMetaStore();
@@ -230,7 +231,7 @@ const onStart = async () => {
                     currency: formState.currency,
                 });
             } catch (error) {
-                console.error('Failed to update user meta currency:', error);
+                errorToast('Failed to update user currency', error);
             }
         }
     }

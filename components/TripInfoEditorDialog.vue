@@ -134,6 +134,7 @@ const {
     isEditingTrip,
     editingTrip,
 } = useEditTrip();
+const { errorToast } = useErrorToast();
 
 const isOpen = computed(() => isAddingTrip.value || isEditingTrip.value);
 
@@ -258,7 +259,7 @@ const onSubmit = async () => {
             });
         }
     } catch (error) {
-        console.error(error);
+        errorToast('Failed to save trip', error);
     } finally {
         isSaving.value = false;
     }

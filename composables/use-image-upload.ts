@@ -26,6 +26,7 @@ export default function (
     const isCompressing = ref(false);
     const toast = useToast();
     const i18n = useI18n();
+    const { errorToast } = useErrorToast();
 
     watch(selectedFile, (file) => {
         if (file) {
@@ -41,7 +42,7 @@ export default function (
             selectedFilePath.value,
         );
         if (!isImageSupported) {
-            console.error('image format is not supported');
+            errorToast('image format is not supported');
             toast.add({
                 severity: 'error',
                 summary: i18n.t('ERROR_IMAGE_FORMAT_NOT_SUPPORTED'),
@@ -60,14 +61,14 @@ export default function (
                         resolve(result);
                     },
                     error: (error) => {
-                        console.error(error.message);
+                        errorToast(error.message);
                         resolve(file);
                     },
                 });
             });
             options?.onFileCompressed?.(compressedFile.value);
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to compress image', error);
         } finally {
             isCompressing.value = false;
         }

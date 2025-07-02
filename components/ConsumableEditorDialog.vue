@@ -150,6 +150,7 @@ const {
     onCompleteEditConsumable,
     onCancelEditConsumable,
 } = useEditConsumable();
+const { errorToast } = useErrorToast();
 
 const isOpen = computed(
     () => isAddingConsumable.value || isEditingConsumable.value,
@@ -245,7 +246,7 @@ const onSubmit = async () => {
             });
         }
     } catch (error) {
-        console.error(error);
+        errorToast('Failed to save consumable', error);
     } finally {
         isSaving.value = false;
     }

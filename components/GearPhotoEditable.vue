@@ -51,6 +51,7 @@ const props = defineProps<{
 const isLoading = ref(false);
 const userGearsStore = useUserGearsStore();
 const { uploadFile } = useStorage();
+const { errorToast } = useErrorToast();
 const {
     fileInput,
     selectedFilePath,
@@ -85,7 +86,7 @@ const {
                 });
             }
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to upload gear photo', error);
         } finally {
             isLoading.value = false;
         }

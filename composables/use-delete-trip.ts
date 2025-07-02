@@ -2,12 +2,13 @@ export default function useDeleteTrip() {
     const i18n = useI18n();
     const userTripsStore = useUserTripsStore();
     const { confirmDeleteDialog } = useUiUitls();
+    const { errorToast } = useErrorToast();
 
     const onDeleteTrip = async (trip: Trip) => {
         try {
             await userTripsStore.deleteTrip(trip.id);
         } catch (error) {
-            console.error(error);
+            errorToast('Failed to delete trip', error);
         }
     };
 

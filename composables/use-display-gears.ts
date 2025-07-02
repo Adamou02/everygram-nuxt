@@ -52,11 +52,12 @@ export default function () {
         isFiltered.value = true;
     }, 500);
 
-    watch(filterValue, (newFilterValue) => {
+    watch([filterValue, visibleGears], ([newFilterValue]) => {
         if (!newFilterValue) {
             // reset immediately when clear filter
             filteredGears.value = visibleGears.value;
             isFiltered.value = false;
+            return;
         }
         debouncedUpdateFilteredGears();
     });
