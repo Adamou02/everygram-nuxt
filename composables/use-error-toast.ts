@@ -1,4 +1,4 @@
-export default function useUseErrorToas() {
+export default function useErrorToast() {
     const toast = useToast();
     const errorToast = (message: string, error?: any) => {
         toast.add({
