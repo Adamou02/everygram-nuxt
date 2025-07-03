@@ -156,6 +156,8 @@
     "INFO_HELLO": "こんにちは！",
     "INFO_IMPORT_GEARS_FROM_LIGHTERPACK": "LighterPackギアリストから{num}件のギアが見つかりました。インポートしたいギアを選択し、「インポート」ボタンをクリックしてください。",
     "INFO_IMPORT_LIGHTERPACK_GEARS_DESC": "LighterPackの共有リンクを入力し、ギア価格の通貨を選択してください。; データが読み込まれたら、ギアをプレビューしてインポートするものを選択できます。; LighterPackからインポートされたギアは自動的にカテゴリとブランドが設定されます。インポート後に編集可能です。; LighterPackで消耗品としてマークされたアイテムはインポートされません。; 一度に最大{max}件までインポートできます。",
+    "INFO_IN_BASE": "ベースにある",
+    "INFO_IN_WORN": "着用にある",
     "INFO_INVALID_GEAR_DATA_ROW": "{index}行目: {data}。{reason}",
     "INFO_INVALID_GEAR_DATA": "無効なギアデータが{num}件あります",
     "INFO_INVALID_GEAR_REASON_ACQUIRED_DATE": "取得日付の形式がサポートされていません",

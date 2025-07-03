@@ -79,7 +79,7 @@
                     <GearSelectDataTable
                         v-if="formattedGearsData.length"
                         :selectableGears="formattedGearsData"
-                        :selectedGears="selectedGears"
+                        :selectedIndices="selectedIndices"
                         dataKey="name"
                         :additionalFields="[
                             'description',
@@ -88,8 +88,9 @@
                             'acquiredDate',
                         ]"
                         @update="
-                            (newSelectedGears) =>
-                                (selectedGears = newSelectedGears)
+                            (newSelectedIndices) => {
+                                selectedIndices = newSelectedIndices;
+                            }
                         "
                     />
                     <PrimePanel
@@ -142,14 +143,14 @@
                         :label="
                             $t(
                                 'ACTION_IMPORT_NUM_GEARS',
-                                { num: selectedGears.length },
-                                selectedGears.length,
+                                { num: selectedIndices.length },
+                                selectedIndices.length,
                             )
                         "
                         icon="pi pi-download"
                         rounded
                         :loading="isImporting"
-                        :disabled="!selectedGears.length || isImporting"
+                        :disabled="!selectedIndices.length || isImporting"
                         @click="onImportGears"
                     />
                 </div>
@@ -180,11 +181,11 @@ const isFormatting = ref(false);
 const isImporting = ref(false);
 const activeStep = ref(0);
 const importedGearRows = ref<string[][]>([]);
-const selectedGears = ref<ImportGear[]>([]);
+const selectedIndices = ref<number[]>([]);
 const invalidRows = ref<{ index: number; data: string[]; reason: string }[]>(
     [],
 );
-const formattedGearsData = ref<ImportGear[]>([]);
+const formattedGearsData = ref<Gear[]>([]);
 const gearNameExists = ref<Record<string, boolean>>({});
 
 const onFileSelected = async (file: File) => {
@@ -322,19 +323,21 @@ const onFileSelected = async (file: File) => {
             return;
         }
 
-        formattedGearsData.value.push({
-            name,
-            weight,
-            category,
-            description,
-            currency,
-            price,
-            acquiredDate,
-        });
+        formattedGearsData.value.push(
+            dataUtils.convertedEditingGearToTempGear({
+                name,
+                weight,
+                category,
+                description,
+                currency,
+                price,
+                acquiredDate,
+            }),
+        );
 
         gearNameExists.value[name] = true;
     });
-    selectedGears.value = formattedGearsData.value;
+    selectedIndices.value = _range(0, formattedGearsData.value.length);
     isFormatting.value = false;
     analyticsUtils.log(constants.ANALYTICS_EVENTS.UPLOAD_IMPORT_GEARS_DATA);
 };
@@ -343,17 +346,19 @@ const resetData = () => {
     importedGearRows.value = [];
     formattedGearsData.value = [];
     invalidRows.value = [];
-    selectedGears.value = [];
+    selectedIndices.value = [];
     gearNameExists.value = {};
 };
 
 const userGearsStore = useUserGearsStore();
 const { errorToast } = useErrorToast();
 const onImportGears = async () => {
-    const gears = selectedGears.value.map(
-        (gear) =>
+    const gears = selectedIndices.value.map(
+        (index) =>
             ({
-                ...dataUtils.formatFormStateToEditingGear(gear),
+                ...dataUtils.formatFormStateToEditingGear(
+                    formattedGearsData.value[index],
+                ),
                 source: 'csv',
             }) as EditingGear,
     );

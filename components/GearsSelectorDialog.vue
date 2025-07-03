@@ -34,12 +34,15 @@
                 <GearSelectDataTable
                     :show-photo="true"
                     :selectableGears="categorySortedGears"
-                    :selectedGears="selectedGears"
-                    :existingGearIds="existingGearIds"
+                    :selectedIndices="selectedIndices"
                     :filters="filters"
                     dataKey="id"
+                    :getIsDisabled="getIsDisabled"
+                    :getGearHint="getGearHint"
                     @update="
-                        (newSelectedGears) => (selectedGears = newSelectedGears)
+                        (newSelectedIndices) => {
+                            selectedIndices = newSelectedIndices;
+                        }
                     "
                 />
             </template>
@@ -52,9 +55,9 @@
                             $t(
                                 'INFO_SELECTED_GEAR_NUM',
                                 {
-                                    num: selectedGears.length,
+                                    num: selectedIndices.length,
                                 },
-                                selectedGears.length,
+                                selectedIndices.length,
                             )
                         }}
                         |
@@ -66,7 +69,7 @@
                         <PrimeButton
                             rounded
                             :label="actionLabel || $t('ACTION_ADD')"
-                            :disabled="!selectedGears.length"
+                            :disabled="!selectedIndices.length"
                             @click="onSubmit()"
                         />
                     </div>
@@ -87,6 +90,8 @@ const props = defineProps<{
     dialogTitle?: string;
     actionLabel?: string;
     noGearHint?: string;
+    getIsDisabled?: (gear: Gear) => boolean;
+    getGearHint?: (gear: Gear) => string;
 }>();
 const emit = defineEmits<{
     complete: [selectedGears: TripGear[]];
@@ -108,9 +113,13 @@ const categorySortedGears = computed<Gear[]>(() =>
         (gear) => -gear.weight,
     ),
 );
-const selectedGears = ref<Gear[]>([]);
+const selectedIndices = ref<number[]>([]);
 const weightOfSelectedGears = computed(() =>
-    _sum(selectedGears.value.map((gear) => +gear.weight || 0)),
+    _sum(
+        selectedIndices.value.map(
+            (index) => +categorySortedGears.value[index].weight || 0,
+        ),
+    ),
 );
 const filterValue = ref<string>('');
 
@@ -118,7 +127,7 @@ watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
-            selectedGears.value = [];
+            selectedIndices.value = [];
             filterValue.value = '';
         }
     },
@@ -130,10 +139,10 @@ const filters = computed(() => ({
 const onSubmit = () => {
     emit(
         'complete',
-        selectedGears.value.map(
-            (gear) =>
+        selectedIndices.value.map(
+            (index) =>
                 ({
-                    id: gear.id,
+                    id: categorySortedGears.value[index].id,
                     quantity: 1,
                 }) as TripGear,
         ),

@@ -314,6 +314,30 @@
                 ? $t('INFO_NO_USER_WEARABLE_GEARS')
                 : $t('INFO_NO_USER_GEARS')
         "
+        :getIsDisabled="
+            (gear: Gear) =>
+                selectingGearType === 'wornGears'
+                    ? isWornGearInTripMap[gear.id]
+                    : isGearInTripMap[gear.id]
+        "
+        :getGearHint="
+            (gear: Gear) => {
+                if (selectingGearType === 'wornGears') {
+                    if (isWornGearInTripMap[gear.id]) {
+                        return $t('INFO_ADDED');
+                    } else if (isGearInTripMap[gear.id]) {
+                        return $t('INFO_IN_BASE');
+                    }
+                } else {
+                    if (isGearInTripMap[gear.id]) {
+                        return $t('INFO_ADDED');
+                    } else if (isWornGearInTripMap[gear.id]) {
+                        return $t('INFO_IN_WORN');
+                    }
+                }
+                return '';
+            }
+        "
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"
     />
@@ -354,6 +378,17 @@ const gearsInTrip = computed<GearWithQuantity[]>(() =>
           }))
         : [],
 );
+const isGearInTripMap = computed<Record<string, boolean>>(() => {
+    if (!trip.value) return {};
+    return _reduce(
+        trip.value.gears,
+        (acc, gear) => {
+            acc[gear.id] = true;
+            return acc;
+        },
+        {} as Record<string, boolean>,
+    );
+});
 
 // worn gears
 const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
@@ -367,6 +402,17 @@ const wornGearsInTrip = computed<GearWithQuantity[]>(() =>
           )
         : [],
 );
+const isWornGearInTripMap = computed<Record<string, boolean>>(() => {
+    if (!trip.value) return {};
+    return _reduce(
+        trip.value.wornGears,
+        (acc, gear) => {
+            acc[gear.id] = true;
+            return acc;
+        },
+        {} as Record<string, boolean>,
+    );
+});
 
 // consumables
 const consumablesInTrip = computed<Consumable[]>(() =>

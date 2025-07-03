@@ -156,6 +156,8 @@
     "INFO_HELLO": "Hello!",
     "INFO_IMPORT_GEARS_FROM_LIGHTERPACK": "Found {num} gears from your LighterPack gear list. You can now select the gears you want to import and click the 'Import' button to add them to your gears.",
     "INFO_IMPORT_LIGHTERPACK_GEARS_DESC": "Enter the share link of your LighterPack gear list, and select the currency used for gear price.;After data is loaded, you can preview the gears and select which gears to import.;Gears imported from LighterPack will automatically have their categories and brands set. You can edit them after they are imported.;Items marked as consumable in LighterPack will not be imported.;A maximum of {max} gear data can be imported at a time.",
+    "INFO_IN_BASE": "In Base",
+    "INFO_IN_WORN": "In Worn",
     "INFO_INVALID_GEAR_DATA_ROW": "Row {index}: {data}. {reason}",
     "INFO_INVALID_GEAR_DATA": "Oops! There are {num} invalid gear data",
     "INFO_INVALID_GEAR_REASON_ACQUIRED_DATE": "Acquired date format not supported",
