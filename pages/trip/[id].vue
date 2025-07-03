@@ -293,21 +293,26 @@
     </EmptyState>
     <GearsSelectorDialog
         :is-open="isSelectingGears"
-        :selected-gear-ids="[...selectedGearIds, ...selectedWornGearIds]"
+        :existing-gear-ids="
+            selectingGearType === 'wornGears'
+                ? selectedWornGearIds
+                : selectedGearIds
+        "
         :categories="
             selectingGearType === 'wornGears'
                 ? constants.WEARABLE_GEAR_CATEGORY_KEYS
                 : undefined
         "
+        :dialog-title="
+            selectingGearType === 'wornGears'
+                ? $t('ACTION_SELECT_WORN_GEARS')
+                : $t('ACTION_SELECT_BASE_GEARS')
+        "
+        :action-label="$t('ACTION_ADD_TO_TRIP')"
         :no-gear-hint="
             selectingGearType === 'wornGears'
                 ? $t('INFO_NO_USER_WEARABLE_GEARS')
                 : $t('INFO_NO_USER_GEARS')
-        "
-        :no-selectable-hint="
-            selectingGearType === 'wornGears'
-                ? $t('INFO_ALL_WEARABLE_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
-                : $t('INFO_ALL_GEARS_HAVE_BEEN_ADDED_TO_TRIP')
         "
         @complete="onCompletSelectGears"
         @cancel="isSelectingGears = false"

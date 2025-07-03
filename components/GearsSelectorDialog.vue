@@ -2,7 +2,7 @@
     <div>
         <PrimeDialog
             :visible="isOpen"
-            :header="$t('ACTION_SELECT_GEARS')"
+            :header="dialogTitle || $t('ACTION_SELECT_GEARS')"
             modal
             @update:visible="(value: boolean) => !value && $emit('cancel')"
             class="w-full h-full mx-2"
@@ -10,11 +10,9 @@
             :pt="{ content: { class: 'p-0 flex-1' } }"
         >
             <EmptyState
-                v-if="!selectableGears.length"
+                v-if="!categorySortedGears.length"
                 :title="$t('INFO_NO_GEARS_TO_SELECT')"
-                :description="
-                    gearsInCategories.length ? noSelectableHint : noGearHint
-                "
+                :description="noGearHint"
                 image-src="/image/empty-gear-select.jpg"
             >
                 <template v-if="!visibleGears.length" #actions>
@@ -35,8 +33,9 @@
                 </div>
                 <GearSelectDataTable
                     :show-photo="true"
-                    :selectableGears="selectableGears"
+                    :selectableGears="categorySortedGears"
                     :selectedGears="selectedGears"
+                    :existingGearIds="existingGearIds"
                     :filters="filters"
                     dataKey="id"
                     @update="
@@ -44,7 +43,7 @@
                     "
                 />
             </template>
-            <template v-if="selectableGears.length" #footer>
+            <template v-if="categorySortedGears.length" #footer>
                 <div
                     class="flex justify-content-between align-items-center gap-3 w-full"
                 >
@@ -66,7 +65,7 @@
                     <div class="flex flex-row gap-2">
                         <PrimeButton
                             rounded
-                            :label="$t('ACTION_ADD')"
+                            :label="actionLabel || $t('ACTION_ADD')"
                             :disabled="!selectedGears.length"
                             @click="onSubmit()"
                         />
@@ -83,10 +82,11 @@ import { FilterMatchMode } from 'primevue/api';
 
 const props = defineProps<{
     isOpen: boolean;
-    selectedGearIds: string[];
+    existingGearIds: string[];
     categories?: GearCategory[];
+    dialogTitle?: string;
+    actionLabel?: string;
     noGearHint?: string;
-    noSelectableHint?: string;
 }>();
 const emit = defineEmits<{
     complete: [selectedGears: TripGear[]];
@@ -101,11 +101,9 @@ const gearsInCategories = computed(() =>
         (gear) => !props.categories || props.categories.includes(gear.category),
     ),
 );
-const selectableGears = computed<Gear[]>(() =>
+const categorySortedGears = computed<Gear[]>(() =>
     _sortBy(
-        gearsInCategories.value.filter(
-            (gear) => !props.selectedGearIds.includes(gear.id),
-        ),
+        gearsInCategories.value,
         (gear) => constants.GEAR_CATEGORY_KEYS.indexOf(gear.category),
         (gear) => -gear.weight,
     ),

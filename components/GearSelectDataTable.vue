@@ -11,6 +11,10 @@
         size="large"
         :dataKey="dataKey"
         class="select-none"
+        :rowClass="
+            (rowData) =>
+                rowData.hasBeenSelected ? 'row--has-been-selected' : ''
+        "
     >
         <PrimeColumn selectionMode="multiple" class="w-2rem" />
         <!-- hide photo on mobile due to limited space -->
@@ -35,7 +39,15 @@
             field="formattedWeight"
             :header="$t('LABEL_WEIGHT')"
             class="text-right w-5rem"
-        />
+        >
+            <template #body="{ data }">
+                {{
+                    data.hasBeenSelected
+                        ? $t('INFO_ADDED')
+                        : data.formattedWeight
+                }}
+            </template>
+        </PrimeColumn>
         <!-- desktop category -->
         <PrimeColumn
             v-if="isLargeScreen"
@@ -87,21 +99,11 @@
     </PrimeDataTable>
 </template>
 
-<script
-    setup
-    lang="ts"
-    generic="
-        T extends {
-            name: string;
-            weight: number;
-            category: GearCategory;
-            brand?: GearBrand;
-        }
-    "
->
+<script setup lang="ts" generic="T extends Gear">
 const props = defineProps<{
     selectableGears: T[];
     selectedGears: T[];
+    existingGearIds: string[];
     dataKey: string;
     showPhoto?: boolean;
     filters?: Record<string, any>;
@@ -115,8 +117,19 @@ const formattedGears = computed(() => {
         ...gear,
         formattedBrand: gear.brand ? formatBrand(gear.brand) : '',
         formattedWeight: gear.weight ? formatWeight(gear.weight) : '-',
+        hasBeenSelected: props.existingGearIds.includes(gear.id),
     }));
 });
 const { formatWeight, formatBrand } = useLangUtils();
 const { isLargeScreen } = useDeviceMeta();
 </script>
+
+<style lang="scss">
+.row--has-been-selected {
+    opacity: 0.5;
+    pointer-events: none;
+    .p-checkbox {
+        visibility: hidden;
+    }
+}
+</style>
