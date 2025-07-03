@@ -43,6 +43,16 @@
             image-src="/image/empty-trip.jpg"
         >
             <template #actions>
+                <NuxtLink to="/gears">
+                    <PrimeButton
+                        severity="secondary"
+                        rounded
+                        outlined
+                        :label="$t('ACTION_CREATE_GEAR_IN_GEARS')"
+                        icon="pi pi-arrow-right"
+                        icon-pos="right"
+                    />
+                </NuxtLink>
                 <PrimeButton
                     severity="secondary"
                     rounded

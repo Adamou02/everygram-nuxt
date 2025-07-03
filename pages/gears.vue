@@ -216,18 +216,14 @@
         image-src="/image/empty-gear.jpg"
     >
         <template #actions>
-            <div
-                class="flex flex-column lg:flex-row-reverse align-items-stretch lg:align-items-center gap-2"
-            >
-                <PrimeButton
-                    severity="secondary"
-                    rounded
-                    :label="$t('ACTION_CREATE_GEAR')"
-                    icon="pi pi-plus"
-                    @click="() => onCreateGear()"
-                />
-                <ImportGearsButton type="text" />
-            </div>
+            <PrimeButton
+                severity="secondary"
+                rounded
+                :label="$t('ACTION_CREATE_GEAR')"
+                icon="pi pi-plus"
+                @click="() => onCreateGear()"
+            />
+            <ImportGearsButton type="text" />
         </template>
     </EmptyState>
     <GearEditorDialog />

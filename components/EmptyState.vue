@@ -24,7 +24,11 @@
             <h2 class="text-2xl font-bold">{{ title }}</h2>
             <p v-if="description">{{ description }}</p>
         </div>
-        <slot name="actions" />
+        <div
+            class="flex flex-column lg:flex-row-reverse align-items-stretch lg:align-items-center gap-2"
+        >
+            <slot name="actions" />
+        </div>
     </div>
 </template>
 
