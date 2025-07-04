@@ -24,7 +24,7 @@
         class="select-none"
         :rowClass="
             (rowData) =>
-                getIsDisabled?.(rowData) ? 'gear-select-data-row--diabled' : ''
+                getIsDisabled?.(rowData) ? 'gear-select-data-row--disabled' : ''
         "
     >
         <PrimeColumn selectionMode="multiple" class="w-2rem" />
@@ -161,7 +161,7 @@ watch(
 </script>
 
 <style lang="scss">
-.gear-select-data-row--diabled {
+.gear-select-data-row--disabled {
     opacity: 0.5;
     pointer-events: none;
     .p-checkbox {
