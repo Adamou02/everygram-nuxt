@@ -1,12 +1,14 @@
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 
 // Scheduled function to collect custom brand statistics from gear collection
-export const findCustomBrands = functions
-    .region('asia-northeast1')
-    .pubsub.schedule('0 0 1 * *') // run at 00:00 on the 1st of each month
-    .timeZone('Asia/Taipei')
-    .onRun(async (context) => {
+export const findCustomBrands = onSchedule(
+    {
+        schedule: '0 0 1 * *', // run at 00:00 on the 1st of each month
+        timeZone: 'Asia/Taipei',
+        region: 'asia-northeast1',
+    },
+    async (event) => {
         const db = admin.firestore();
         // Use where clause to only get gears with brand.custom
         const gearSnapshot = await db
@@ -50,6 +52,5 @@ export const findCustomBrands = functions
             ),
             brandCount: brandsArray.length,
         });
-
-        return null;
-    });
+    },
+);

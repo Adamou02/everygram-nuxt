@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="['trip-og-image', 'flex overflow-hidden']"
+        :class="['trip-og-image', 'overflow-hidden']"
         :style="{ width: '1200px', height: '630px' }"
     >
         <div
@@ -28,12 +28,14 @@
                 </div>
             </div>
         </div>
-        <TripWeightInfo
-            :gears="gearsInTrip"
-            :wornGears="wornGearsInTrip"
-            :consumables="consumablesInTrip"
-            class="trip-og-image__weight-info"
-        />
+        <div>
+            <TripWeightInfo
+                :gears="gearsInTrip"
+                :wornGears="wornGearsInTrip"
+                :consumables="consumablesInTrip"
+                class="trip-og-image__weight-info"
+            />
+        </div>
     </div>
 </template>
 
@@ -77,6 +79,8 @@ body {
     height: 630px;
 }
 .trip-og-image {
+    display: grid;
+    grid-template-columns: 540px 660px;
     background: white;
     &__trip-info {
         width: 540px;

@@ -2,10 +2,10 @@ import * as functions from 'firebase-functions';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
 // Callable function to increment viewCount of a trip
-export const incrementTripShareView = functions
-    .region('asia-northeast1')
-    .https.onCall(async (data, context) => {
-        const tripId = data?.tripId;
+export const incrementTripShareView = functions.https.onCall(
+    { region: 'asia-northeast1' },
+    async (request: functions.https.CallableRequest<any>, context) => {
+        const tripId = request.data?.tripId;
         if (!tripId || typeof tripId !== 'string') {
             throw new functions.https.HttpsError(
                 'invalid-argument',
@@ -36,4 +36,5 @@ export const incrementTripShareView = functions
                 error.message,
             );
         }
-    });
+    },
+);

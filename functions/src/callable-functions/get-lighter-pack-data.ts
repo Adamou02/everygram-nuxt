@@ -3,10 +3,10 @@ import fetch from 'node-fetch';
 import { load as cheerioLoad } from 'cheerio';
 import Papa from 'papaparse';
 
-export const getLighterPackPackData = functions
-    .region('asia-northeast1')
-    .https.onCall(async (data) => {
-        const listId = data?.listId;
+export const getLighterPackPackData = functions.https.onCall(
+    { region: 'asia-northeast1' },
+    async (request: functions.https.CallableRequest<any>, context) => {
+        const listId = request.data?.listId;
         if (!listId || typeof listId !== 'string') {
             throw new functions.https.HttpsError(
                 'invalid-argument',
@@ -77,4 +77,5 @@ export const getLighterPackPackData = functions
                 err.message || 'Failed to fetch pack data',
             );
         }
-    });
+    },
+);
