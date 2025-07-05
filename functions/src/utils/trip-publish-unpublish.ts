@@ -131,15 +131,10 @@ export const publishTrip = async (tripId: string) => {
     // write trip share data to firestore in tripShare collection
     const tripShareCollectionRef = admin.firestore().collection('tripShare');
     const tripShareDocRef = tripShareCollectionRef.doc(tripId);
-    await tripShareDocRef.set(
-        {
-            ...tripShare,
-            tripShareCreated: FieldValue.serverTimestamp(),
-        },
-        {
-            merge: true,
-        },
-    );
+    await tripShareDocRef.set({
+        ...tripShare,
+        tripShareCreated: FieldValue.serverTimestamp(),
+    });
 };
 
 export const unpublishTrip = async (tripId: string) => {
