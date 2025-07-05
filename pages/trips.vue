@@ -30,7 +30,7 @@
                         :trip="trip"
                         :is-public="trip.isPublished"
                         :pack-weight="
-                            dataUtils.getTripBaseWeight(trip, gearMap)
+                            dataUtils.getTripPackWeight(trip, gearMap)
                         "
                     />
                 </NuxtLink>

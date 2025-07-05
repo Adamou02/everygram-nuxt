@@ -83,18 +83,23 @@ export const publishTrip = async (tripId: string) => {
     );
 
     // calculate weights
-    const baseWeight = Object.values(tripShareGears).reduce(
-        (acc, gear) => acc + gear.weight * gear.quantity,
-        0,
+    const baseWeight = _.round(
+        _.sumBy(_.values(tripShareGears), (gear) => {
+            return gear.weight * (gear?.quantity || 1) || 0;
+        }),
     );
-    const consumablesWeight = _.sumBy(
-        _.values(trip.consumables),
-        (consumable) => +consumable.weight * (consumable?.quantity || 1) || 0,
+    const consumablesWeight = _.round(
+        _.sumBy(
+            _.values(trip.consumables),
+            (consumable) =>
+                +consumable.weight * (consumable?.quantity || 1) || 0,
+        ),
     );
-    const packWeight = baseWeight + consumablesWeight;
-    const wornWeight = Object.values(tripShareWornGears).reduce(
-        (acc, gear) => acc + gear.weight * gear.quantity,
-        0,
+    const packWeight = _.round(baseWeight + consumablesWeight);
+    const wornWeight = _.round(
+        _.sumBy(_.values(tripShareWornGears), (gear) => {
+            return gear.weight * (gear?.quantity || 1) || 0;
+        }),
     );
 
     // build trip share data
