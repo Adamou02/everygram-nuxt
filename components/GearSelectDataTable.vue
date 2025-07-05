@@ -4,13 +4,28 @@
         :globalFilterFields="['name', 'formattedBrand']"
         :selection="selectedGears"
         @update:selection="
-            (newSelectedGears: T[]) => $emit('update', newSelectedGears)
+            (newSelectedGears: FormattedGear[]) => {
+                selectedGears = newSelectedGears;
+                $emit(
+                    'update',
+                    newSelectedGears
+                        .filter(
+                            // filter out disabled gears
+                            (gear) => !gear.isDisabled,
+                        )
+                        .map((gear) => gear._index),
+                );
+            }
         "
         selectionMode="multiple"
         :value="formattedGears"
         size="large"
         :dataKey="dataKey"
         class="select-none"
+        :rowClass="
+            (rowData) =>
+                getIsDisabled?.(rowData) ? 'gear-select-data-row--disabled' : ''
+        "
     >
         <PrimeColumn selectionMode="multiple" class="w-2rem" />
         <!-- hide photo on mobile due to limited space -->
@@ -35,7 +50,16 @@
             field="formattedWeight"
             :header="$t('LABEL_WEIGHT')"
             class="text-right w-5rem"
-        />
+        >
+            <template #body="{ data }">
+                <div class="flex flex-column align-items-end gap-2">
+                    <div>{{ data.formattedWeight }}</div>
+                    <div v-if="data.gearHint" class="text-color-light text-sm">
+                        {{ data.gearHint }}
+                    </div>
+                </div>
+            </template>
+        </PrimeColumn>
         <!-- desktop category -->
         <PrimeColumn
             v-if="isLargeScreen"
@@ -87,36 +111,61 @@
     </PrimeDataTable>
 </template>
 
-<script
-    setup
-    lang="ts"
-    generic="
-        T extends {
-            name: string;
-            weight: number;
-            category: GearCategory;
-            brand?: GearBrand;
-        }
-    "
->
+<script setup lang="ts">
 const props = defineProps<{
-    selectableGears: T[];
-    selectedGears: T[];
+    selectableGears: Gear[];
+    selectedIndices: number[];
     dataKey: string;
     showPhoto?: boolean;
     filters?: Record<string, any>;
     additionalFields?: (keyof Gear)[];
+    getIsDisabled?: (gear: Gear) => boolean;
+    getGearHint?: (gear: Gear) => string;
 }>();
 const emit = defineEmits<{
-    update: [selectedGears: T[]];
+    update: [selectedIndices: number[]];
 }>();
-const formattedGears = computed(() => {
-    return props.selectableGears.map((gear) => ({
-        ...gear,
-        formattedBrand: gear.brand ? formatBrand(gear.brand) : '',
-        formattedWeight: gear.weight ? formatWeight(gear.weight) : '-',
-    }));
-});
+
 const { formatWeight, formatBrand } = useLangUtils();
 const { isLargeScreen } = useDeviceMeta();
+
+type FormattedGear = Gear & {
+    _index: number;
+    formattedBrand: string;
+    formattedWeight: string;
+    isDisabled: boolean;
+    gearHint: string;
+};
+
+const selectedGears = ref<FormattedGear[]>([]);
+const formattedGears = computed<FormattedGear[]>(() => {
+    return props.selectableGears.map((gear, index) => ({
+        ...gear,
+        _index: index,
+        formattedBrand: gear.brand ? formatBrand(gear.brand) : '',
+        formattedWeight: gear.weight ? formatWeight(gear.weight) : '-',
+        isDisabled: !!props.getIsDisabled?.(gear),
+        gearHint: props.getGearHint?.(gear) || '',
+    }));
+});
+
+watch(
+    () => props.selectedIndices,
+    (newSelectedIndices) => {
+        selectedGears.value = newSelectedIndices
+            .map((index) => formattedGears.value[index])
+            .filter(Boolean); // filter out undefined
+    },
+    { immediate: true },
+);
 </script>
+
+<style lang="scss">
+.gear-select-data-row--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    .p-checkbox {
+        visibility: hidden;
+    }
+}
+</style>
