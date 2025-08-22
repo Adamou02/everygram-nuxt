@@ -43,6 +43,15 @@
                 >
                     <PrimeButton rounded text icon="pi pi-instagram" />
                 </NuxtLink>
+                <!-- github page -->
+                <NuxtLink
+                    to="https://github.com/LeeBoYin/everygram-nuxt"
+                    target="_blank"
+                    rel="noopener"
+                    :aria-label="$t('PAGE_GITHUB')"
+                >
+                    <PrimeButton rounded text icon="pi pi-github" />
+                </NuxtLink>
                 <!-- release notes -->
                 <NuxtLink
                     to="/release-notes"
