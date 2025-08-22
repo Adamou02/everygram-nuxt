@@ -24,7 +24,5 @@ logs
 !.env.example
 
 # firebase files
-storage.rules
-firestore.rules
 functions/src/everygram-firebase-adminsdk.json
 functions/lib/everygram-firebase-adminsdk.json
