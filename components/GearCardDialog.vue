@@ -38,6 +38,11 @@
                         :gear="displayingGear"
                         :size="isLargeScreen ? 'lg' : 'md'"
                     />
+                    <!-- gear price -->
+                    <GearPrice
+                        :gear="displayingGear"
+                        :size="isLargeScreen ? 'lg' : 'md'"
+                    />
                     <!-- private note -->
                     <div
                         v-if="
