@@ -1,5 +1,6 @@
 import 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 export default defineNuxtPlugin({
     name: 'firebase.client',
     async setup(nuxtApp) {
@@ -18,7 +19,15 @@ export default defineNuxtPlugin({
             measurementId: config.public.FIREBASE_MEASUREMENT_ID as string,
         };
 
-        initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize App Check
+        initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider(
+                config.public.RECAPTCHA_SITE_KEY as string,
+            ),
+            isTokenAutoRefreshEnabled: true, // Optional: enables auto-refresh of tokens
+        });
     },
     hooks: {
         // You can directly register Nuxt app runtime hooks here
