@@ -21,13 +21,16 @@ export default defineNuxtPlugin({
 
         const app = initializeApp(firebaseConfig);
 
-        // Initialize App Check
-        initializeAppCheck(app, {
-            provider: new ReCaptchaV3Provider(
-                config.public.RECAPTCHA_SITE_KEY as string,
-            ),
-            isTokenAutoRefreshEnabled: true, // Optional: enables auto-refresh of tokens
-        });
+        // run only in client side, not on server side render
+        if (process.client) {
+            // Initialize App Check
+            initializeAppCheck(app, {
+                provider: new ReCaptchaV3Provider(
+                    config.public.RECAPTCHA_SITE_KEY as string,
+                ),
+                isTokenAutoRefreshEnabled: true, // Optional: enables auto-refresh of tokens
+            });
+        }
     },
     hooks: {
         // You can directly register Nuxt app runtime hooks here
