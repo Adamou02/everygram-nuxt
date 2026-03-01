@@ -98,6 +98,7 @@ To safely develop new features and avoid breaking production, you should set up 
     NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
     NUXT_PUBLIC_FIREBASE_APP_ID=your-app-id
     NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+    NUXT_PUBLIC_RECAPTCHA_SITE_KEY=your-recaptch-site-key
     ```
 
 5. **Add Firebase Admin SDK Credentials**
