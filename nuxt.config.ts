@@ -16,6 +16,7 @@ export default defineNuxtConfig({
                 process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
             FIREBASE_FUNCTION_REGION:
                 process.env.NUXT_PUBLIC_FIREBASE_FUNCTION_REGION,
+            RECAPTCHA_SITE_KEY: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
         },
     },
     devtools: { enabled: true },
