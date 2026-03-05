@@ -96,13 +96,13 @@ function onExport() {
     ];
 
     const rows = selectedGears.map((g) => [
-        g.name ?? '',
-        g.weight ?? '',
-        g.category ?? '',
-        g.description ?? '',
-        g.currency ?? '',
-        g.price ?? '',
-        g.acquiredDate ?? '',
+        String(g.name ?? ''),
+        String(g.weight ?? ''),
+        String(g.category ?? ''),
+        String(g.description ?? ''),
+        String(g.currency ?? ''),
+        String(g.price ?? ''),
+        String(g.acquiredDate ?? ''),
     ]);
 
     const csv = generateCsvContent([header, ...rows]);
