@@ -37,6 +37,7 @@
     "ACTION_IMPORT_GEARS_FROM_LIGHTERPACK": "LighterPackからギアをインポート",
     "ACTION_IMPORT_EXPORT_GEARS": "ギアをインポート/エクスポート",
     "ACTION_IMPORT_NUM_GEARS": "インポート | {num}個のギアをインポート | {num}個のギアをインポート",
+    "ACTION_EXPORT_NUM_GEARS": "エクスポート | エクスポート {num} 個のギア | エクスポート {num} 個のギア",
     "ACTION_EXPORT_TO_CSV_FILE": "CSVファイルにエクスポート",
     "ACTION_NEXT": "次へ",
     "ACTION_PUBLISH": "公開",

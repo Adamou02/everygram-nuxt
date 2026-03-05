@@ -44,9 +44,11 @@
 
                 <PrimeButton
                     :label="
-                        $t('ACTION_EXPORT_NUM_GEARS', {
-                            num: selectedIndices.length,
-                        })
+                        $t(
+                            'ACTION_EXPORT_NUM_GEARS',
+                            { num: selectedIndices.length },
+                            selectedIndices.length,
+                        )
                     "
                     icon="pi pi-download"
                     rounded
