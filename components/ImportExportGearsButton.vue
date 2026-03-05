@@ -4,7 +4,7 @@
         severity="secondary"
         rounded
         outlined
-        :label="type === 'text' ? $t('ACTION_IMPORT_GEARS') : ''"
+        :label="type === 'text' ? $t('ACTION_IMPORT_EXPORT_GEARS') : ''"
         icon="pi pi-file-arrow-up"
         aria-haspopup="true"
         :aria-controls="isLargeScreen ? menuId : undefined"
@@ -32,6 +32,47 @@ const { isLargeScreen } = useDeviceMeta();
 const i18n = useI18n();
 const router = useRouter();
 
+const userGearsStore = useUserGearsStore();
+
+const exportToCsv = () => {
+    const gears = userGearsStore.gears || [];
+
+    const rows = gears.map((g: Gear) => [
+        g.name ?? '',
+        g.weight ?? '',
+        g.category ?? '',
+        g.description ?? '',
+        g.currency ?? '',
+        g.price ?? '',
+        g.acquiredDate ?? '',
+    ]);
+
+    const header = [
+        'name',
+        'weight',
+        'category',
+        'description',
+        'currency',
+        'price',
+        'acquiredDate',
+    ];
+
+    const csvContent = [header, ...rows].map((row) => row.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'gears_export.csv');
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+};
+
 const menuItems = computed(() => {
     return [
         {
@@ -44,6 +85,12 @@ const menuItems = computed(() => {
             label: i18n.t('ACTION_IMPORT_FROM_CSV_FILE'),
             command: () => {
                 isOpenImportGearsDialog.value = true;
+            },
+        },
+        {
+            label: i18n.t('ACTION_EXPORT_TO_CSV_FILE'),
+            command: () => {
+                exportToCsv();
             },
         },
     ];
